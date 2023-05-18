@@ -1,13 +1,12 @@
-DROP TABLE IF EXISTS User;
+DROP TABLE IF EXISTS Users;
 
 -- Crear tabla
 CREATE TABLE users (
   id SERIAL PRIMARY KEY,
-  name VARCHAR(50),
-  last_name VARCHAR(50),
-  correo VARCHAR(50)
+  username VARCHAR(50) UNIQUE NOT NULL,
+  password char(60) NOT NULL
 );
-
+/* 
 -- insertar datos para probar
 INSERT INTO users (name, last_name, correo) VALUES
 ('John', 'Doe', 'john.doe@example.com'),
@@ -53,4 +52,4 @@ INSERT INTO users (name, last_name, correo) VALUES
 ('Caleb', 'Evans', 'caleb.evans@example.com'),
 ('Leah', 'Edwards', 'leah.edwards@example.com'),
 ('Julian', 'Collins', 'julian.collins@example.com'),
-('Audrey', 'Stewart', 'audrey.stewart@example.com');
+('Audrey', 'Stewart', 'audrey.stewart@example.com'); */
