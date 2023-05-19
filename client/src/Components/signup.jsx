@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import swal from "sweetalert";
 
 const Signup = (props) => {
     // Se crea un estado para los valores de los inputs del formulario
@@ -34,6 +35,12 @@ const Signup = (props) => {
             .then((response) => {
                 // Manejar solicitud la respuesta exitosa
                 console.log(response.data);
+                swal({
+                    title: "Registrado exitosamente",
+                    icon : "success",
+                }).then(() => {
+                    window.location.reload();
+                })
             })
             .catch((error) => {
                 // Manejar el error de la solicitud
@@ -43,7 +50,7 @@ const Signup = (props) => {
     };
 
     // Se usa para actualizar el estado de los valores de los inputs
-    const onChange = (e) => {
+    const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
@@ -110,7 +117,7 @@ const Signup = (props) => {
 
                         // Garantiza que el estado refleje siempre el valor actual del input
                         // y se mantenga sincronizado con los cambios realizados por el usuario
-                        onChange={onChange}
+                        onChange = {handleChange}
 
                         // Se enlaza el valor del input con el valor almacenado en values[input.name]
                         value={values[input.name]}
