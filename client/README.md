@@ -11,3 +11,5 @@ npm install
 ```
 npm run dev
 ```
+
+Despues de que inicie la aplicaion, visitar `http://localhost:5173`

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 const Signup = (props) => {
     // Se crea un estado para los valores de los inputs del formulario
@@ -14,14 +15,31 @@ const Signup = (props) => {
     // Se crea un estado para saber si el input está enfocado o no
     const [focused, setFocused] = useState(false);
 
+    // Se crea un estado para mostrar el error al enviar el form
+    const [errorMessage, setErrorMessage] = useState('');
+
     // Se usa para cambiar el estado de focused a true cuando el input está enfocado
     const handleFocus = (e) => {
         setFocused(true);
     };
 
-    // Se usa para evitar que la página se recargue al enviar el formulario
+    // Se ejecuta al enviar el formulario
     const handleSubmit = (e) => {
+        // Se usa para evitar que la página se recargue al enviar el formulario
         e.preventDefault();
+
+        // se usa para enviar el formulario a traves del metodo post
+        axios
+            .post("http://localhost:3000/signup", values)
+            .then((response) => {
+                // Manejar solicitud la respuesta exitosa
+                console.log(response.data);
+            })
+            .catch((error) => {
+                // Manejar el error de la solicitud
+                console.error(error.response.data.message);
+                setErrorMessage(error.response.data.message)
+            });
     };
 
     // Se usa para actualizar el estado de los valores de los inputs
@@ -59,7 +77,7 @@ const Signup = (props) => {
           errormessage: "Full Name should be only letters and no more than 64 characters.",
           label: "Full Name",
           required: true,
-          pattern: "[a-zA-Z]{1,64}",
+          pattern: "[a-zA-Z ]{1,64}",
         },
         {
           id: 4,
@@ -114,6 +132,7 @@ const Signup = (props) => {
             ))}
             <button type="submit">Sign Up</button>
         </form>
+        <p className="error">{errorMessage}</p>
         <button className = "button-switch" onClick={() => props.onFormSwitch('login')}>
             Already have an account? Login here.
         </button>
