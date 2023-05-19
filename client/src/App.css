@@ -1,42 +1,100 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+/* Para eliminar borde blanco por defecto del navegador */
+*{padding:0; margin:0;}
+
+.App{
+  display: flex;
   text-align: center;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: linear-gradient(75deg, #fbc2eb 0%, #a6c1ee 100%);
+  background-position: center;
+  background-size: cover;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.auth-form-container, .login-form, .register-form {
+  display: flex;
+  flex-direction: column;
+  width: 280px;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.auth-form-container{
+    padding: 50px;
+    border: 1px solid white;
+    border-radius: 10px;
+    margin: 5px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+
+h1 {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
-.card {
-  padding: 2em;
+.login-form, .register-form {
+  text-align: left;
+  align-items: center;
+  padding: 5px;
+  font-size: 16px;
 }
 
-.read-the-docs {
-  color: #888;
+label {
+  text-align: left;
+  padding: 5px;
+  font-size: 16px;
+  margin: 10px;
 }
+
+input {
+  margin: 10px;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  width: 250px;
+  font-size: 14px;
+}
+
+button {
+  width: 280px;
+  height: 50px;
+  border: none;
+  background: #a04af1;
+  padding: 10px;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.button-switch{
+  background: none;
+  color: #a04af1;
+  text-decoration: underline;
+  border: none;
+  font-size: 14px;
+  margin-top: 15px;
+  margin-bottom: 30px;
+}
+
+span{
+  font-size: 12px;
+  padding: 3px;
+  color: red;
+  display: none;
+  margin: 10px;
+  margin-top: 0px;
+}
+
+input:invalid[focused = "true"]{
+  border: 1px solid red;
+}
+
+input:invalid[focused = "true"] ~ span{
+  display: block;
+}
+
+
+
+
