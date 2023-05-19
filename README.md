@@ -1,15 +1,66 @@
-# Intrucciones de ejecución
+# Calendar Manager for Volunteer Work
 
-- Ejecutar createDataBase.sh para crear base de datos de prueba en postgresql
-
-Nota: Por ahora, se debe configurar la base de datos del `/server/db/db.js`. Proximamente, se incluirá docker para la compilación del proyecto, y evitar este tipo de inconvenientes.
-
-- Run react project:
+## Aplicación React con Nodejs en el backend y uso de la base de datos postgres
+Estructura del proyecto:
 ```
-npm run dev 
+.
+├── README.md
+├── client
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── src
+│   │   ├── App.css
+│   │   ├── App.jsx
+│   │   ├── Components
+│   │   │   └── UsersList.jsx
+│   │   ├── index.css
+│   │   └── main.jsx
+│   ├── vite.config.js
+│   └── ...
+├── ...
+├── docker-compose.yml
+└── server
+    ├── ...
+    ├── Dockerfile
+    ├── app.js
+    ├── bin
+    │   └── www
+    ├── controllers
+    │   └── users.controllers.js
+    ├── db
+    │   └── db.js
+    ├── package-lock.json
+    ├── package.json
+    ├── public
+    │   └── stylesheets
+    │       └── style.css
+    ├── routes
+    │   ├── api-test.js
+    │   ├── index.js
+    │   └── users.js
+    └── views
+        ├── error.pug
+        ├── index.pug
+        └── layout.pug
 ```
 
-- Run express project:
+## Uso con entorno de desarrollo de Docker
+
+### Ejecutar con docker compose
+
 ```
-npm run serverstart
+$ docker compose up
+```
+
+#### Para ejecutar en segundo plano:
+```
+$ docker compose up -d
+```
+
+### Darle de baja a los contenedores
+
+```
+$ docker compose down -v
 ```
