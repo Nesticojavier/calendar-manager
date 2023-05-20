@@ -9,11 +9,14 @@ const Login = (props) => {
     });
 
     // Se crea un estado para saber si el input está enfocado o no
-    const [focused, setFocused] = useState(false);
+    const [focused, setFocused] = useState({
+        username: false,
+        password: false,
+    });
 
     // Se usa para cambiar el estado de focused a true cuando el input está enfocado
-    const handleFocus = (e) => {
-        setFocused(true);
+    const handleFocus = (e, isFocused) => {
+        setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
     };
 
     // Se usa para evitar que la página se recargue al enviar el formulario
@@ -22,7 +25,7 @@ const Login = (props) => {
     };
 
     // Se usa para actualizar el estado de los valores de los inputs
-    const onChange = (e) => {
+    const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
@@ -53,34 +56,35 @@ const Login = (props) => {
     return (
         <div className="auth-form-container">
             <h1>Login</h1>
-        <form className = "login-form" onSubmit={handleSubmit}>
-            {inputs.map((input) => (
-                <div key={input.id} className = "formLogin">
-                    <label className = "labelForm" htmlFor={input.name}>{input.label}</label>
-                    <input
-                        {...input}
+            <form className = "login-form" onSubmit={handleSubmit}>
+                {inputs.map((input) => (
+                    <div key={input.id} className = "formLogin">
+                        <label htmlFor={input.name}>{input.label}</label>
+                        <input
+                            {...input}
 
-                        // Garantiza que el estado refleje siempre el valor actual del input
-                        // y se mantenga sincronizado con los cambios realizados por el usuario
-                        onChange={onChange}
+                            // Garantiza que el estado refleje siempre el valor actual del input
+                            // y se mantenga sincronizado con los cambios realizados por el usuario
+                            onChange={handleChange}
 
-                        // Se enlaza el valor del input con el valor almacenado en values[input.name]
-                        value={values[input.name]}
+                            // Se enlaza el valor del input con el valor almacenado en values[input.name]
+                            value={values[input.name]}
 
-                        // Se usa para cambiar el estado de focused a true cuando el input está enfocado
-                        onBlur = {handleFocus}
+                            /// Para mostrar el mensaje de error cuando el input está enfocado
+                            // esta en true para mantener el mensaje de error mientras el input sea invalido
+                            onBlur = {() => handleFocus(input.name, true)}
 
-                        // Muestra el mensaje de error si el input está enfocado y el valor no cumple con el patrón
-                        focused = {focused.toString()}
-                    />
-                    <span>{input.errormessage}</span>
-                </div>
-            ))}
-            <button type="submit">Log In</button>
-        </form>
-        <button className = "button-switch" onClick={() => props.onFormSwitch('register')}>
-            Don't have an account? Sign up here.
-        </button>
+                            // Muestra el mensaje de error si el input está enfocado y el valor no cumple con el patrón
+                            //focused = {focused.toString()}
+                        />
+                        {focused[input.name] && <span>{input.errormessage}</span>}
+                    </div>
+                ))}
+                <button type="submit">Log In</button>
+            </form>
+            <button className = "button-switch" onClick={() => props.onFormSwitch('register')}>
+                Don't have an account? Sign up here.
+            </button>
         </div>
     );
 }

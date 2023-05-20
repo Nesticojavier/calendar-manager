@@ -1,4 +1,4 @@
-Para eliminar borde blanco por defecto del navegador
+/* Para eliminar borde blanco por defecto del navegador */
 *{padding:0; margin:0;}
 
 .App{
@@ -76,6 +76,7 @@ form button {
   font-size: 14px;
   margin-top: 15px;
   margin-bottom: 30px;
+  cursor: pointer;
 }
 
 form span{
@@ -87,12 +88,17 @@ form span{
   margin-top: 0px;
 }
 
-input:invalid[focused = "true"]{
-  border: 1px solid red;
+input:invalid + span {
+  display: block;
 }
 
-input:invalid[focused = "true"] ~ span{
-  display: block;
+.error-message{
+  font-size: 12px;
+  padding: 3px;
+  color: red;
+  display: none;
+  margin: 10px;
+  margin-top: 0px;
 }
 
 p.error{

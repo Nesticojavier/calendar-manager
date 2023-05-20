@@ -14,14 +14,20 @@ const Signup = (props) => {
     });
 
     // Se crea un estado para saber si el input está enfocado o no
-    const [focused, setFocused] = useState(false);
+    const [focused, setFocused] = useState({
+        username: false,
+        password: false,
+        fullName: false,
+        birthDate: false,
+        institutionalId: false,
+    });
 
     // Se crea un estado para mostrar el error al enviar el form
     const [errorMessage, setErrorMessage] = useState('');
 
     // Se usa para cambiar el estado de focused a true cuando el input está enfocado
-    const handleFocus = (e) => {
-        setFocused(true);
+    const handleFocus = (e, isFocused) => {
+        setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
     };
 
     // Se ejecuta al enviar el formulario
@@ -108,41 +114,37 @@ const Signup = (props) => {
     return (
         <div className="auth-form-container">
             <h1>Sign Up</h1>
-        <form className = "register-form" onSubmit={handleSubmit}>
-            {inputs.map((input) => (
-                <div key={input.id} className="formRegister">
-                    <label htmlFor={input.id}>{input.label}</label>
-                    <input
-                        {...input}
+            <form className = "register-form" onSubmit={handleSubmit}>
+                {inputs.map((input) => (
+                    <div key={input.id} className="formRegister">
+                        <label htmlFor={input.id}>{input.label}</label>
+                        <input
+                            {...input}
 
-                        // Garantiza que el estado refleje siempre el valor actual del input
-                        // y se mantenga sincronizado con los cambios realizados por el usuario
-                        onChange = {handleChange}
+                            // Garantiza que el estado refleje siempre el valor actual del input
+                            // y se mantenga sincronizado con los cambios realizados por el usuario
+                            onChange = {handleChange}
 
-                        // Se enlaza el valor del input con el valor almacenado en values[input.name]
-                        value={values[input.name]}
+                            // Se enlaza el valor del input con el valor almacenado en values[input.name]
+                            value={values[input.name]}
 
-                        // Se usa para cambiar el estado de focused a true cuando el input está enfocado
-                        onBlur = {handleFocus}
+                            // Para mostrar el mensaje de error cuando el input está enfocado
+                            // esta en true para mantener el mensaje de error mientras el input sea invalido
+                            onBlur = {() => handleFocus(input.name, true)}
 
-                        // Lo comento porque no veo que haga nada, pero no lo elimino porsia
-                        // onFocus={ () =>
-                        //     (input.name === "institutionalId")
-                        //     && setFocused(true)
-                        // }
+                            //onFocus = {() => handleFocus(input.name, true)}
 
-                        // Muestra el mensaje de error si el input está enfocado y el valor no cumple con el patrón
-                        focused = {focused.toString()}
-                    />
-                    <span>{input.errormessage}</span>
-                </div>
-            ))}
-            <button type="submit">Sign Up</button>
-        </form>
-        <p className="error">{errorMessage}</p>
-        <button className = "button-switch" onClick={() => props.onFormSwitch('login')}>
-            Already have an account? Login here.
-        </button>
+                            //focused = {focused.toString()}
+                        />
+                        {focused[input.name] && <span>{input.errormessage}</span>}
+                    </div>
+                ))}
+                <button type="submit">Sign Up</button>
+            </form>
+            <p className="error">{errorMessage}</p>
+            <button className = "button-switch" onClick={() => props.onFormSwitch('login')}>
+                Already have an account? Login here.
+            </button>
         </div>
     );
 }
