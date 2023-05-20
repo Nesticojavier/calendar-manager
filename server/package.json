@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "serverstart": "DEBUG=myapp* npm run devstart"
+    "serverstart": "DEBUG=myapp* npm run devstart",
+    "migrate": "node scripts/migrate.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -16,6 +17,7 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.0",
+    "knex": "^2.4.2",
     "morgan": "~1.9.1",
     "pg": "^8.10.0",
     "pug": "2.0.0-beta11"
