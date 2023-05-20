@@ -1,4 +1,4 @@
-/* Para eliminar borde blanco por defecto del navegador */
+Para eliminar borde blanco por defecto del navegador
 *{padding:0; margin:0;}
 
 .App{
@@ -54,7 +54,7 @@ input {
   font-size: 14px;
 }
 
-button {
+form button {
   width: 280px;
   height: 50px;
   border: none;
@@ -78,7 +78,7 @@ button {
   margin-bottom: 30px;
 }
 
-span{
+form span{
   font-size: 12px;
   padding: 3px;
   color: red;
@@ -102,6 +102,3 @@ p.error{
   margin: 10px;
   margin-top: 0px;
 }
-
-
-
