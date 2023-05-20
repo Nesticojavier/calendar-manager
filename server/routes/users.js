@@ -6,15 +6,16 @@ const {
   login,
   dashboard,
   showUsers,
+  verifyToken
 } = require("../controllers/users.controllers");
 
-// Show all users
+// Mostrar todos los usuarios
 router.get("/users", showUsers);
 // Signup
 router.post("/signup", signup);
 // Login
 router.post("/login", login);
-// User dashboard
-router.get("/dashboard", dashboard);
+// User dashboard -- Ruta protegida
+router.get("/dashboard", verifyToken, dashboard);
 
 module.exports = router;
