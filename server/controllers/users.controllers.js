@@ -1,4 +1,5 @@
 const pool = require("../db/db"); //importar conexion a la base de datos
+const Users = require("../Models/Users"); //importar conexion a la base de datos
 const bcrypt = require("bcrypt"); //Para encriptar las contrasenas
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
 
@@ -16,18 +17,13 @@ const signup = async (req, res) => {
   }
 
   // Verificar si el usuario ya se encuentra registrado
-  // const response = await pool.query("SELECT * FROM users WHERE username = $1", [
-  //   username,
-  // ]);
-  // if (response.rowCount != 0) {
-  //   return res.status(500).json({ message: "Error, usuario ya registrado" });
-  // }
-  const response = await pool
-    .select()
-    .from("users")
-    .where("username", "=", username);
+  const users = await Users.findAll({
+    where: {
+      username: username,
+    },
+  });
 
-  if (response.length != 0) {
+  if (users.length != 0) {
     return res.status(500).json({ message: "Error, usuario ya registrado" });
   }
 
@@ -37,27 +33,15 @@ const signup = async (req, res) => {
       return res.status(500).json({ message: "Error al cifrar la contraseña" });
     }
 
-    // pool.query(
-    //   "INSERT INTO users(username, password) VALUES($1, $2)",
-    //   [username, hash],
-    //   (err, result) => {
-    //     if (err) {
-    //       return res
-    //         .status(500)
-    //         .json({ message: "Error al registrar usuario" });
-    //     }
-    //   }
-    // );
-    // Enviamos una respuesta al cliente indicando que el registro fue exitoso
-    // res.json({ message: "Registro exitoso" });
-    pool("users")
-      .insert({ username, password })
-      .then(() => {
-        res.status(201).json({ mensaje: "Registro exitoso" });
-      })
-      .catch((error) => {
-        res.status(500).json({ error: "Error al registrar usuario" });
+    try {
+      Users.create({
+        username,
+        password: hash,
       });
+      res.status(201).json({ mensaje: "Registro exitoso" });
+    } catch (error) {
+      res.status(500).json({ error: "Error al registrar usuario" });
+    }
   });
 };
 
@@ -69,17 +53,11 @@ const login = async (req, res) => {
     return res.status(500).json({ message: "Error en datos de entrada" });
   }
 
-  // Verificar si el usuario ya se encuentra registrado
-  // const response = await pool.query("SELECT * FROM users WHERE username = $1", [
-  //   username,
-  // ]);
-  // if (response.rowCount === 0) {
-  //   return res.status(500).json({ message: "Error, usuario no registrado" });
-  // }
-  const response = await pool
-    .select()
-    .from("users")
-    .where("username", "=", username);
+  const response = await Users.findAll({
+    where: {
+      username,
+    },
+  });
 
   if (response.length != 0) {
     return res.status(500).json({ message: "Error, usuario no registrado" });
@@ -105,33 +83,19 @@ const login = async (req, res) => {
   });
 };
 
-// const login = (req, res) => {
-//   res.send("login");
-// };
-
 const dashboard = (req, res) => {
   req.username;
   res.send("dashboard");
 };
 
-const showUsers = (req, res) => {
-  // pool.query(" SELECT * FROM users", (error, result) => {
-  //   if (error || result.rowCount === 0) {
-  //     return res
-  //       .status(404)
-  //       .json({ message: "Error al consultar la base de datos" }); // En caso de error, resolvemos la Promise con error
-  //   }
-  //   res.json(result.rows); // Si no, resolvemos con el resultado
-  // });
-  pool
-    .select()
-    .from("users")
-    .then((rows) => {
-      res.json(rows);
-    })
-    .catch((error) => {
-      res.status(500).json({ error: "Error al obtener usuarios" });
-    });
+const showUsers = async (req, res) => {
+
+  try {
+    const users = await Users.findAll();
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: "Error al obtener usuarios" });
+  }
 };
 
 // Middleware para verificar y decodificar el token JWT

@@ -20,7 +20,9 @@
     "knex": "^2.4.2",
     "morgan": "~1.9.1",
     "pg": "^8.10.0",
-    "pug": "2.0.0-beta11"
+    "pg-hstore": "^2.3.4",
+    "pug": "2.0.0-beta11",
+    "sequelize": "^6.31.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22",

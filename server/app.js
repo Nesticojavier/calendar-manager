@@ -3,8 +3,15 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const pool = require("./db/db"); //importar conexion a la base de datos
+// const pool = require("./db/db"); //importar conexion a la base de datos
 const cors = require("cors");
+const Users = require("./Models/Users")
+
+// Sincronizar modelo
+Users.sync().then(() => {
+  console.log("Users Model synced 2");
+});
+
 
 var app = express();
 
