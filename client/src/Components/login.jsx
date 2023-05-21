@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
-const Login = (props) => {
+export default function Login (props) {
     // Se crea un estado para los valores de los inputs del formulario
     // Se guarda en un objeto con los valores iniciales vacíos
     const [values, setValues] = useState({
@@ -23,6 +24,9 @@ const Login = (props) => {
     // Se crea un estado para mostrar el error al enviar el form
     const [errorMessage, setErrorMessage] = useState('');
 
+    // Para redireccionar a otra página
+    const navigate = useNavigate()
+
     // Se usa para evitar que la página se recargue al enviar el formulario
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -34,10 +38,9 @@ const Login = (props) => {
                 console.log(response.data.token);
                 const token = response.data.token
                 localStorage.setItem('token', token);
+                // Redireccionar a la página de home
+                navigate('/home')
 
-                return (
-                    <h1>Hola</h1>
-                )
             })
             .catch((error) => {
                 // Manejar el error de la solicitud
@@ -113,4 +116,3 @@ const Login = (props) => {
     );
 }
 
-export default Login;
