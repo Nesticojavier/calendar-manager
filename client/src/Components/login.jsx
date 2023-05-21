@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from 'axios';
 
 const Login = (props) => {
     // Se crea un estado para los valores de los inputs del formulario
@@ -19,9 +20,31 @@ const Login = (props) => {
         setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
     };
 
+    // Se crea un estado para mostrar el error al enviar el form
+    const [errorMessage, setErrorMessage] = useState('');
+
     // Se usa para evitar que la página se recargue al enviar el formulario
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        axios
+            .post("http://localhost:3000/login", values)
+            .then((response) => {
+                // Manejar solicitud la respuesta exitosa
+                console.log(response.data.token);
+                const token = response.data.token
+                localStorage.setItem('token', token);
+
+                return (
+                    <h1>Hola</h1>
+                )
+            })
+            .catch((error) => {
+                // Manejar el error de la solicitud
+                console.error(error.response.data.message);
+                setErrorMessage(error.response.data.message)
+            });
+
     };
 
     // Se usa para actualizar el estado de los valores de los inputs
@@ -82,6 +105,7 @@ const Login = (props) => {
                 ))}
                 <button type="submit">Log In</button>
             </form>
+            <p className="error">{errorMessage}</p>
             <button className = "button-switch" onClick={() => props.onFormSwitch('register')}>
                 Don't have an account? Sign up here.
             </button>

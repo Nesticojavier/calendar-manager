@@ -19,7 +19,7 @@ const signup = async (req, res) => {
   // Verificar si el usuario ya se encuentra registrado
   const users = await Users.findAll({
     where: {
-      username: username,
+      username,
     },
   });
 
@@ -38,9 +38,9 @@ const signup = async (req, res) => {
         username,
         password: hash,
       });
-      res.status(201).json({ mensaje: "Registro exitoso" });
+      res.status(201).json({ message: "Registro exitoso" });
     } catch (error) {
-      res.status(500).json({ error: "Error al registrar usuario" });
+      res.status(500).json({ message: "Error al registrar usuario" });
     }
   });
 };
@@ -53,20 +53,22 @@ const login = async (req, res) => {
     return res.status(500).json({ message: "Error en datos de entrada" });
   }
 
-  const response = await Users.findAll({
+  // verificar si el usuarion ya está registrado
+  const response = await Users.findOne({
     where: {
       username,
     },
   });
 
-  if (response.length != 0) {
-    return res.status(500).json({ message: "Error, usuario no registrado" });
+  if (response === null) {
+    return res.status(500).json({ message: "Error, unregistered user" });
   }
 
   const password_hash = response.password;
-  const id = response[0].id;
+  const id = response.id;
 
-  bcrypt.compare(req.body.password, password_hash, (err, result) => {
+  // Validar password
+  bcrypt.compare(password, password_hash, (err, result) => {
     if (err) {
       return res
         .status(500)
@@ -78,18 +80,17 @@ const login = async (req, res) => {
       res.json({ token });
     } else {
       // Si la contraseña es incorrecta, enviamos un mensaje de error
-      res.status(401).json({ message: "Credenciales inválidas" });
+      res.status(401).json({ message: "Password does not match the username" });
     }
   });
 };
 
 const dashboard = (req, res) => {
-  req.username;
-  res.send("dashboard");
+  // res.send("dashboard");s
+  res.send(req.id);
 };
 
 const showUsers = async (req, res) => {
-
   try {
     const users = await Users.findAll();
     res.json(users);
@@ -101,7 +102,6 @@ const showUsers = async (req, res) => {
 // Middleware para verificar y decodificar el token JWT
 const verifyToken = (req, res, next) => {
   const header = req.headers["authorization"];
-  console.log("por aqui");
 
   if (!header) {
     return res.status(401).send("Acceso denegado");
@@ -111,8 +111,7 @@ const verifyToken = (req, res, next) => {
 
   try {
     const decoded = jwt.verify(token, secretKey);
-    req.user = decoded;
-    console.log(req.user);
+    req.id = decoded;
     next();
   } catch (ex) {
     res.status(400).send("Token inválido");

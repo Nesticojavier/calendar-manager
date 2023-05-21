@@ -42,7 +42,7 @@ const Signup = (props) => {
                 // Manejar solicitud la respuesta exitosa
                 console.log(response.data);
                 swal({
-                    title: "Registrado exitosamente",
+                    title: response.data.message,
                     icon : "success",
                 }).then(() => {
                     window.location.reload();

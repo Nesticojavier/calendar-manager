@@ -20,7 +20,6 @@ function App() {
         ? <Login onFormSwitch={toggleForm} />
         : <Signup onFormSwitch={toggleForm} />
       }
-
     </div>
   );
 }
