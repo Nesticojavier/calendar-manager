@@ -11,6 +11,7 @@ const Signup = (props) => {
         fullName: "",
         birthDate: "",
         institutionalId: "",
+        rol: "voluntario",
     });
 
     // Se crea un estado para saber si el input está enfocado o no
@@ -20,6 +21,7 @@ const Signup = (props) => {
         fullName: false,
         birthDate: false,
         institutionalId: false,
+        rol: false,
     });
 
     // Se crea un estado para mostrar el error al enviar el form
@@ -58,7 +60,16 @@ const Signup = (props) => {
     // Se usa para actualizar el estado de los valores de los inputs
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
+        console.log(values)
     };
+    const handleChangeSelect = (event) => {
+        const { name, value } = event.target;
+        setValues((prevValues) => ({
+            ...prevValues,
+            [   name]: value,
+        }));
+        console.log(values)
+      };
 
     // Inputs del formulario con sus restricciones y errores de mensaje
     const inputs = [
@@ -108,6 +119,19 @@ const Signup = (props) => {
           errormessage: "Institutional ID should be only numbers and no more than 16 characters.",
           label: "Institutional ID",
           pattern: "[0-9.]{1,16}$",
+        },
+        {
+          id: 6,
+          name: "rol",
+          type: "select",
+          placeholder: "seleccione rol",
+          errormessage: "you must select a role",
+          label: "Seleccione rol",
+          required: true,
+          options: [
+            { value: "voluntario", label: "Voluntario" },
+            { value: "proveedor", label: "Proveedor" }
+          ]
         }
     ]
 
@@ -118,9 +142,20 @@ const Signup = (props) => {
                 {inputs.map((input) => (
                     <div key={input.id} className="formRegister">
                         <label htmlFor={input.id}>{input.label}</label>
+                        
+                        {input.type === "select"
+                        ? 
+                        <select name={input.name} id={input.id} onChange = {handleChangeSelect}>
+                            {input.options.map(option => (
+                                <option key={option.value} value={option.value}>
+                                {option.label}
+                                </option>
+                            ))}
+                        </select>
+                        :  
                         <input
                             {...input}
-
+                            
                             // Garantiza que el estado refleje siempre el valor actual del input
                             // y se mantenga sincronizado con los cambios realizados por el usuario
                             onChange = {handleChange}
@@ -136,6 +171,8 @@ const Signup = (props) => {
 
                             //focused = {focused.toString()}
                         />
+
+                        }
                         {focused[input.name] && <span>{input.errormessage}</span>}
                     </div>
                 ))}

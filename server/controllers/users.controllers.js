@@ -86,9 +86,17 @@ const login = async (req, res) => {
   });
 };
 
-const dashboard = (req, res) => {
-  // res.send("dashboard");s
-  res.send(req.id);
+const dashboard = async (req, res) => {
+  // res.send("dashboard");
+
+  const id = req.id.id;
+  const response = await Users.findOne({
+    where: {
+      id,
+    },
+  });
+  console.log(response.dataValues)
+  res.json(response.dataValues);
 };
 
 const showUsers = async (req, res) => {
