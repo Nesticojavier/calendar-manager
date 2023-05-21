@@ -15,6 +15,10 @@ const Users = sq.define("users", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  rol: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
 });
 
 module.exports = Users;

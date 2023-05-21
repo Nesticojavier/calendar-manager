@@ -9,10 +9,10 @@ secretKey = "my_secret_key";
 // Signup
 // TODO: Chequear codigos HTTP. Retornar el adecuado en cada caso
 const signup = async (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, rol } = req.body;
 
   // Verificar que los datos de entrada no sean undefined
-  if (!username || !password) {
+  if (!username || !password || !rol) {
     return res.status(500).json({ message: "Error en datos de entrada" });
   }
 
@@ -37,6 +37,7 @@ const signup = async (req, res) => {
       Users.create({
         username,
         password: hash,
+        rol,
       });
       res.status(201).json({ message: "Registro exitoso" });
     } catch (error) {
