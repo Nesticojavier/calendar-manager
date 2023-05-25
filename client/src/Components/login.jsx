@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 
 export default function Login () {
+
+    if (Cookies.get('token')) {
+        return <Navigate to={"/dashboard"} replace />;
+    }
+
     // Se crea un estado para los valores de los inputs del formulario
     // Se guarda en un objeto con los valores iniciales vacíos
     const [values, setValues] = useState({

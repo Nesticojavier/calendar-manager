@@ -8,6 +8,7 @@ import Cookies from 'js-cookie';
 export default function Dashboard() {
 
   const token = Cookies.get('token'); 
+  const headers = { Authorization: `Bearer ${token}` };
   const [user, setUser] = useState("");
   const navigate = useNavigate()
 
@@ -20,22 +21,19 @@ export default function Dashboard() {
   if (!token) {
     return <Navigate to={"/login"} replace />;
   }
-  
-  // useEffect(() => {
-  //   const token = localStorage.getItem('token');
-  //   const headers = { Authorization: `Bearer ${token}` };
 
-  //   axios.get("http://localhost:3000/dashboard", { headers })
-  //     .then((response) => {
-  //       // Manejar la respuesta exitosa de la solicitud
-  //       console.log(response.data);
-  //       setUser(response.data);
-  //     })
-  //     .catch((error) => {
-  //       // Manejar el error de la solicitud
-  //       console.error(error.response.data.message);
-  //     });
-  // }, []); // Dependencia vacía para que el efecto se ejecute solo una vez al montar el componente
+  useEffect(() => {
+
+    axios.get("http://localhost:3000/dashboard", { headers })
+      .then((response) => {
+        // Manejar la respuesta exitosa de la solicitud
+        setUser(response.data);
+      })
+      .catch((error) => {
+        // Manejar el error de la solicitud
+        console.error(error.response.data.message);
+      });
+  }, []); // Dependencia vacía para que el efecto se ejecute solo una vez al montar el componente
 
   return (
     <div className="Home">
