@@ -123,7 +123,7 @@ const verifyToken = (req, res, next) => {
     req.id = decoded;
     next();
   } catch (ex) {
-    res.status(400).send("Token inválido");
+    res.status(400).json({ message: "Error, token invalido" });
   }
 };
 

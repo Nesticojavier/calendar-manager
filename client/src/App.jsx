@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./App.css";
 import Signup from "./Components/signup";
 import Login from "./Components/login";
-//import UsersList from "./Components/UsersList";
+import Dashboard from "./Components/dashboard";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 
 function App() {
   // Se crea un estado para saber qué formulario se está mostrando
@@ -14,13 +15,15 @@ function App() {
   };
 
   return (
-    <div className="App">
-      {
-        currentForm === "login"
-        ? <Login onFormSwitch={toggleForm} />
-        : <Signup onFormSwitch={toggleForm} />
-      }
-    </div>
+
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<h1>Welcome to Calendar Manager for volunter Work</h1>} />
+        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<Signup/>} />
+        <Route path="/dashboard" element={<Dashboard/>} />
+      </Routes>
+    </BrowserRouter>  
   );
 }
 

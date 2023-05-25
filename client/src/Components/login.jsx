@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import Cookies from 'js-cookie';
 
-export default function Login (props) {
+export default function Login () {
     // Se crea un estado para los valores de los inputs del formulario
     // Se guarda en un objeto con los valores iniciales vacíos
     const [values, setValues] = useState({
@@ -35,11 +36,13 @@ export default function Login (props) {
             .post("http://localhost:3000/login", values)
             .then((response) => {
                 // Manejar solicitud la respuesta exitosa
-                console.log(response.data.token);
                 const token = response.data.token
-                localStorage.setItem('token', token);
-                // Redireccionar a la página de home
-                navigate('/home')
+
+                // localStorage.setItem('token', token);
+                Cookies.set('token', token, { expires: 1 });
+
+                // Redireccionar al dashboard
+                navigate('/dashboard')
 
             })
             .catch((error) => {
@@ -109,7 +112,7 @@ export default function Login (props) {
                 <button type="submit">Log In</button>
             </form>
             <p className="error">{errorMessage}</p>
-            <button className = "button-switch" onClick={() => props.onFormSwitch('register')}>
+            <button className = "button-switch" onClick={() => navigate("/signup")}>
                 Don't have an account? Sign up here.
             </button>
         </div>

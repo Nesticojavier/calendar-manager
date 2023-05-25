@@ -1,8 +1,12 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import swal from "sweetalert";
+import { useNavigate, Navigate } from "react-router-dom";
 
-const Signup = (props) => {
+
+const Signup = () => {
+    const navigate = useNavigate()
+
     // Se crea un estado para los valores de los inputs del formulario
     // Se guarda en un objeto con los valores iniciales vacíos
     const [values, setValues] = useState({
@@ -47,7 +51,7 @@ const Signup = (props) => {
                     title: "Registrado exitosamente",
                     icon : "success",
                 }).then(() => {
-                    window.location.reload();
+                    navigate("/login"), {replace : true};
                 })
             })
             .catch((error) => {
@@ -179,7 +183,7 @@ const Signup = (props) => {
                 <button type="submit">Sign Up</button>
             </form>
             <p className="error">{errorMessage}</p>
-            <button className = "button-switch" onClick={() => props.onFormSwitch('login')}>
+            <button className = "button-switch" onClick={() => navigate("/login")}>
                 Already have an account? Login here.
             </button>
         </div>
