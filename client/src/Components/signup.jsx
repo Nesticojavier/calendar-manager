@@ -1,12 +1,17 @@
 import React, { useState } from "react";
 import axios from 'axios';
 import swal from "sweetalert";
+import Cookies from 'js-cookie';
 import { useNavigate, Navigate } from "react-router-dom";
 
 
 const Signup = () => {
+    
+    if (Cookies.get('token')) {
+        return <Navigate to={"/dashboard"} replace />;
+    }
+    
     const navigate = useNavigate()
-
     // Se crea un estado para los valores de los inputs del formulario
     // Se guarda en un objeto con los valores iniciales vacíos
     const [values, setValues] = useState({

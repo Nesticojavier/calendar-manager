@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
 import Signup from "./Components/signup";
 import Login from "./Components/login";
 import Dashboard from "./Components/dashboard";
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import Navbar from "./Components/Navbar";
 
 function App() {
   // Se crea un estado para saber qué formulario se está mostrando
@@ -17,6 +18,7 @@ function App() {
   return (
 
     <BrowserRouter>
+      <Navbar/>
       <Routes>
         <Route path="/" element={<h1>Welcome to Calendar Manager for volunter Work</h1>} />
         <Route path="/login" element={<Login/>} />
