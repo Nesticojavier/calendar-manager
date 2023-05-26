@@ -51,7 +51,6 @@ const Signup = () => {
             .post("http://localhost:3000/signup", values)
             .then((response) => {
                 // Manejar solicitud la respuesta exitosa
-                console.log(response.data);
                 swal({
                     title: "Registrado exitosamente",
                     icon : "success",
@@ -69,7 +68,6 @@ const Signup = () => {
     // Se usa para actualizar el estado de los valores de los inputs
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
-        console.log(values)
     };
     const handleChangeSelect = (event) => {
         const { name, value } = event.target;
@@ -77,7 +75,6 @@ const Signup = () => {
             ...prevValues,
             [   name]: value,
         }));
-        console.log(values)
       };
 
     // Inputs del formulario con sus restricciones y errores de mensaje

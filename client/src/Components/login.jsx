@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 
-export default function Login () {
+export default function Login ({ setIsLoggedIn }) {
 
     if (Cookies.get('token')) {
         return <Navigate to={"/dashboard"} replace />;
@@ -47,13 +47,17 @@ export default function Login () {
                 Cookies.set('token', token, { expires: 1 });
 
                 // Redireccionar al dashboard
+                setIsLoggedIn(true);
                 navigate('/dashboard')
 
             })
             .catch((error) => {
                 // Manejar el error de la solicitud
-                console.error(error.response.data.message);
-                setErrorMessage(error.response.data.message)
+                
+                // console.error(error.response.data.message);
+                console.error(error);
+                // setErrorMessage(error.response.data.message)
+                setErrorMessage(error)
             });
 
     };
