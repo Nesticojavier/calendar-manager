@@ -10,14 +10,14 @@ import Cookies from "js-cookie";
 function App() {
 
   // Se crea un estado para saber si el usuario está logged
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get("token"))
 
   // cuando se recargue la pagina, para saber si el usuario está logged 
-  useEffect(() => {
-    if (Cookies.get("token")) {
-      setIsLoggedIn(true)
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (Cookies.get("token")) {
+  //     setIsLoggedIn(true)
+  //   }
+  // }, []);
   
 
   const changeLoggedIn = (value) => {
