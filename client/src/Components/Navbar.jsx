@@ -1,6 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import "./navbar.css";
 
 export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     const navigate = useNavigate()
@@ -10,7 +11,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
         navigate('/', { replace: true })
     }
     return (
-        <nav>
+        <nav className="navbar">
             <ul>
                 <li>
                     <NavLink

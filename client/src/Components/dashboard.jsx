@@ -12,6 +12,7 @@ export default function Dashboard({ setIsLoggedIn }) {
   const [user, setUser] = useState("");
   const navigate = useNavigate()
 
+
   const handleClick = () => {
     // localStorage.removeItem('token');
     Cookies.remove('token');

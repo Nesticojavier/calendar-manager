@@ -142,52 +142,55 @@ const Signup = () => {
     ]
 
     return (
-        <div className="auth-form-container">
-            <h1>Sign Up</h1>
-            <form className = "register-form" onSubmit={handleSubmit}>
-                {inputs.map((input) => (
-                    <div key={input.id} className="formRegister">
-                        <label htmlFor={input.id}>{input.label}</label>
-                        
-                        {input.type === "select"
-                        ? 
-                        <select name={input.name} id={input.id} onChange = {handleChangeSelect}>
-                            {input.options.map(option => (
-                                <option key={option.value} value={option.value}>
-                                {option.label}
-                                </option>
-                            ))}
-                        </select>
-                        :  
-                        <input
-                            {...input}
+        <div className="App">
+
+            <div className="auth-form-container">
+                <h1>Sign Up</h1>
+                <form className = "register-form" onSubmit={handleSubmit}>
+                    {inputs.map((input) => (
+                        <div key={input.id} className="formRegister">
+                            <label htmlFor={input.id}>{input.label}</label>
                             
-                            // Garantiza que el estado refleje siempre el valor actual del input
-                            // y se mantenga sincronizado con los cambios realizados por el usuario
-                            onChange = {handleChange}
+                            {input.type === "select"
+                            ? 
+                            <select name={input.name} id={input.id} onChange = {handleChangeSelect}>
+                                {input.options.map(option => (
+                                    <option key={option.value} value={option.value}>
+                                    {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                            :  
+                            <input
+                                {...input}
+                                
+                                // Garantiza que el estado refleje siempre el valor actual del input
+                                // y se mantenga sincronizado con los cambios realizados por el usuario
+                                onChange = {handleChange}
 
-                            // Se enlaza el valor del input con el valor almacenado en values[input.name]
-                            value={values[input.name]}
+                                // Se enlaza el valor del input con el valor almacenado en values[input.name]
+                                value={values[input.name]}
 
-                            // Para mostrar el mensaje de error cuando el input está enfocado
-                            // esta en true para mantener el mensaje de error mientras el input sea invalido
-                            onBlur = {() => handleFocus(input.name, true)}
+                                // Para mostrar el mensaje de error cuando el input está enfocado
+                                // esta en true para mantener el mensaje de error mientras el input sea invalido
+                                onBlur = {() => handleFocus(input.name, true)}
 
-                            //onFocus = {() => handleFocus(input.name, true)}
+                                //onFocus = {() => handleFocus(input.name, true)}
 
-                            //focused = {focused.toString()}
-                        />
+                                //focused = {focused.toString()}
+                            />
 
-                        }
-                        {focused[input.name] && <span>{input.errormessage}</span>}
-                    </div>
-                ))}
-                <button type="submit">Sign Up</button>
-            </form>
-            <p className="error">{errorMessage}</p>
-            <button className = "button-switch" onClick={() => navigate("/login")}>
-                Already have an account? Login here.
-            </button>
+                            }
+                            {focused[input.name] && <span>{input.errormessage}</span>}
+                        </div>
+                    ))}
+                    <button type="submit">Sign Up</button>
+                </form>
+                <p className="error">{errorMessage}</p>
+                <button className = "button-switch" onClick={() => navigate("/login")}>
+                    Already have an account? Login here.
+                </button>
+            </div>
         </div>
     );
 }

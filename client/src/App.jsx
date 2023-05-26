@@ -8,8 +8,17 @@ import Navbar from "./Components/Navbar";
 import Cookies from "js-cookie";
 
 function App() {
-  // Se crea un estado para saber qué formulario se está mostrando
+
+  // Se crea un estado para saber si el usuario está logged
   const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  // cuando se recargue la pagina, para saber si el usuario está logged 
+  useEffect(() => {
+    if (Cookies.get("token")) {
+      setIsLoggedIn(true)
+    }
+  }, []);
+  
 
   const changeLoggedIn = (value) => {
     setIsLoggedIn(value);
