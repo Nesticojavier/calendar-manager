@@ -28,14 +28,14 @@ export default function Dashboard({ setIsLoggedIn }) {
 
     axios.get("http://localhost:3000/dashboard", { headers })
       .then((response) => {
-        // Manejar la respuesta exitosa de la solicitud
+        // Handle request response successful
         setUser(response.data);
       })
       .catch((error) => {
-        // Manejar el error de la solicitud
+        // Handle request error
         console.error(error.response.data.message);
       });
-  }, []); // Dependencia vacía para que el efecto se ejecute solo una vez al montar el componente
+  }, []); // Empty dependency so that the effect is executed only once when mounting the component
 
   return (
     <div className="Home">

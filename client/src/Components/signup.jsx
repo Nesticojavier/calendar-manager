@@ -6,14 +6,15 @@ import { useNavigate, Navigate } from "react-router-dom";
 
 
 const Signup = () => {
-    
+
     if (Cookies.get('token')) {
         return <Navigate to={"/dashboard"} replace />;
     }
-    
+
     const navigate = useNavigate()
-    // Se crea un estado para los valores de los inputs del formulario
-    // Se guarda en un objeto con los valores iniciales vacíos
+
+    // A state is created for the values of the form inputs
+    // Saved to an object with empty initial values
     const [values, setValues] = useState({
         username: "",
         password: "",
@@ -23,7 +24,7 @@ const Signup = () => {
         rol: "voluntario",
     });
 
-    // Se crea un estado para saber si el input está enfocado o no
+    // A state is created to know if the input is focused or not
     const [focused, setFocused] = useState({
         username: false,
         password: false,
@@ -33,24 +34,24 @@ const Signup = () => {
         rol: false,
     });
 
-    // Se crea un estado para mostrar el error al enviar el form
+    // A state is created to show the error when submitting the form
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Se usa para cambiar el estado de focused a true cuando el input está enfocado
+    // It is used to change the state of focused to true when the input is focused
     const handleFocus = (e, isFocused) => {
         setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
     };
 
-    // Se ejecuta al enviar el formulario
+    // It is executed when the form is submitted
     const handleSubmit = (e) => {
-        // Se usa para evitar que la página se recargue al enviar el formulario
+        // Used to prevent the page from reloading on form submission
         e.preventDefault();
 
-        // se usa para enviar el formulario a traves del metodo post
+        // Used to submit the form via the post method
         axios
             .post("http://localhost:3000/signup", values)
             .then((response) => {
-                // Manejar solicitud la respuesta exitosa
+                // Handle request response successful
                 swal({
                     title: "Registrado exitosamente",
                     icon : "success",
@@ -59,13 +60,13 @@ const Signup = () => {
                 })
             })
             .catch((error) => {
-                // Manejar el error de la solicitud
+                // Handle request error
                 console.error(error.response.data.message);
                 setErrorMessage(error.response.data.message)
             });
     };
 
-    // Se usa para actualizar el estado de los valores de los inputs
+    // It is used to update the state of the values of the inputs
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
@@ -77,7 +78,7 @@ const Signup = () => {
         }));
       };
 
-    // Inputs del formulario con sus restricciones y errores de mensaje
+    // Form inputs with their restrictions and message errors
     const inputs = [
         {
           id: 1,
@@ -150,9 +151,9 @@ const Signup = () => {
                     {inputs.map((input) => (
                         <div key={input.id} className="formRegister">
                             <label htmlFor={input.id}>{input.label}</label>
-                            
+
                             {input.type === "select"
-                            ? 
+                            ?
                             <select name={input.name} id={input.id} onChange = {handleChangeSelect}>
                                 {input.options.map(option => (
                                     <option key={option.value} value={option.value}>
@@ -160,19 +161,19 @@ const Signup = () => {
                                     </option>
                                 ))}
                             </select>
-                            :  
+                            :
                             <input
                                 {...input}
-                                
-                                // Garantiza que el estado refleje siempre el valor actual del input
-                                // y se mantenga sincronizado con los cambios realizados por el usuario
+
+                                // Ensures that the state always reflects the current value of the input
+                                // and stays in sync with changes made by the user
                                 onChange = {handleChange}
 
-                                // Se enlaza el valor del input con el valor almacenado en values[input.name]
+                                // The value of the input is bound to the value stored in values[input.name]
                                 value={values[input.name]}
 
-                                // Para mostrar el mensaje de error cuando el input está enfocado
-                                // esta en true para mantener el mensaje de error mientras el input sea invalido
+                                // To display the error message when the input is focused
+                                // set to true to keep the error message as long as the input is invalid
                                 onBlur = {() => handleFocus(input.name, true)}
 
                                 //onFocus = {() => handleFocus(input.name, true)}

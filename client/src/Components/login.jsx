@@ -9,51 +9,51 @@ export default function Login ({ setIsLoggedIn }) {
         return <Navigate to={"/dashboard"} replace />;
     }
 
-    // Se crea un estado para los valores de los inputs del formulario
-    // Se guarda en un objeto con los valores iniciales vacíos
+    // A state is created for the values of the form inputs
+    // Saved to an object with empty initial values
     const [values, setValues] = useState({
         username: "",
         password: ""
     });
 
-    // Se crea un estado para saber si el input está enfocado o no
+    // A state is created to know if the input is focused or not
     const [focused, setFocused] = useState({
         username: false,
         password: false,
     });
 
-    // Se usa para cambiar el estado de focused a true cuando el input está enfocado
+    // It is used to change the state of focused to true when the input is focused
     const handleFocus = (e, isFocused) => {
         setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
     };
 
-    // Se crea un estado para mostrar el error al enviar el form
+    // A state is created to show the error when submitting the form
     const [errorMessage, setErrorMessage] = useState('');
 
-    // Para redireccionar a otra página
+    // To redirect to another page
     const navigate = useNavigate()
 
-    // Se usa para evitar que la página se recargue al enviar el formulario
+    // It is executed when the form is submitted
     const handleSubmit = (e) => {
         e.preventDefault();
 
         axios
             .post("http://localhost:3000/login", values)
             .then((response) => {
-                // Manejar solicitud la respuesta exitosa
+                // Handle request response successful
                 const token = response.data.token
 
                 // localStorage.setItem('token', token);
                 Cookies.set('token', token, { expires: 1 });
 
-                // Redireccionar al dashboard
+                // Redirect to dashboard
                 setIsLoggedIn(true);
                 navigate('/dashboard')
 
             })
             .catch((error) => {
-                // Manejar el error de la solicitud
-                
+                // Handle request error
+
                 // console.error(error.response.data.message);
                 console.error(error);
                 // setErrorMessage(error.response.data.message)
@@ -62,12 +62,12 @@ export default function Login ({ setIsLoggedIn }) {
 
     };
 
-    // Se usa para actualizar el estado de los valores de los inputs
+    // It is used to update the state of the values of the inputs
     const handleChange = (e) => {
         setValues({ ...values, [e.target.name]: e.target.value });
     };
 
-    // Inputs del formulario con sus restricciones y errores de mensaje
+    // Form inputs with their restrictions and message errors
     const inputs = [
         {
           id: 1,
@@ -102,18 +102,18 @@ export default function Login ({ setIsLoggedIn }) {
                             <input
                                 {...input}
 
-                                // Garantiza que el estado refleje siempre el valor actual del input
-                                // y se mantenga sincronizado con los cambios realizados por el usuario
+                                // Ensures that the state always reflects the current value of the input
+                                // and stays in sync with changes made by the user
                                 onChange={handleChange}
 
-                                // Se enlaza el valor del input con el valor almacenado en values[input.name]
+                                // The value of the input is bound to the value stored in values[input.name]
                                 value={values[input.name]}
 
-                                /// Para mostrar el mensaje de error cuando el input está enfocado
-                                // esta en true para mantener el mensaje de error mientras el input sea invalido
+                                // To display the error message when the input is focused
+                                // set to true to keep the error message as long as the input is invalid
                                 onBlur = {() => handleFocus(input.name, true)}
 
-                                // Muestra el mensaje de error si el input está enfocado y el valor no cumple con el patrón
+                                // Shows the error message if the input is focused and the value does not match the pattern
                                 //focused = {focused.toString()}
                             />
                             {focused[input.name] && <span>{input.errormessage}</span>}

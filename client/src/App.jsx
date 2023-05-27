@@ -9,16 +9,16 @@ import Cookies from "js-cookie";
 
 function App() {
 
-  // Se crea un estado para saber si el usuario está logged
+  // A state is created to know if the user is logged in
   const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get("token"))
 
-  // cuando se recargue la pagina, para saber si el usuario está logged 
+  // when the page is reloaded, to know if the user is logged in
   // useEffect(() => {
   //   if (Cookies.get("token")) {
   //     setIsLoggedIn(true)
   //   }
   // }, []);
-  
+
 
   const changeLoggedIn = (value) => {
     setIsLoggedIn(value);
@@ -34,7 +34,7 @@ function App() {
         <Route path="/signup" element={<Signup/>} />
         <Route path="/dashboard" element={<Dashboard setIsLoggedIn = {changeLoggedIn}/>} />
       </Routes>
-    </BrowserRouter>  
+    </BrowserRouter>
   );
 }
 
