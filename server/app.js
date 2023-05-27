@@ -7,7 +7,7 @@ var logger = require("morgan");
 const cors = require("cors");
 const Users = require("./Models/Users")
 
-// Sincronizar modelo
+// Synchronize model
 Users.sync().then(() => {
   console.log("Users Model synced 2");
 });

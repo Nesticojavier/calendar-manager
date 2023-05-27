@@ -9,13 +9,13 @@ const {
   verifyToken
 } = require("../controllers/users.controllers");
 
-// Mostrar todos los usuarios
+// show all users
 router.get("/users", showUsers);
 // Signup
 router.post("/signup", signup);
 // Login
 router.post("/login", login);
-// User dashboard -- Ruta protegida
+// User dashboard -- protected route
 router.get("/dashboard", verifyToken, dashboard);
 
 module.exports = router;
