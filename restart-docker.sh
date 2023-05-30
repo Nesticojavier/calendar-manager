@@ -1,7 +1,7 @@
 #!/bin/bash
 
-docker-compose down -v 
-docker rmi golden-bugs-server
-docker rmi golden-bugs-client
-docker-compose up
+sudo down -v 
+sudo docker rmi golden-bugs-server
+sudo docker rmi golden-bugs-client
+sudo docker-compose up
 

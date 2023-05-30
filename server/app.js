@@ -3,15 +3,16 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-// const pool = require("./db/db"); //importar conexion a la base de datos
 const cors = require("cors");
-const Users = require("./Models/Users")
+const { Users, Credential } = require("./Models/Users");
 
 // Synchronize model
 Users.sync().then(() => {
   console.log("Users Model synced 2");
 });
-
+Credential.sync().then(() => {
+  console.log("Credential Model synced 2");
+});
 
 var app = express();
 
@@ -29,14 +30,12 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var api2Router = require('./routes/api-test');
-
+var authRouter = require("./routes/auth");
+var providerRouter = require("./routes/provider");
 
 app.use(indexRouter);
-app.use(usersRouter);
-app.use('/api2', api2Router);
-
+app.use(authRouter);
+app.use("/provider", providerRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,6 +1,6 @@
 const { Sequelize } = require("sequelize");
 
-const sequelize = new Sequelize("postgres", "postgres", process.env.DATABASE_PWD || "nestico123", {
+const sequelize = new Sequelize("postgres", "postgres", process.env.DATABASE_PWD || "12345678", {
   host: process.env.DATABASE_HOST || "localhost",
   dialect: "postgres",
   port: "5432"
