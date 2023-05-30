@@ -50,7 +50,7 @@ export default function WorkCreationForm() {
             errormessage: "Titulo del trabajo no debe incluir caracteres especiales.",
             label: "Titulo del trabajo",
             required: true,
-            pattern: "[a-zA-Z]$",
+            pattern: "[a-zA-Z]{1,64}$",
         },
         {
             name: "workDescription",
@@ -59,7 +59,7 @@ export default function WorkCreationForm() {
             errormessage: "Descripción del trabajo no debe incluir caracteres especiales.",
             label: "Descripción del trabajo",
             required: true,
-            pattern: "[a-zA-Z]$",
+            pattern: "[a-zA-Z]{1,64}$",
         },
         {
             name: "workType",
