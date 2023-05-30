@@ -4,6 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Sidebar from './Sidebar';
 import WorkCreationForm from './WorkCreationForm';
+import { Box, Stack } from '@mui/material';
 
 
 export default function Dashboard({ setIsLoggedIn }) {
@@ -30,14 +31,12 @@ export default function Dashboard({ setIsLoggedIn }) {
   }, []); // Empty dependency so that the effect is executed only once when mounting the component
 
   return (
-    <div className="Home">
-      <p> just for testing: user logged 
-        <span style={{color : "blue"}}>{user.username}</span> 
-        in mode 
-        <span style={{color : "blue"}}>{user.rol}</span>
-      </p>
-      <Sidebar/>
-      <WorkCreationForm/>
-    </div>
+    <Box>
+      <Stack direction="row" spacing={2} justifyContent="space-between">
+        <Sidebar />
+        <WorkCreationForm/>
+      </Stack>
+    </Box>
+
   );
 }
