@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Box, Button } from '@mui/material'
 import "./WorkCreationForm.css"
 
@@ -41,11 +41,22 @@ export default function WorkCreationForm() {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        setValues((prevValues) => ({
-            ...prevValues,
-            blocks,
-        }));
-        console.log(values);
+
+        // show error message if blocks variable is void
+        if (blocks.length === 0) {
+            setShowError(true);
+            setTimeout(() => {
+                setShowError(false);
+            }, 1000);
+        } else {
+            setValues((prevValues) => ({
+                ...prevValues,
+                blocks,
+            }));
+            console.log(values);
+            console.log(blocks);
+        }
+
     }
 
     const inputs = [
@@ -143,6 +154,19 @@ export default function WorkCreationForm() {
         );
     };
 
+    useEffect(() => {
+        if (values.workType === "2") {
+            setBlocks([]);
+        } else if (values.workType === "1") {
+            setValues((prevValues) => ({
+                ...prevValues,
+                workDate: ""
+            }));
+        }
+    }, [values.workType]);
+
+    const [showError, setShowError] = useState(false);
+
     return (
         <Box
             component="form"
@@ -192,56 +216,81 @@ export default function WorkCreationForm() {
             }
             {
                 values.workType == "1" || values.workType == "2"
-                ? (
-                    values.workType == "1"
                     ? (
-                        <div>
-                            {blocks.map((block, blockIndex) => {
-                                return (
-                                    <div key={blockIndex}>
-                                        <p>Seleccione el bloque {blockIndex + 1}</p>
+                        values.workType == "1"
+                            ? (
+                                <div>
+                                    {blocks.map((block, blockIndex) => {
+                                        return (
+                                            <div key={blockIndex}>
+                                                <p>Seleccione el bloque {blockIndex + 1}</p>
 
-                                        <label htmlFor="" >Day</label>
-                                        <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                            <option value="">Seleccione un día</option>
-                                            {days.map((day) => (
-                                                <option key={day} value={day}>
-                                                    {day}
-                                                </option>
-                                            ))}
-                                        </select>
+                                                <label htmlFor="" >Day</label>
+                                                <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                                    <option value="">Seleccione un día</option>
+                                                    {days.map((day) => (
+                                                        <option key={day} value={day}>
+                                                            {day}
+                                                        </option>
+                                                    ))}
+                                                </select>
 
 
-                                        <label htmlFor="" >Hour</label>
-                                        <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                            <option value="">Seleccione una hour</option>
-                                            {hours.map((hour) => (
-                                                <option key={hour} value={hour}>
-                                                    {hour}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                )
-                            })}
+                                                <label htmlFor="" >Hour</label>
+                                                <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                                    <option value="">Seleccione una hour</option>
+                                                    {hours.map((hour) => (
+                                                        <option key={hour} value={hour}>
+                                                            {hour}
+                                                        </option>
+                                                    ))}
+                                                </select>
+                                            </div>
+                                        )
+                                    })}
 
-                            <button
-                                disabled={blocks.length >= 2}
-                                className="more"
-                                type="button"
-                                onClick={handleMore}
-                            >
-                                Agregar bloque
-                            </button>
-                        </div>
+                                    {blocks.length === 0 && showError && (
+                                        <p className="error-message">Debe agregar al menos un bloque</p>
+                                    )}
 
-                    ) : (
-                        <h1>hola</h1>
+                                    <button
+                                        disabled={blocks.length >= 2}
+                                        className="more"
+                                        type="button"
+                                        onClick={handleMore}
+                                    >
+                                        Agregar bloque
+                                    </button>
+                                </div>
+
+                            ) : (
+                                <div className="workCreationForm">
+                                    <input
+                                        name={"workDate"}
+                                        type={"date"}
+                                        placeholder={"Fecha del trabajo"}
+                                        errormessage={"Debe seleccionar una fecha."}
+                                        label={"Fecha del trabajo"}
+                                        required={true}
+
+                                        // Ensures that the state always reflects the current value of the input
+                                        // and stays in sync with changes made by the user
+                                        onChange={handleChange}
+
+                                        // The value of the input is bound to the value stored in values[input.name]
+                                        value={values["workDate"]}
+
+                                        // To display the error message when the input is focused
+                                        // set to true to keep the error message as long as the input is invalid
+                                        onBlur={() => handleFocus("workDate", true)}
+
+                                    />
+                                    {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
+                                </div>
+                            )
                     )
-                )
-                :
-                null
-
+                    :
+                    null
             }
 
             <Button
