@@ -107,13 +107,17 @@ export default function WorkCreationForm() {
         // },
     ];
 
+    // state used to set the blocks of hours
     const [blocks, setBlocks] = useState([]);
 
+    
+    // this is used to increase the number of blocks
     const handleMore = (e) => {
         setBlocks([...blocks, { day: "", hour: "" }]);
         console.log(blocks)
     }
 
+    // blocks of hours and days
     const days = ["Lun", "Mar", "Mie", "Jue", "Vie"];
     const hours = [
         "7:00 AM",
@@ -128,6 +132,7 @@ export default function WorkCreationForm() {
         "4:00 PM"
     ];
 
+    // It is used to change the state of the hour and day blocks.
     const handleBlockChange = (blockIndex, e) => {
         const { name, value } = e.target;
         setBlocks((prevBlocks) =>
@@ -148,7 +153,8 @@ export default function WorkCreationForm() {
             <h1>Crear Trabajo Voluntario</h1>
 
             {inputs.map((input) => {
-                // Only render the workDate input if the workType is "Una sesión"
+                
+                // render this if the work type is recurring
                 if (input.name === "workDate" && values.workType == "1") {
                     return (
                         <div>
