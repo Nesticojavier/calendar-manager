@@ -5,7 +5,7 @@ import Cookies from 'js-cookie';
 import Sidebar from './Sidebar';
 import WorkCreationForm from './WorkCreationForm';
 import { Box, Stack } from '@mui/material';
-
+import { Navigate } from 'react-router-dom'
 
 export default function Dashboard({ setIsLoggedIn }) {
 

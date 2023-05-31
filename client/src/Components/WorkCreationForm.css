@@ -33,3 +33,21 @@
     display: block;
 }
 
+.more {
+    width: 60px;
+    height: 30px;
+    /* border: none; */
+    background: #4a55f1;
+    padding: 1px;
+    /* color: #fff; */
+    /* border-radius: 5px; */
+    /* font-weight: bold; */
+    font-size: 12px;
+    /* cursor: pointer; */
+    margin-top: 15px;
+  }
+  
+.more:disabled {
+    opacity: 0.3    ;
+    cursor: default;
+}
