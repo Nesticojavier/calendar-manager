@@ -1,5 +1,4 @@
-const pool = require("../db/db"); //import database connection
-const Users = require("../Models/Users"); //import database connection
+const { Credential, Users } = require("../Models/Users"); //import database connection
 const bcrypt = require("bcrypt"); //To encrypt passwords
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
 
@@ -9,22 +8,23 @@ secretKey = "my_secret_key";
 // Signup
 // TODO: Check HTTP codes. Return the appropriate one in each case
 const signup = async (req, res) => {
-  const { username, password, rol } = req.body;
+  const { username, password, rol, fullName, birthDate, institutionalId } =
+    req.body;
 
   // Verify that the input data is not undefined
-  if (!username || !password || !rol) {
-    return res.status(500).json({ message: "Error en datos de entrada" });
+  if (!username || !password || !rol || !fullName || !birthDate) {
+    return res.status(500).json({ message: "Error, missing sign up data" });
   }
 
   // Check if the user is already registered
-  const users = await Users.findAll({
+  const consult = await Credential.findOne({
     where: {
       username,
     },
   });
 
-  if (users.length != 0) {
-    return res.status(500).json({ message: "Error, usuario ya registrado" });
+  if (consult !== null) {
+    return res.status(500).json({ message: "Error, registered user" });
   }
 
   // If the user does not exist, we encrypt his password and save it in the database
@@ -35,11 +35,19 @@ const signup = async (req, res) => {
 
     try {
       Users.create({
-        username,
-        password: hash,
+        fullName,
+        birthDate,
+        institutionalId,
         rol,
+      }).then((user) => {
+        Credential.create({
+          username,
+          password: hash,
+          users_id: user.id,
+        });
       });
-      res.status(201).json({ message: "Registro exitoso" });
+
+      res.status(201).json({ message: "Successful sign-up" });
     } catch (error) {
       res.status(500).json({ message: "Error al registrar usuario" });
     }
@@ -51,22 +59,22 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   // Verify that the input data is not undefined
   if (!username || !password) {
-    return res.status(500).json({ message: "Error en datos de entrada" });
+    return res.status(500).json({ message: "Error, missing login data" });
   }
 
   // check if the user is already registered
-  const response = await Users.findOne({
+  const consult = await Credential.findOne({
     where: {
       username,
     },
   });
 
-  if (response === null) {
+  if (consult === null) {
     return res.status(500).json({ message: "Error, unregistered user" });
   }
 
-  const password_hash = response.password;
-  const id = response.id;
+  const password_hash = consult.password;
+  const id = consult.users_id;
 
   // Validate password
   bcrypt.compare(password, password_hash, (err, result) => {
@@ -87,15 +95,13 @@ const login = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  // res.send("dashboard");
-
-  const id = req.id.id;
+  const {id} = req.id;
   const response = await Users.findOne({
     where: {
       id,
     },
   });
-  console.log(response.dataValues)
+  console.log(response.dataValues);
   res.json(response.dataValues);
 };
 
