@@ -61,6 +61,7 @@ export default function WorkCreationForm() {
 
     const inputs = [
         {
+            id: 1,
             name: "workTitle",
             type: "text",
             placeholder: "Titulo del trabajo",
@@ -70,6 +71,7 @@ export default function WorkCreationForm() {
             pattern: "[a-zA-Z ]{1,64}$",
         },
         {
+            id: 2,
             name: "workDescription",
             type: "text",
             placeholder: "Descripción del trabajo",
@@ -79,6 +81,7 @@ export default function WorkCreationForm() {
             pattern: "[a-zA-Z ]{1,64}$",
         },
         {
+            id: 3,
             name: "workersNeeded",
             type: "number",
             placeholder: "Cantidad de voluntarios necesarios",
@@ -89,6 +92,7 @@ export default function WorkCreationForm() {
             max: 100,
         },
         {
+            id: 4,
             name: "workType",
             type: "select",
             placeholder: "Tipo de trabajo",
@@ -101,14 +105,14 @@ export default function WorkCreationForm() {
                 { value: "2", label: "Una sesión" },
             ],
         },
-        // {
-        //     name: "workDate",
-        //     type: "date",
-        //     placeholder: "Fecha del trabajo",
-        //     errormessage: "Debe seleccionar una fecha.",
-        //     label: "Fecha del trabajo",
-        //     required: true,
-        // },
+        {
+            name: "workDate",
+            type: "date",
+            placeholder: "Fecha del trabajo",
+            errormessage: "Debe seleccionar una fecha.",
+            label: "Fecha del trabajo",
+            required: true,
+        },
         // {
         //     name: "workTime",
         //     type: "time",
@@ -154,16 +158,30 @@ export default function WorkCreationForm() {
         );
     };
 
-    useEffect(() => {
-        if (values.workType === "2") {
-            setBlocks([]);
-        } else if (values.workType === "1") {
-            setValues((prevValues) => ({
-                ...prevValues,
-                workDate: ""
-            }));
-        }
-    }, [values.workType]);
+    const handleChangeSessionDay = (e) => {
+        const { value } = e.target;
+        setBlocks((prevBlocks) => ({
+            ...prevBlocks,
+            day : value,
+        }));
+        console.log(blocks);
+    };
+
+
+
+    // useEffect(() => {
+    //     // when swicht to session mode
+    //     if (values.workType === "2") {
+    //         // setBlocks([...blocks, { day: "", hour: "" }]);
+    //         setBlocks([{ day: "", hour: "" }]);
+    //     } else if (values.workType === "1") {
+    //         setBlocks([]);
+    //         setValues((prevValues) => ({
+    //             ...prevValues,
+    //             workDate: ""
+    //         }));
+    //     }
+    // }, [values.workType]);
 
     const [showError, setShowError] = useState(false);
 
@@ -225,7 +243,7 @@ export default function WorkCreationForm() {
                                             <div key={blockIndex}>
                                                 <p>Seleccione el bloque {blockIndex + 1}</p>
 
-                                                <label htmlFor="" >Day</label>
+                                                <label htmlFor="" >Dia</label>
                                                 <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
                                                     <option value="">Seleccione un día</option>
                                                     {days.map((day) => (
@@ -236,7 +254,7 @@ export default function WorkCreationForm() {
                                                 </select>
 
 
-                                                <label htmlFor="" >Hour</label>
+                                                <label htmlFor="" >Hora</label>
                                                 <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
                                                     <option value="">Seleccione una hour</option>
                                                     {hours.map((hour) => (
@@ -265,17 +283,17 @@ export default function WorkCreationForm() {
 
                             ) : (
                                 <div className="workCreationForm">
+                                    <label htmlFor={5}>Seleccione la fecha del trabajo </label>
                                     <input
                                         name={"workDate"}
                                         type={"date"}
                                         placeholder={"Fecha del trabajo"}
-                                        errormessage={"Debe seleccionar una fecha."}
                                         label={"Fecha del trabajo"}
                                         required={true}
 
                                         // Ensures that the state always reflects the current value of the input
                                         // and stays in sync with changes made by the user
-                                        onChange={handleChange}
+                                        onChange={handleChangeSessionDay}
 
                                         // The value of the input is bound to the value stored in values[input.name]
                                         value={values["workDate"]}
@@ -286,6 +304,17 @@ export default function WorkCreationForm() {
 
                                     />
                                     {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
+
+                                    {/* <label htmlFor="" >Hora</label>
+                                    <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                        <option value="">Seleccione una hour</option>
+                                        {hours.map((hour) => (
+                                            <option key={hour} value={hour}>
+                                                {hour}
+                                            </option>
+                                        ))}
+                                    </select> */}
+
                                 </div>
                             )
                     )
