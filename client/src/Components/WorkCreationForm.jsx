@@ -36,6 +36,7 @@ export default function WorkCreationForm() {
             ...prevValues,
             [name]: value,
         }));
+        console.log(values);
     };
 
     const handleSubmit = (event) => {
@@ -89,14 +90,14 @@ export default function WorkCreationForm() {
                 { value: "2", label: "Una sesión" },
             ],
         },
-        {
-            name: "workDate",
-            type: "date",
-            placeholder: "Fecha del trabajo",
-            errormessage: "Debe seleccionar una fecha.",
-            label: "Fecha del trabajo",
-            required: true,
-        },
+        // {
+        //     name: "workDate",
+        //     type: "date",
+        //     placeholder: "Fecha del trabajo",
+        //     errormessage: "Debe seleccionar una fecha.",
+        //     label: "Fecha del trabajo",
+        //     required: true,
+        // },
         // {
         //     name: "workTime",
         //     type: "time",
@@ -110,7 +111,7 @@ export default function WorkCreationForm() {
     // state used to set the blocks of hours
     const [blocks, setBlocks] = useState([]);
 
-    
+
     // this is used to increase the number of blocks
     const handleMore = (e) => {
         setBlocks([...blocks, { day: "", hour: "" }]);
@@ -152,40 +153,75 @@ export default function WorkCreationForm() {
         >
             <h1>Crear Trabajo Voluntario</h1>
 
-            {inputs.map((input) => {
-                
-                // render this if the work type is recurring
-                if (input.name === "workDate" && values.workType == "1") {
+            {
+                inputs.map((input) => {
                     return (
+                        <div key={input.name} className="workCreationForm">
+                            <label htmlFor={input.id}>{input.label}</label>
+
+                            {input.type === "select"
+                                ?
+                                <select name={input.name} id={input.id} onChange={handleChangeSelect}>
+                                    {input.options.map(option => (
+                                        <option key={option.value} value={option.value}>
+                                            {option.label}
+                                        </option>
+                                    ))}
+                                </select>
+                                :
+                                <input
+                                    {...input}
+
+                                    // Ensures that the state always reflects the current value of the input
+                                    // and stays in sync with changes made by the user
+                                    onChange={handleChange}
+
+                                    // The value of the input is bound to the value stored in values[input.name]
+                                    value={values[input.name]}
+
+                                    // To display the error message when the input is focused
+                                    // set to true to keep the error message as long as the input is invalid
+                                    onBlur={() => handleFocus(input.name, true)}
+
+                                />
+                            }
+                            {focused[input.name] && <span>{input.errormessage}</span>}
+                        </div>
+                    )
+                })
+            }
+            {
+                values.workType == "1" || values.workType == "2"
+                ? (
+                    values.workType == "1"
+                    ? (
                         <div>
                             {blocks.map((block, blockIndex) => {
                                 return (
-                                    <>
+                                    <div key={blockIndex}>
                                         <p>Seleccione el bloque {blockIndex + 1}</p>
-                                        <div key={blockIndex}>
-                                            <label htmlFor="" >Day</label>
-                                            <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                                <option value="">Seleccione un día</option>
-                                                {days.map((day) => (
-                                                    <option key={day} value={day}>
-                                                        {day}
-                                                    </option>
-                                                ))}
-                                            </select>
+
+                                        <label htmlFor="" >Day</label>
+                                        <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                            <option value="">Seleccione un día</option>
+                                            {days.map((day) => (
+                                                <option key={day} value={day}>
+                                                    {day}
+                                                </option>
+                                            ))}
+                                        </select>
 
 
-                                            <label htmlFor="" >Hour</label>
-                                            <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                                <option value="">Seleccione una hour</option>
-                                                {hours.map((hour) => (
-                                                    <option key={hour} value={hour}>
-                                                        {hour}
-                                                    </option>
-                                                ))}
-                                            </select>
-
-                                        </div>
-                                    </>
+                                        <label htmlFor="" >Hour</label>
+                                        <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                            <option value="">Seleccione una hour</option>
+                                            {hours.map((hour) => (
+                                                <option key={hour} value={hour}>
+                                                    {hour}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                 )
                             })}
 
@@ -198,46 +234,15 @@ export default function WorkCreationForm() {
                                 Agregar bloque
                             </button>
                         </div>
+
+                    ) : (
+                        <h1>hola</h1>
                     )
-                }
-
-                return (
-                    <div key={input.name} className="workCreationForm">
-                        <label htmlFor={input.id}>{input.label}</label>
-
-                        {input.type === "select"
-                            ?
-                            <select name={input.name} id={input.id} onChange={handleChangeSelect}>
-                                {input.options.map(option => (
-                                    <option key={option.value} value={option.value}>
-                                        {option.label}
-                                    </option>
-                                ))}
-                            </select>
-                            :
-                            <input
-                                {...input}
-
-                                // Ensures that the state always reflects the current value of the input
-                                // and stays in sync with changes made by the user
-                                onChange={handleChange}
-
-                                // The value of the input is bound to the value stored in values[input.name]
-                                value={values[input.name]}
-
-                                // To display the error message when the input is focused
-                                // set to true to keep the error message as long as the input is invalid
-                                onBlur={() => handleFocus(input.name, true)}
-
-                            />
-
-                        }
-                        {focused[input.name] && <span>{input.errormessage}</span>}
-                    </div>
-
                 )
+                :
+                null
 
-            })}
+            }
 
             <Button
                 type="submit"
