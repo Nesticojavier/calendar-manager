@@ -73,9 +73,9 @@ export default function Login ({ setIsLoggedIn }) {
           id: 1,
           name: "username",
           type: "text",
-          placeholder: "Username",
-          errormessage: "Username should be no more than 16 characters and shouldn't include any special character.",
-          label: "Username",
+          placeholder: "Nombre de usuario",
+          errormessage: "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
+          label: "Nombre de usuario",
           required: true,
           pattern: "[a-zA-Z0-9]{1,16}$",
         },
@@ -83,9 +83,9 @@ export default function Login ({ setIsLoggedIn }) {
           id: 2,
           name: "password",
           type: "password",
-          placeholder: "Password",
-          errormessage: "Password should be at least 3 characters long and shouldn't include any special character.",
-          label: "Password",
+          placeholder: "Contraseña",
+          errormessage: "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
+          label: "Contraseña",
           required: true,
           pattern: "[a-zA-Z0-9]{3,}$",
         }
@@ -94,7 +94,7 @@ export default function Login ({ setIsLoggedIn }) {
     return (
         <div className="App">
             <div className="auth-form-container">
-                <h1>Login</h1>
+                <h1>Iniciar sesión</h1>
                 <form className = "login-form" onSubmit={handleSubmit}>
                     {inputs.map((input) => (
                         <div key={input.id} className = "formLogin">
@@ -119,11 +119,11 @@ export default function Login ({ setIsLoggedIn }) {
                             {focused[input.name] && <span>{input.errormessage}</span>}
                         </div>
                     ))}
-                    <button type="submit">Log In</button>
+                    <button type="submit">Iniciar sesión</button>
                 </form>
                 <p className="error">{errorMessage}</p>
                 <button className = "button-switch" onClick={() => navigate("/signup")}>
-                    Don't have an account? Sign up here.
+                    ¿No tienes una cuenta? Regístrate aquí.
                 </button>
             </div>
         </div>
