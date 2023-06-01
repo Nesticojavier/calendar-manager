@@ -27,7 +27,8 @@ export default function WorkCreationForm() {
     };
 
     const handleChange = (e) => {
-        setValues({ ...values, [e.target.name]: e.target.value });
+        const { name, value } = e.target;
+        setValues({ ...values, [name]: value });
     };
 
     const handleChangeSelect = (event) => {
@@ -36,7 +37,6 @@ export default function WorkCreationForm() {
             ...prevValues,
             [name]: value,
         }));
-        console.log(values);
     };
 
     const handleSubmit = (event) => {
@@ -49,12 +49,8 @@ export default function WorkCreationForm() {
                 setShowError(false);
             }, 1000);
         } else {
-            setValues((prevValues) => ({
-                ...prevValues,
-                blocks,
-            }));
-            console.log(values);
-            console.log(blocks);
+            const valuesEnd = { ...values, blocks }
+            console.log(valuesEnd);
         }
 
     }
@@ -105,14 +101,14 @@ export default function WorkCreationForm() {
                 { value: "2", label: "Una sesión" },
             ],
         },
-        {
-            name: "workDate",
-            type: "date",
-            placeholder: "Fecha del trabajo",
-            errormessage: "Debe seleccionar una fecha.",
-            label: "Fecha del trabajo",
-            required: true,
-        },
+        // {
+        //     name: "workDate",
+        //     type: "date",
+        //     placeholder: "Fecha del trabajo",
+        //     errormessage: "Debe seleccionar una fecha.",
+        //     label: "Fecha del trabajo",
+        //     required: true,
+        // },
         // {
         //     name: "workTime",
         //     type: "time",
@@ -130,7 +126,6 @@ export default function WorkCreationForm() {
     // this is used to increase the number of blocks
     const handleMore = (e) => {
         setBlocks([...blocks, { day: "", hour: "" }]);
-        console.log(blocks)
     }
 
     // blocks of hours and days
@@ -159,29 +154,26 @@ export default function WorkCreationForm() {
     };
 
     const handleChangeSessionDay = (e) => {
-        const { value } = e.target;
-        setBlocks((prevBlocks) => ({
-            ...prevBlocks,
-            day : value,
-        }));
-        console.log(blocks);
-    };
+        const { value } = e.target
+        setBlocks((prevBlocks) => {
+            const updatedBlocks = [...prevBlocks];
+            updatedBlocks[0].day = value;
+            return updatedBlocks;
+        });
+    }
 
-
-
-    // useEffect(() => {
-    //     // when swicht to session mode
-    //     if (values.workType === "2") {
-    //         // setBlocks([...blocks, { day: "", hour: "" }]);
-    //         setBlocks([{ day: "", hour: "" }]);
-    //     } else if (values.workType === "1") {
-    //         setBlocks([]);
-    //         setValues((prevValues) => ({
-    //             ...prevValues,
-    //             workDate: ""
-    //         }));
-    //     }
-    // }, [values.workType]);
+    useEffect(() => {
+        // when swicht to session mode
+        if (values.workType === "2") {
+            setBlocks([{ day: "", hour: "" }]);
+        } else if (values.workType === "1") {
+            setBlocks([])
+            setValues((prevValues) => ({
+                ...prevValues,
+                workDate: ""
+            }));
+        }
+    }, [values.workType]);
 
     const [showError, setShowError] = useState(false);
 
@@ -296,7 +288,7 @@ export default function WorkCreationForm() {
                                         onChange={handleChangeSessionDay}
 
                                         // The value of the input is bound to the value stored in values[input.name]
-                                        value={values["workDate"]}
+                                        // value={values["workDate"]}
 
                                         // To display the error message when the input is focused
                                         // set to true to keep the error message as long as the input is invalid
@@ -305,15 +297,15 @@ export default function WorkCreationForm() {
                                     />
                                     {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
 
-                                    {/* <label htmlFor="" >Hora</label>
-                                    <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                        <option value="">Seleccione una hour</option>
+                                    <label htmlFor="" >Hora</label>
+                                    <select >
+                                        <option value="">Seleccione una hora</option>
                                         {hours.map((hour) => (
                                             <option key={hour} value={hour}>
                                                 {hour}
                                             </option>
                                         ))}
-                                    </select> */}
+                                    </select>
 
                                 </div>
                             )
