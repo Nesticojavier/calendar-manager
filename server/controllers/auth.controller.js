@@ -13,7 +13,7 @@ const signup = async (req, res) => {
 
   // Verify that the input data is not undefined
   if (!username || !password || !rol || !fullName || !birthDate) {
-    return res.status(500).json({ message: "Error, missing sign up data" });
+    return res.status(400).json({ message: "Error, missing sign up data" });
   }
 
   // Check if the user is already registered
@@ -84,9 +84,15 @@ const login = async (req, res) => {
         .json({ message: "Error al comparar las contraseñas" });
     }
     if (result) {
-      // If the password is correct, we generate the JWT token and send it as a response to the client
-      const token = jwt.sign({ id: id }, secretKey);
-      res.json({ token });
+      Users.findOne({
+        where: {
+          id,
+        },
+      }).then((profile) => {
+        // If the password is correct, we generate the JWT token and send it as a response to the client
+        const token = jwt.sign({ username, profile }, secretKey);
+        res.json({ token });
+      });
     } else {
       // If the password is incorrect, we send an error message
       res.status(401).json({ message: "Password does not match the username" });
@@ -95,14 +101,8 @@ const login = async (req, res) => {
 };
 
 const dashboard = async (req, res) => {
-  const {id} = req.id;
-  const response = await Users.findOne({
-    where: {
-      id,
-    },
-  });
-  console.log(response.dataValues);
-  res.json(response.dataValues);
+  console.log(req.userData);
+  res.json(req.userData);
 };
 
 const showUsers = async (req, res) => {
@@ -125,8 +125,7 @@ const verifyToken = (req, res, next) => {
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, secretKey);
-    req.id = decoded;
+    req.userData = jwt.verify(token, secretKey);;
     next();
   } catch (ex) {
     res.status(400).json({ message: "Error, token invalido" });

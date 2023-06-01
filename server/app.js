@@ -4,7 +4,9 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
+// Import Models
 const { Users, Credential } = require("./Models/Users");
+const { Work } = require("./Models/Work");
 
 // Synchronize model
 Users.sync().then(() => {
@@ -12,6 +14,10 @@ Users.sync().then(() => {
 });
 Credential.sync().then(() => {
   console.log("Credential Model synced 2");
+});
+
+Work.sync({force: true}).then(() => {
+  console.log("Work Model synced 2");
 });
 
 var app = express();

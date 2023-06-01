@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const { verifyToken } = require("../controllers/auth.controller");
+
 const {
   createJob,
   deleteJob,
@@ -9,11 +11,11 @@ const {
   changeStatus,
 } = require("../controllers/provider.controller");
 
-//TO DO: Modify http method. Get is used temporarily to test routes
-router.get("/create", createJob);
-router.get("/delete", deleteJob);
-router.get("/update", updateJob);
-router.get("/myJobs", showJobs);
-router.get("/changeStatus", changeStatus);
+router.post("/create", verifyToken, createJob);
+
+router.get("/delete", verifyToken, deleteJob);
+router.get("/update", verifyToken, updateJob);
+router.get("/myJobs", verifyToken, showJobs);
+router.get("/changeStatus", verifyToken, changeStatus);
 
 module.exports = router;
