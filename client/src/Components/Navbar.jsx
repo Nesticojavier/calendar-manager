@@ -32,7 +32,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                                 to="/login"
                                 className={({ isActive }) => (isActive ? "active" : "")}
                             >
-                                Login
+                                Iniciar sesión
                             </NavLink>
                         </li>
                         <li>
@@ -40,7 +40,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                                 to="/signup"
                                 className={({ isActive }) => (isActive ? "active" : "")}
                             >
-                                Signup
+                                Registrarse
                             </NavLink>
                         </li>
                     </>

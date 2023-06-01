@@ -84,9 +84,9 @@ const Signup = () => {
           id: 1,
           name: "username",
           type: "text",
-          placeholder: "Username",
-          errormessage: "Username should be no more than 16 characters and shouldn't include any special character.",
-          label: "Username",
+          placeholder: "Nombre de usuario",
+          errormessage: "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
+          label: "Nombre de usuario",
           required: true,
           pattern: "[a-zA-Z0-9]{1,16}$",
         },
@@ -94,9 +94,9 @@ const Signup = () => {
           id: 2,
           name: "password",
           type: "password",
-          placeholder: "Password",
-          errormessage: "Password should be at least 3 characters long and shouldn't include any special character.",
-          label: "Password",
+          placeholder: "Contraseña",
+          errormessage: "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
+          label: "Contraseña",
           required: true,
           pattern: "[a-zA-Z0-9]{3,}$",
         },
@@ -104,9 +104,9 @@ const Signup = () => {
           id: 3,
           name: "fullName",
           type: "text",
-          placeholder: "Full Name",
-          errormessage: "Full Name should be only letters and no more than 64 characters.",
-          label: "Full Name",
+          placeholder: "Nombre completo",
+          errormessage: "El nombre completo debe contener solo letras y no tener mas de 64 caracteres.",
+          label: "Nombre completo",
           required: true,
           pattern: "[a-zA-Z ]{1,64}",
         },
@@ -114,17 +114,17 @@ const Signup = () => {
           id: 4,
           name: "birthDate",
           type: "date",
-          placeholder: "Birth Date",
-          label: "Birth Date",
+          placeholder: "Fecha de nacimiento",
+          label: "Fecha de nacimiento",
           required: true
         },
         {
           id: 5,
           name: "institutionalId",
           type: "text",
-          placeholder: "Institutional ID",
-          errormessage: "Institutional ID should be only numbers and no more than 16 characters.",
-          label: "Institutional ID",
+          placeholder: "ID Institucional",
+          errormessage: "El ID institucional debe contener solo números y no tener mas de 16 caracteres.",
+          label: "ID Institucional",
           pattern: "[0-9.]{1,16}$",
         },
         {
@@ -132,7 +132,7 @@ const Signup = () => {
           name: "rol",
           type: "select",
           placeholder: "seleccione rol",
-          errormessage: "you must select a role",
+          errormessage: "Debes seleccionar un rol",
           label: "Seleccione rol",
           required: true,
           options: [
@@ -146,7 +146,7 @@ const Signup = () => {
         <div className="App">
 
             <div className="auth-form-container">
-                <h1>Sign Up</h1>
+                <h1>Registrarse</h1>
                 <form className = "register-form" onSubmit={handleSubmit}>
                     {inputs.map((input) => (
                         <div key={input.id} className="formRegister">
@@ -185,11 +185,11 @@ const Signup = () => {
                             {focused[input.name] && <span>{input.errormessage}</span>}
                         </div>
                     ))}
-                    <button type="submit">Sign Up</button>
+                    <button type="submit">Registrarse</button>
                 </form>
                 <p className="error">{errorMessage}</p>
                 <button className = "button-switch" onClick={() => navigate("/login")}>
-                    Already have an account? Login here.
+                    ¿Ya tienes una cuenta? Inicia sesión aquí.
                 </button>
             </div>
         </div>

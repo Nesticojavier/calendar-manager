@@ -29,9 +29,10 @@
     margin-top: 0px;
 }
 
-.workCreationForm input:invalid + span {
+.workCreationForm input:invalid + span, .error-message {
     display: block;
 }
+
 
 .more {
     width: 60px;
