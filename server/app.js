@@ -16,7 +16,7 @@ Credential.sync().then(() => {
   console.log("Credential Model synced 2");
 });
 
-Work.sync({force: true}).then(() => {
+Work.sync().then(() => {
   console.log("Work Model synced 2");
 });
 
