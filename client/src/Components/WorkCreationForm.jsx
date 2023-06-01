@@ -42,7 +42,7 @@ export default function WorkCreationForm() {
     const handleSubmit = (event) => {
         event.preventDefault();
 
-        // show error message if blocks variable is void
+        // show error message if blocks va?riable is void
         if (blocks.length === 0) {
             setShowError(true);
             setTimeout(() => {
@@ -162,6 +162,15 @@ export default function WorkCreationForm() {
         });
     }
 
+    const handleChangeSessionHour = (e) => {
+        const { value } = e.target
+        setBlocks((prevBlocks) => {
+            const updatedBlocks = [...prevBlocks];
+            updatedBlocks[0].hour = value;
+            return updatedBlocks;
+        });
+    }
+
     useEffect(() => {
         // when swicht to session mode
         if (values.workType === "2") {
@@ -224,9 +233,10 @@ export default function WorkCreationForm() {
                     )
                 })
             }
-            {
+            {  
                 values.workType == "1" || values.workType == "2"
                     ? (
+                        // if is selected the work by recurrent
                         values.workType == "1"
                             ? (
                                 <div>
@@ -245,10 +255,9 @@ export default function WorkCreationForm() {
                                                     ))}
                                                 </select>
 
-
                                                 <label htmlFor="" >Hora</label>
                                                 <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                                    <option value="">Seleccione una hour</option>
+                                                    <option value="">Seleccione una hora</option>
                                                     {hours.map((hour) => (
                                                         <option key={hour} value={hour}>
                                                             {hour}
@@ -274,6 +283,7 @@ export default function WorkCreationForm() {
                                 </div>
 
                             ) : (
+                                // if is selected work by session
                                 <div className="workCreationForm">
                                     <label htmlFor={5}>Seleccione la fecha del trabajo </label>
                                     <input
@@ -296,9 +306,9 @@ export default function WorkCreationForm() {
 
                                     />
                                     {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
-
+                                    
                                     <label htmlFor="" >Hora</label>
-                                    <select >
+                                    <select required name="hour" value={blocks[0]?.hour} onChange={handleChangeSessionHour} id="">
                                         <option value="">Seleccione una hora</option>
                                         {hours.map((hour) => (
                                             <option key={hour} value={hour}>
