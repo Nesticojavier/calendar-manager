@@ -23,7 +23,11 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                 </li>
                 {isLoggedIn ? (
                     <li>
-                        <button onClick = {handleClick} >Logout</button>
+                        <button
+                            className="logout-button"
+                            onClick = {handleClick} >
+                                Logout
+                        </button>
                     </li>
                 ) : (
                     <>
