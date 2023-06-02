@@ -53,11 +53,7 @@ export default function Login ({ setIsLoggedIn }) {
             })
             .catch((error) => {
                 // Handle request error
-
-                // console.error(error.response.data.message);
-                console.error(error);
-                // setErrorMessage(error.response.data.message)
-                setErrorMessage(error)
+                setErrorMessage(error.response.data.message)
             });
 
     };
