@@ -18,10 +18,7 @@ const createJob = (req, res) => {
       .json({ message: "The user dont have permiss to create works" });
   }
 
-  console.log(req.body);
-  console.log(req.userData);
-
-  res.json(req.userData);
+  res.json({ title, description, type, volunteerMax });
 };
 
 const deleteJob = (req, res) => {

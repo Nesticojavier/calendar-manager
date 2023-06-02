@@ -24,6 +24,7 @@ const Credential = sq.define("credential", {
       model: "users",
       key: "id",
     },
+    onDelete: 'CASCADE',
   },
 });
 

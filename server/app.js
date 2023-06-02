@@ -9,16 +9,18 @@ const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
 
 // Synchronize model
-Users.sync().then(() => {
-  console.log("Users Model synced 2");
-});
-Credential.sync().then(() => {
-  console.log("Credential Model synced 2");
-});
+(async () => {
+  await Users.sync().then(() => {
+    console.log("Users Model synced 2");
+  });
+  await Credential.sync().then(() => {
+    console.log("Credential Model synced 2");
+  });
 
-Work.sync().then(() => {
-  console.log("Work Model synced 2");
-});
+  await Work.sync().then(() => {
+    console.log("Work Model synced 2");
+  });
+})();
 
 var app = express();
 
