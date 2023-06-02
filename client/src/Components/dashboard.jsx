@@ -23,6 +23,7 @@ export default function Dashboard({ setIsLoggedIn }) {
       .then((response) => {
         // Handle request response successful
         setUser(response.data);
+        console.log(response.data)
       })
       .catch((error) => {
         // Handle request error
@@ -33,6 +34,7 @@ export default function Dashboard({ setIsLoggedIn }) {
   return (
     <Box>
       <Stack direction="row" spacing={2} justifyContent="space-between">
+        {/* <h1> es: {user}</h1> */}
         <Sidebar />
         <WorkCreationForm/>
       </Stack>

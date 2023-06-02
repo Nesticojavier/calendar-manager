@@ -118,7 +118,8 @@ const verifyToken = (req, res, next) => {
   const header = req.headers["authorization"];
 
   if (!header) {
-    return res.status(401).send("Acceso denegado");
+    return res.status(401).json({ message: "Acceso denegado" });
+    // return res.status(401).send("Acceso denegado");
   }
 
   const token = header.split(" ")[1];

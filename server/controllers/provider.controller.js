@@ -2,6 +2,7 @@ const { Work } = require("../Models/Work");
 const { Users } = require("../Models/Users"); //import database connection
 
 const createJob = (req, res) => {
+
   const { id, rol } = req.userData.profile;
   const {
     workDescription: description,
