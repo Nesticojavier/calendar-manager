@@ -1,6 +1,7 @@
 const { Work } = require("../Models/Work");
 const { Users } = require("../Models/Users"); //import database connection
 
+// Controller to create a job
 const createJob = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
   const {
@@ -54,9 +55,12 @@ const createJob = (req, res) => {
     });
 };
 
+// Controller to display jobs from a user
 const showJobs = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
-
+  if (rol !== "proveedor") {
+    return res.status(403).json({ message: "The user is not provider" });
+  }
   Work.findAll({
     where: {
       users_id,
@@ -77,9 +81,11 @@ const changeStatus = (req, res) => {
 const deleteJob = (req, res) => {
   res.json({ message: "delete Job" });
 };
+
 const updateJob = (req, res) => {
   res.json({ message: "update Job" });
 };
+
 module.exports = {
   createJob,
   deleteJob,
