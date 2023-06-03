@@ -1,7 +1,8 @@
 const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
 
-const Users = sq.define("users", {
+// Credential Table
+const Credential = sq.define("credential", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -15,10 +16,41 @@ const Users = sq.define("users", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  users_id: {
+    type: DataTypes.INTEGER,
+    unique: true,
+    allowNull: false,
+    references: {
+      model: "users",
+      key: "id",
+    },
+    onDelete: 'CASCADE',
+  },
+});
+
+// Users Table
+const Users = sq.define("users", {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true,
+  },
   rol: {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  fullName: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  birthDate: {
+    type: DataTypes.DATEONLY,
+    allowNull: false,
+  },
+  institucionalId: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
 });
 
-module.exports = Users;
+module.exports = { Users, Credential };

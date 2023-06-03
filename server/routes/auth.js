@@ -7,7 +7,7 @@ const {
   dashboard,
   showUsers,
   verifyToken
-} = require("../controllers/users.controllers");
+} = require("../controllers/auth.controller");
 
 // show all users
 router.get("/users", showUsers);

@@ -23,6 +23,7 @@ export default function Dashboard({ setIsLoggedIn }) {
       .then((response) => {
         // Handle request response successful
         setUser(response.data);
+        console.log(response.data)
       })
       .catch((error) => {
         // Handle request error

@@ -41,7 +41,7 @@ then
 fi
 
 # Crear base de datos por defecto
-: "${DATABASE:="express-react-project"}"
+: "${DATABASE:="postgres"}"
 
 # Crear la base, importar los datos, crear las tablas del schema y llenarlas
 # con datos

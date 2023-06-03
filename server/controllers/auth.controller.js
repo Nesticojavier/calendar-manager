@@ -1,5 +1,4 @@
-const pool = require("../db/db"); //import database connection
-const Users = require("../Models/Users"); //import database connection
+const { Credential, Users } = require("../Models/Users"); //import database connection
 const bcrypt = require("bcrypt"); //To encrypt passwords
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
 
@@ -9,37 +8,46 @@ secretKey = "my_secret_key";
 // Signup
 // TODO: Check HTTP codes. Return the appropriate one in each case
 const signup = async (req, res) => {
-  const { username, password, rol } = req.body;
+  const { username, password, rol, fullName, birthDate, institutionalId } =
+    req.body;
 
   // Verify that the input data is not undefined
-  if (!username || !password || !rol) {
-    return res.status(500).json({ message: "Error en datos de entrada" });
+  if (!username || !password || !rol || !fullName || !birthDate) {
+    return res.status(400).json({ message: "Error, missing sign up data" });
   }
 
   // Check if the user is already registered
-  const users = await Users.findAll({
+  const consult = await Credential.findOne({
     where: {
       username,
     },
   });
 
-  if (users.length != 0) {
+  if (consult !== null) {
     return res.status(500).json({ message: "Error, usuario ya registrado" });
   }
 
   // If the user does not exist, we encrypt his password and save it in the database
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
-      return res.status(500).json({ message: "Error al cifrar la contraseña" });
+      return res.status(500).json({ message: "Error almacenando los datos de autenticacion" });
     }
 
     try {
       Users.create({
-        username,
-        password: hash,
+        fullName,
+        birthDate,
+        institutionalId,
         rol,
+      }).then((user) => {
+        Credential.create({
+          username,
+          password: hash,
+          users_id: user.id,
+        });
       });
-      res.status(201).json({ message: "Registro exitoso" });
+
+      res.status(201).json({ message: "Registro Exitoso" });
     } catch (error) {
       res.status(500).json({ message: "Error al registrar usuario" });
     }
@@ -51,52 +59,49 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   // Verify that the input data is not undefined
   if (!username || !password) {
-    return res.status(500).json({ message: "Error en datos de entrada" });
+    return res.status(500).json({ message: "Error, missing login data" });
   }
 
   // check if the user is already registered
-  const response = await Users.findOne({
+  const consult = await Credential.findOne({
     where: {
       username,
     },
   });
 
-  if (response === null) {
-    return res.status(500).json({ message: "Error, unregistered user" });
+  if (consult === null) {
+    return res.status(500).json({ message: "Error, usuario no registrado" });
   }
 
-  const password_hash = response.password;
-  const id = response.id;
+  const password_hash = consult.password;
+  const id = consult.users_id;
 
   // Validate password
   bcrypt.compare(password, password_hash, (err, result) => {
     if (err) {
       return res
         .status(500)
-        .json({ message: "Error al comparar las contraseñas" });
+        .json({ message: "Se produjo un error al validar los datos" });
     }
     if (result) {
-      // If the password is correct, we generate the JWT token and send it as a response to the client
-      const token = jwt.sign({ id: id }, secretKey);
-      res.json({ token });
+      Users.findOne({
+        where: {
+          id,
+        },
+      }).then((profile) => {
+        // If the password is correct, we generate the JWT token and send it as a response to the client
+        const token = jwt.sign({ username, profile }, secretKey);
+        res.json({ token });
+      });
     } else {
       // If the password is incorrect, we send an error message
-      res.status(401).json({ message: "Password does not match the username" });
+      res.status(401).json({ message: "Error en validacion de credenciales" });
     }
   });
 };
 
 const dashboard = async (req, res) => {
-  // res.send("dashboard");
-
-  const id = req.id.id;
-  const response = await Users.findOne({
-    where: {
-      id,
-    },
-  });
-  console.log(response.dataValues)
-  res.json(response.dataValues);
+  res.json(req.userData);
 };
 
 const showUsers = async (req, res) => {
@@ -113,14 +118,14 @@ const verifyToken = (req, res, next) => {
   const header = req.headers["authorization"];
 
   if (!header) {
-    return res.status(401).send("Acceso denegado");
+    return res.status(401).json({ message: "Acceso denegado" });
+    // return res.status(401).send("Acceso denegado");
   }
 
   const token = header.split(" ")[1];
 
   try {
-    const decoded = jwt.verify(token, secretKey);
-    req.id = decoded;
+    req.userData = jwt.verify(token, secretKey);;
     next();
   } catch (ex) {
     res.status(400).json({ message: "Error, token invalido" });
