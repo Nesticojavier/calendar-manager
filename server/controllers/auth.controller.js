@@ -24,13 +24,13 @@ const signup = async (req, res) => {
   });
 
   if (consult !== null) {
-    return res.status(500).json({ message: "Error, registered user" });
+    return res.status(500).json({ message: "Error, usuario ya registrado" });
   }
 
   // If the user does not exist, we encrypt his password and save it in the database
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
-      return res.status(500).json({ message: "Error al cifrar la contraseña" });
+      return res.status(500).json({ message: "Error almacenando los datos de autenticacion" });
     }
 
     try {
@@ -47,7 +47,7 @@ const signup = async (req, res) => {
         });
       });
 
-      res.status(201).json({ message: "Successful sign-up" });
+      res.status(201).json({ message: "Registro Exitoso" });
     } catch (error) {
       res.status(500).json({ message: "Error al registrar usuario" });
     }
@@ -70,7 +70,7 @@ const login = async (req, res) => {
   });
 
   if (consult === null) {
-    return res.status(500).json({ message: "Error, unregistered user" });
+    return res.status(500).json({ message: "Error, usuario no registrado" });
   }
 
   const password_hash = consult.password;
@@ -81,7 +81,7 @@ const login = async (req, res) => {
     if (err) {
       return res
         .status(500)
-        .json({ message: "Error al comparar las contraseñas" });
+        .json({ message: "Se produjo un error al validar los datos" });
     }
     if (result) {
       Users.findOne({
@@ -95,7 +95,7 @@ const login = async (req, res) => {
       });
     } else {
       // If the password is incorrect, we send an error message
-      res.status(401).json({ message: "Password does not match the username" });
+      res.status(401).json({ message: "Error en validacion de credenciales" });
     }
   });
 };

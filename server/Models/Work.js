@@ -1,7 +1,7 @@
 const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
 
-// Credential Table
+// Work Table
 const Work = sq.define("work", {
   id: {
     type: DataTypes.INTEGER,
@@ -15,6 +15,7 @@ const Work = sq.define("work", {
       model: "users",
       key: "id",
     },
+    onDelete: 'CASCADE',
   },
   title: {
     type: DataTypes.STRING,
@@ -29,7 +30,7 @@ const Work = sq.define("work", {
     allowNull: false,
   },
   type: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   volunteerCount: {
