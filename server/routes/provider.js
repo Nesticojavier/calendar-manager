@@ -11,11 +11,18 @@ const {
   changeStatus,
 } = require("../controllers/provider.controller");
 
+// Create a job (Information of user are in JWT)
 router.post("/create", verifyToken, createJob);
-
-router.get("/delete", verifyToken, deleteJob);
-router.get("/update", verifyToken, updateJob);
+// Show all jobs created by a user 
 router.get("/myJobs", verifyToken, showJobs);
+
+//Delete Job 
+router.delete("/job/:id", verifyToken, deleteJob);
+
+//Show details of a Job by id
+router.get("/job/:id", verifyToken, deleteJob);
+
+router.get("/update", verifyToken, updateJob);
 router.get("/changeStatus", verifyToken, changeStatus);
 
 module.exports = router;
