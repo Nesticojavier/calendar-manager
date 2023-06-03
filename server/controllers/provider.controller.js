@@ -19,13 +19,13 @@ const createJob = (req, res) => {
     !volunteerCountMax ||
     blocks.length == 0
   ) {
-    return res.status(400).json({ message: "Error, missing data" });
+    return res.status(400).json({ message: "Error, faltan datos del trabajo" });
   }
 
   if (rol !== "proveedor") {
     return res
       .status(403)
-      .json({ message: "The user dont have permiss to create works" });
+      .json({ message: "El usuario no posee permisos para crear trabaos" });
   }
 
   Work.findOrCreate({
@@ -43,15 +43,15 @@ const createJob = (req, res) => {
       blocks: JSON.stringify(blocks),
     },
   })
-    .then(([fila, creado]) => {
+    .then(([row, creado]) => {
       if (creado) {
         res.json({ message: "Trabajo creado exitosamente" });
       } else {
         res.status(409).json({ message: "Trabajo ya creado por el proveedor" });
       }
     })
-    .catch((error) => {
-      res.status(500).json({ message: "Ha ocurrido un error en el servidor " });
+    .catch(() => {
+      res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
     });
 };
 
@@ -59,7 +59,7 @@ const createJob = (req, res) => {
 const showJobs = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
   if (rol !== "proveedor") {
-    return res.status(403).json({ message: "The user is not provider" });
+    return res.status(403).json({ message: "El usuario no es proveedor" });
   }
   Work.findAll({
     where: {
@@ -78,8 +78,29 @@ const changeStatus = (req, res) => {
   res.json({ message: "change status of Job" });
 };
 
+// Controller to delete a job
 const deleteJob = (req, res) => {
-  res.json({ message: "delete Job" });
+  const { id: users_id } = req.userData.profile;
+  const { id } = req.params;
+
+  Work.destroy({
+    where: {
+      users_id,
+      id,
+    },
+  })
+    .then((rowsDeleted) => {
+      if (rowsDeleted !== 0) {
+        res.json({ message: "Registro eliminado con exito" });
+      } else {
+        res
+          .status(404)
+          .json({ message: "El trabajo a eliminar no se encontro" });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
+    });
 };
 
 const updateJob = (req, res) => {
