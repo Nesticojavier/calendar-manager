@@ -1,5 +1,6 @@
 const { Work } = require("../Models/Work");
-const { Users } = require("../Models/Users"); //import database connection
+const { Tags, WorkTags } = require("../Models/Tags");
+
 
 // Controller to create a job
 const createJob = (req, res) => {
@@ -10,6 +11,7 @@ const createJob = (req, res) => {
     workType: type,
     workersNeeded: volunteerCountMax,
     blocks,
+    tags,
   } = req.body;
 
   if (
@@ -45,9 +47,35 @@ const createJob = (req, res) => {
   })
     .then(([row, creado]) => {
       if (creado) {
+        insertTag(row.dataValues.id, tags);
         res.json({ message: "Trabajo creado exitosamente" });
       } else {
         res.status(409).json({ message: "Trabajo ya creado por el proveedor" });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
+    });
+};
+
+// Controller to display a job from a user
+const showJob = (req, res) => {
+  const { id: users_id } = req.userData.profile;
+  const { id } = req.params;
+
+  Work.findOne({
+    where: {
+      users_id,
+      id,
+    },
+  })
+    .then((result) => {
+      if (result) {
+        res.json(result);
+      } else {
+        res.status(404).json({
+          message: "Error, trabajo no encontrado o no pertenece al usuario",
+        });
       }
     })
     .catch(() => {
@@ -103,9 +131,94 @@ const deleteJob = (req, res) => {
     });
 };
 
-const updateJob = (req, res) => {
-  res.json({ message: "update Job" });
+const updateJob = async (req, res) => {
+  const { id: users_id } = req.userData.profile;
+  const { id } = req.params;
+  const {
+    workDescription: description,
+    workTitle: title,
+    workType: type,
+    workersNeeded: volunteerCountMax,
+    blocks,
+  } = req.body;
+
+  if (
+    !title ||
+    !description ||
+    !type ||
+    !volunteerCountMax ||
+    blocks.length == 0
+  ) {
+    return res.status(400).json({ message: "Error, faltan datos del trabajo" });
+  }
+
+  // Find a job created by the user with same title
+  const consult = await Work.findOne({
+    where: {
+      users_id,
+      title,
+    },
+  });
+  if (consult !== null) {
+    return res
+      .status(400)
+      .json({ message: "Error, ya existe un trabajo con el titulo" });
+  }
+
+  Work.update(
+    {
+      title,
+      description,
+      type,
+      volunteerCountMax,
+      blocks: JSON.stringify(blocks),
+    },
+    {
+      where: {
+        users_id,
+        id,
+      },
+    }
+  )
+    .then((result) => {
+      return res.json({ message: "Se actualizo correctamente" });
+    })
+    .catch(() => {
+      return res
+        .status(500)
+        .json({ message: "Ha ocurrido un error en el servidor" });
+    });
 };
+
+
+// Function to insert works-tags
+const insertTag = (works_id, tags) => {
+  tags.map((title) => {
+    Tags.findOrCreate({
+      where: {
+        title,
+      },
+      defaults: {
+        title,
+      },
+    })
+      .then(([row, creado]) => {
+        WorkTags.create({
+          tags_id: row.dataValues.id,
+          works_id,
+        });
+      })
+      .catch(() => {
+        console.log("Error en el servidor al crear tags");
+      });
+  });
+};
+
+
+const showTags = (req, res) => {
+
+  res.json({tags: ["test1", "test2"]})
+}
 
 module.exports = {
   createJob,
@@ -113,4 +226,6 @@ module.exports = {
   updateJob,
   showJobs,
   changeStatus,
+  showJob,
+  showTags,
 };
