@@ -30,6 +30,7 @@ const WorkTags = sq.define(
         model: "works",
         key: "id",
       },
+      onDelete: 'CASCADE',
     },
     tags_id: {
       type: DataTypes.INTEGER,
@@ -38,6 +39,7 @@ const WorkTags = sq.define(
         model: "tags",
         key: "id",
       },
+      onDelete: 'CASCADE',
     },
   },
   {

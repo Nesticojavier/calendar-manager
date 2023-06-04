@@ -1,7 +1,5 @@
 const { Work } = require("../Models/Work");
-const { Tags, WorkTags } = require("../Models/Tags");
-
-
+const { insertTag } = require("./utils");
 // Controller to create a job
 const createJob = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
@@ -27,7 +25,7 @@ const createJob = (req, res) => {
   if (rol !== "proveedor") {
     return res
       .status(403)
-      .json({ message: "El usuario no posee permisos para crear trabaos" });
+      .json({ message: "El usuario no posee permisos para crear el trabajo" });
   }
 
   Work.findOrCreate({
@@ -190,35 +188,9 @@ const updateJob = async (req, res) => {
     });
 };
 
-
-// Function to insert works-tags
-const insertTag = (works_id, tags) => {
-  tags.map((title) => {
-    Tags.findOrCreate({
-      where: {
-        title,
-      },
-      defaults: {
-        title,
-      },
-    })
-      .then(([row, creado]) => {
-        WorkTags.create({
-          tags_id: row.dataValues.id,
-          works_id,
-        });
-      })
-      .catch(() => {
-        console.log("Error en el servidor al crear tags");
-      });
-  });
-};
-
-
 const showTags = (req, res) => {
-
-  res.json({tags: ["test1", "test2"]})
-}
+  res.json({ tags: ["test1", "test2"] });
+};
 
 module.exports = {
   createJob,
