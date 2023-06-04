@@ -12,7 +12,6 @@ import {
 } from '@mui/material'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { useNavigate } from 'react-router-dom';
 
 export default function WorkListProvider() {
 
@@ -31,11 +30,6 @@ export default function WorkListProvider() {
             .catch((error) => {
                 console.error("Error al eliminar el trabajo:", error.response.data.message);
             });
-    };
-
-    const navigate = useNavigate();
-    const handleEdit = (work) => {
-        navigate(`/WorkEdit/${work.id}`, { state: { work } });
     };
 
     useEffect(() => {
@@ -60,9 +54,10 @@ export default function WorkListProvider() {
                 <Card key={work.id} sx={{ marginBottom: '20px' }}>
                     <CardHeader
                         action={
-                            <IconButton onClick={() => handleEdit(work)}>
+                            <IconButton>
                                 <EditIcon />
                             </IconButton>
+
                         }
                         title={work.title}
                         subheader={work.type}

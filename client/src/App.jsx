@@ -8,7 +8,6 @@ import Navbar from "./Components/Navbar";
 import Cookies from "js-cookie";
 import WorkCreation from "./Components/Pages/WorkCreation";
 import WorkList from "./Components/Pages/WorkList";
-import WorkEdit from "./Components/Pages/WorkEdit";
 
 function App() {
 
@@ -38,7 +37,6 @@ function App() {
         <Route path="/dashboard" element={<Dashboard setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/WorkCreation" element={<WorkCreation setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/WorkList" element={<WorkList setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/WorkEdit/:id" element={<WorkEdit setIsLoggedIn = {changeLoggedIn}/>} />
       </Routes>
     </BrowserRouter>
   );
