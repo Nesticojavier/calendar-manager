@@ -406,7 +406,7 @@ export default function WorkCreationForm() {
                                         </input>
 
                                         {showErrorDate &&
-                                        <span>La fecha de culminacion debe ser mayor que la de inicio.</span>}
+                                        <span>La fecha de culminacion debe ser después que la de inicio.</span>}
                                     </div>
                                 </div>
 
