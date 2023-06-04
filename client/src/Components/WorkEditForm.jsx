@@ -149,7 +149,7 @@ export default function WorkCreationForm() {
     ];
 
     // state used to set the blocks of hours
-    const [blocks, setBlocks] = useState([]);
+    const [blocks, setBlocks] = useState([workBlocks]);
 
 
     // this is used to increase the number of blocks
