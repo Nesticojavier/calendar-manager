@@ -16,20 +16,33 @@ import DeleteIcon from '@mui/icons-material/Delete';
 export default function WorkListProvider() {
 
     const [workData, setWorkData] = useState([]);
+    const [isDeleted, setIsDeleted] = useState(false);
     const token = Cookies.get('token');
     const headers = { Authorization: `Bearer ${token}` };
+
+    const handleDelete = (workId) => {
+        axios
+            .delete(`http://localhost:3000/provider/job/${workId}`, { headers })
+            .then((response) => {
+                setIsDeleted(true)
+                console.log(response.data.message);
+            })
+            .catch((error) => {
+                console.error("Error al eliminar el trabajo:", error.response.data.message);
+            });
+    };
 
     useEffect(() => {
         axios
             .get("http://localhost:3000/provider/myJobs", { headers })
             .then((response) => {
-                setWorkData(response.data)
-                console.log(response.data)
+                setWorkData(response.data);
+                setIsDeleted(false);
             })
             .catch((error) => {
                 console.error(error.response.data.message);
             });
-    }, []);
+    }, [isDeleted]);
 
     return (
         <Box
@@ -55,7 +68,7 @@ export default function WorkListProvider() {
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing>
-                        <IconButton aria-label="share">
+                        <IconButton aria-label="share" onClick={() => handleDelete(work.id)}>
                             <DeleteIcon />
                         </IconButton>
                     </CardActions>
