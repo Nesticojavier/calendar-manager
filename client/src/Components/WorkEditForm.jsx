@@ -3,14 +3,17 @@ import { Box, Button } from '@mui/material'
 import axios from 'axios';
 import "./WorkCreationForm.css"
 import Cookies from 'js-cookie';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 
 export default function WorkCreationForm() {
 
     const location = useLocation();
     const { work } = location.state;
+    const { id: workId } = useParams();
     const workBlocks = JSON.parse(work.blocks)
+    const navigate = useNavigate();
+
 
     const [values, setValues] = useState({
         workTitle: work.title,
@@ -63,14 +66,14 @@ export default function WorkCreationForm() {
             const valuesEnd = { ...values, blocks }
             console.log(valuesEnd);
             axios
-                .post("http://localhost:3000/provider/create", valuesEnd, { headers })
+                .put(`http://localhost:3000/provider/job/${workId}`,valuesEnd, { headers })
                 .then((response) => {
                     // Handle request response successful
                     swal({
-                        title: "Trabajo creado exitosamente",
+                        title: "Trabajo actualizado exitosamente",
                         icon: "success",
                     }).then(() => {
-                        window.location.reload();
+                        navigate(`/WorkList`);
                     })
                 })
                 .catch((error) => {
@@ -197,7 +200,6 @@ export default function WorkCreationForm() {
         });
     }
 
-    const navigate = useNavigate();
     const handleCancel = (e) => {
         navigate(`/WorkList`);
     }
@@ -351,11 +353,11 @@ export default function WorkCreationForm() {
                     null
             }
 
-            <div style={ {display: 'flex', marginTop: '80px', marginLeft: '10px'} } >
+            <div style={{ display: 'flex', marginTop: '80px', marginLeft: '10px' }} >
                 <Button
                     type="button"
                     variant="contained" color="error"
-                    sx = {{marignLeft: '10px', marginRight: '30px'}}
+                    sx={{ marignLeft: '10px', marginRight: '30px' }}
                     onClick={handleCancel}
                 >
                     Cancelar
