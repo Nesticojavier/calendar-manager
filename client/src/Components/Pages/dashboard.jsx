@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import "./home.css";
+import '../dashboard.css';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Sidebar from './Sidebar';
-import WorkCreationForm from './WorkCreationForm';
+import Sidebar from '../Sidebar';
 import { Box, Stack } from '@mui/material';
 import { Navigate } from 'react-router-dom'
+import Calendar from '../Calendar';
 
 export default function Dashboard({ setIsLoggedIn }) {
 
@@ -32,11 +32,10 @@ export default function Dashboard({ setIsLoggedIn }) {
   }, []); // Empty dependency so that the effect is executed only once when mounting the component
 
   return (
-    <Box>
+    <Box className='boxDashboard'>
       <Stack direction="row" spacing={2} justifyContent="space-between">
-        {/* <h1> es: {user}</h1> */}
-        <Sidebar />
-        <WorkCreationForm/>
+        <Sidebar/>
+        <Calendar />
       </Stack>
     </Box>
 

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
 import "./App.css";
-import Signup from "./Components/signup";
-import Login from "./Components/login";
-import Dashboard from "./Components/dashboard";
+import Signup from "./Components/Pages/signup";
+import Login from "./Components/Pages/login";
+import Dashboard from "./Components/Pages/dashboard";
 import Navbar from "./Components/Navbar";
 import Cookies from "js-cookie";
+import WorkCreation from "./Components/Pages/WorkCreation";
+import WorkList from "./Components/Pages/WorkList";
 
 function App() {
 
@@ -33,6 +35,8 @@ function App() {
         <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/dashboard" element={<Dashboard setIsLoggedIn = {changeLoggedIn}/>} />
+        <Route path="/WorkCreation" element={<WorkCreation setIsLoggedIn = {changeLoggedIn}/>} />
+        <Route path="/WorkList" element={<WorkList setIsLoggedIn = {changeLoggedIn}/>} />
       </Routes>
     </BrowserRouter>
   );
