@@ -7,6 +7,8 @@ const cors = require("cors");
 // Import Models
 const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
+const { Tags, WorkTags } = require("./Models/Tags");
+
 
 // Synchronize model
 (async () => {
@@ -19,6 +21,14 @@ const { Work } = require("./Models/Work");
 
   await Work.sync().then(() => {
     console.log("Work Model synced 2");
+  });
+  
+  await Tags.sync({force:true}).then(() => {
+    console.log("Tags Model synced 2");
+  });
+
+  await WorkTags.sync({force:true} ).then(() => {
+    console.log("WorkTags Model synced 2");
   });
 })();
 

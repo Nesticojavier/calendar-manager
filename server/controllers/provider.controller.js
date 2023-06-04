@@ -1,5 +1,34 @@
 const { Work } = require("../Models/Work");
-const { Users } = require("../Models/Users"); //import database connection
+const { Tags, WorkTags } = require("../Models/Tags");
+
+// Function to insert works-tags
+const insertTag = (works_id, tags) => {
+  tags.map((title) => {
+    Tags.findOrCreate({
+      where: {
+        title,
+      },
+      defaults: {
+        title,
+      },
+    })
+      .then(([row, creado]) => {
+        WorkTags.create({
+          tags_id: row.dataValues.id,
+          works_id
+        })
+        if (creado) {
+          console.log("Tag creado con exito: " + title);
+        } else {
+          console.log("Tag ya existia: " + title);
+          
+        }
+      })
+      .catch(() => {
+        console.log("Error en el servidor al crear tags")
+      });
+  });
+};
 
 // Controller to create a job
 const createJob = (req, res) => {
@@ -10,6 +39,7 @@ const createJob = (req, res) => {
     workType: type,
     workersNeeded: volunteerCountMax,
     blocks,
+    tags,
   } = req.body;
 
   if (
@@ -44,7 +74,9 @@ const createJob = (req, res) => {
     },
   })
     .then(([row, creado]) => {
+      console.log(row.dataValues.id);
       if (creado) {
+        insertTag(row.dataValues.id, tags);
         res.json({ message: "Trabajo creado exitosamente" });
       } else {
         res.status(409).json({ message: "Trabajo ya creado por el proveedor" });
@@ -139,17 +171,29 @@ const updateJob = async (req, res) => {
     blocks,
   } = req.body;
 
+  if (
+    !title ||
+    !description ||
+    !type ||
+    !volunteerCountMax ||
+    blocks.length == 0
+  ) {
+    return res.status(400).json({ message: "Error, faltan datos del trabajo" });
+  }
+
   // Find a job created by the user with same title
   const consult = await Work.findOne({
     where: {
       users_id,
       title,
     },
-  })
+  });
   if (consult !== null) {
-    return res.status(400).json({ message: "Error, ya existe un trabajo con el titulo" });
+    return res
+      .status(400)
+      .json({ message: "Error, ya existe un trabajo con el titulo" });
   }
-    
+
   Work.update(
     {
       title,
@@ -166,10 +210,12 @@ const updateJob = async (req, res) => {
     }
   )
     .then((result) => {
-        return res.json({message: "Se actualizo correctamente"})
+      return res.json({ message: "Se actualizo correctamente" });
     })
     .catch(() => {
-      return res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
+      return res
+        .status(500)
+        .json({ message: "Ha ocurrido un error en el servidor" });
     });
 };
 
