@@ -18,7 +18,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                         to="/"
                         className={({ isActive }) => (isActive ? "active" : "")}
                     >
-                        Home
+                        Inicio
                     </NavLink>
                 </li>
                 {isLoggedIn ? (
@@ -26,7 +26,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                         <button
                             className="logout-button"
                             onClick = {handleClick} >
-                                Logout
+                                Cerrar sesión
                         </button>
                     </li>
                 ) : (
