@@ -3,8 +3,11 @@ import { Box, Button } from '@mui/material'
 import axios from 'axios';
 import "./WorkCreationForm.css"
 import Cookies from 'js-cookie';
+import { useNavigate } from "react-router-dom";
 
 export default function WorkCreationForm() {
+    const navigate = useNavigate()
+
     const [values, setValues] = useState({
         workTitle: "",
         workDescription: "",
@@ -88,7 +91,7 @@ export default function WorkCreationForm() {
                         title: "Trabajo creado exitosamente",
                         icon: "success",
                     }).then(() => {
-                        window.location.reload();
+                        navigate(`/WorkList`);
                     })
                 })
                 .catch((error) => {
