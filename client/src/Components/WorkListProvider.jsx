@@ -54,7 +54,7 @@ export default function WorkListProvider() {
         <Box
             flex={4}
             p={2}
-            sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+            sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
             {workData.map((work) => (
                 <Card key={work.id} sx={{ marginBottom: '20px' }}>
@@ -66,10 +66,12 @@ export default function WorkListProvider() {
                         }
                         title={work.title}
                         subheader={work.type}
+
                     />
                     <CardContent>
                         <Typography variant="body2" color="text.secondary">
                             {work.description}
+                            {/* {work.tags} */}
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing>
