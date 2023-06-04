@@ -55,6 +55,31 @@ const createJob = (req, res) => {
     });
 };
 
+// Controller to display a job from a user
+const showJob = (req, res) => {
+  const { id: users_id } = req.userData.profile;
+  const { id } = req.params;
+
+  Work.findOne({
+    where: {
+      users_id,
+      id,
+    },
+  })
+    .then((result) => {
+      if (result) {
+        res.json(result);
+      } else {
+        res.status(404).json({
+          message: "Error, trabajo no encontrado o no pertenece al usuario",
+        });
+      }
+    })
+    .catch(() => {
+      res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
+    });
+};
+
 // Controller to display jobs from a user
 const showJobs = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
@@ -103,8 +128,49 @@ const deleteJob = (req, res) => {
     });
 };
 
-const updateJob = (req, res) => {
-  res.json({ message: "update Job" });
+const updateJob = async (req, res) => {
+  const { id: users_id } = req.userData.profile;
+  const { id } = req.params;
+  const {
+    workDescription: description,
+    workTitle: title,
+    workType: type,
+    workersNeeded: volunteerCountMax,
+    blocks,
+  } = req.body;
+
+  // Find a job created by the user with same title
+  const consult = await Work.findOne({
+    where: {
+      users_id,
+      title,
+    },
+  })
+  if (consult !== null) {
+    return res.status(400).json({ message: "Error, ya existe un trabajo con el titulo" });
+  }
+    
+  Work.update(
+    {
+      title,
+      description,
+      type,
+      volunteerCountMax,
+      blocks: JSON.stringify(blocks),
+    },
+    {
+      where: {
+        users_id,
+        id,
+      },
+    }
+  )
+    .then((result) => {
+        return res.json({message: "Se actualizo correctamente"})
+    })
+    .catch(() => {
+      return res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
+    });
 };
 
 module.exports = {
@@ -113,4 +179,5 @@ module.exports = {
   updateJob,
   showJobs,
   changeStatus,
+  showJob,
 };

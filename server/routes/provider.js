@@ -8,6 +8,7 @@ const {
   deleteJob,
   updateJob,
   showJobs,
+  showJob,
   changeStatus,
 } = require("../controllers/provider.controller");
 
@@ -20,9 +21,9 @@ router.get("/myJobs", verifyToken, showJobs);
 router.delete("/job/:id", verifyToken, deleteJob);
 
 //Show details of a Job by id
-router.get("/job/:id", verifyToken, deleteJob);
+router.get("/job/:id", verifyToken, showJob);
 
-router.get("/update", verifyToken, updateJob);
+router.put("/job/:id", verifyToken, updateJob);
 router.get("/changeStatus", verifyToken, changeStatus);
 
 module.exports = router;
