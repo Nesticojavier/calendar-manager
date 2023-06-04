@@ -10,6 +10,7 @@ const {
   showJobs,
   showJob,
   changeStatus,
+  showTags,
 } = require("../controllers/provider.controller");
 
 // Create a job (Information of user are in JWT)
@@ -22,6 +23,8 @@ router.delete("/job/:id", verifyToken, deleteJob);
 router.get("/job/:id", verifyToken, showJob);
 // Update a job created by a user
 router.put("/job/:id", verifyToken, updateJob);
-router.get("/changeStatus", verifyToken, changeStatus);
+//Show all the tags of a job
+router.get("/job/tags/:id", showTags);
 
+router.get("/changeStatus", verifyToken, changeStatus);
 module.exports = router;

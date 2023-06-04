@@ -23,11 +23,11 @@ const { Tags, WorkTags } = require("./Models/Tags");
     console.log("Work Model synced 2");
   });
   
-  await Tags.sync({force:true}).then(() => {
+  await Tags.sync().then(() => {
     console.log("Tags Model synced 2");
   });
 
-  await WorkTags.sync({force:true} ).then(() => {
+  await WorkTags.sync().then(() => {
     console.log("WorkTags Model synced 2");
   });
 })();

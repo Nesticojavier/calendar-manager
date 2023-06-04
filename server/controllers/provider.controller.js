@@ -1,34 +1,6 @@
 const { Work } = require("../Models/Work");
 const { Tags, WorkTags } = require("../Models/Tags");
 
-// Function to insert works-tags
-const insertTag = (works_id, tags) => {
-  tags.map((title) => {
-    Tags.findOrCreate({
-      where: {
-        title,
-      },
-      defaults: {
-        title,
-      },
-    })
-      .then(([row, creado]) => {
-        WorkTags.create({
-          tags_id: row.dataValues.id,
-          works_id
-        })
-        if (creado) {
-          console.log("Tag creado con exito: " + title);
-        } else {
-          console.log("Tag ya existia: " + title);
-          
-        }
-      })
-      .catch(() => {
-        console.log("Error en el servidor al crear tags")
-      });
-  });
-};
 
 // Controller to create a job
 const createJob = (req, res) => {
@@ -74,7 +46,6 @@ const createJob = (req, res) => {
     },
   })
     .then(([row, creado]) => {
-      console.log(row.dataValues.id);
       if (creado) {
         insertTag(row.dataValues.id, tags);
         res.json({ message: "Trabajo creado exitosamente" });
@@ -219,6 +190,36 @@ const updateJob = async (req, res) => {
     });
 };
 
+
+// Function to insert works-tags
+const insertTag = (works_id, tags) => {
+  tags.map((title) => {
+    Tags.findOrCreate({
+      where: {
+        title,
+      },
+      defaults: {
+        title,
+      },
+    })
+      .then(([row, creado]) => {
+        WorkTags.create({
+          tags_id: row.dataValues.id,
+          works_id,
+        });
+      })
+      .catch(() => {
+        console.log("Error en el servidor al crear tags");
+      });
+  });
+};
+
+
+const showTags = (req, res) => {
+
+  res.json({tags: ["test1", "test2"]})
+}
+
 module.exports = {
   createJob,
   deleteJob,
@@ -226,4 +227,5 @@ module.exports = {
   showJobs,
   changeStatus,
   showJob,
+  showTags,
 };
