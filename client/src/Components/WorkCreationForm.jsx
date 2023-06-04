@@ -10,8 +10,9 @@ export default function WorkCreationForm() {
         workDescription: "",
         workType: "",
         workDate: "",
-        workTime: "",
-        workersNeeded: ""
+        startDate: "",
+        endDate: "",
+        workersNeeded: "",
     });
 
     const [focused, setFocused] = useState({
@@ -19,9 +20,22 @@ export default function WorkCreationForm() {
         workDescription: false,
         workType: false,
         workDate: false,
-        workTime: false,
         workersNeeded: false,
     });
+
+    // Function to validate the dates of the work
+    function validateDates(startDate, endDate) {
+        if (startDate && endDate) {
+            if (startDate > endDate) {
+                // Start date is greater than end date
+                setShowErrorDate(true);
+                return false;
+            } else {
+                // Dates are valid
+                return true;
+            }
+        }
+    }
 
     // It is used to change the state of focused to true when the input is focused
     const handleFocus = (e, isFocused) => {
@@ -31,6 +45,15 @@ export default function WorkCreationForm() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setValues({ ...values, [name]: value });
+
+        // If either the start or end date inputs were changed, validate the dates
+        if (name === "startDate" || name === "endDate") {
+            // Get the current values of the start and end date inputs from the state
+            const { startDate, endDate } = values;
+
+            // Call the validateDates function with the current start and end dates
+            validateDates(startDate, endDate);
+        }
     };
 
     const handleChangeSelect = (event) => {
@@ -95,7 +118,7 @@ export default function WorkCreationForm() {
             errormessage: "Descripción del trabajo no debe incluir caracteres especiales.",
             label: "Descripción del trabajo",
             required: true,
-            pattern: "[a-zA-Z ]{1,64}$",
+            pattern: "[a-zA-Z ]{1,200}$",
         },
         {
             id: 3,
@@ -121,23 +144,7 @@ export default function WorkCreationForm() {
                 { value: "1", label: "Recurrente" },
                 { value: "2", label: "Una sesión" },
             ],
-        },
-        // {
-        //     name: "workDate",
-        //     type: "date",
-        //     placeholder: "Fecha del trabajo",
-        //     errormessage: "Debe seleccionar una fecha.",
-        //     label: "Fecha del trabajo",
-        //     required: true,
-        // },
-        // {
-        //     name: "workTime",
-        //     type: "time",
-        //     placeholder: "Hora del trabajo",
-        //     errormessage: "Debe seleccionar una hora.",
-        //     label: "Hora del trabajo",
-        //     required: true,
-        // },
+        }
     ];
 
     // state used to set the blocks of hours
@@ -150,7 +157,7 @@ export default function WorkCreationForm() {
     }
 
     // blocks of hours and days
-    const days = ["Lun", "Mar", "Mie", "Jue", "Vie"];
+    const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
     const hours = [
         "7:00 AM",
         "8:00 AM",
@@ -205,7 +212,56 @@ export default function WorkCreationForm() {
         }
     }, [values.workType]);
 
+    // To display the error message for blocks
     const [showError, setShowError] = useState(false);
+
+    // To display the error message for start and end dates
+    const [showErrorDate, setShowErrorDate] = useState(false);
+
+    // To display the error message for tags
+    const [showErrorTags, setShowErrorTags] = useState(false);
+
+    // To add tags
+    const [tagValue, setTagValue] = useState("");
+
+    const [workTags, setTags] = useState([]);
+
+    // When enter is pressed, the tag is added
+    const addTags = (e) => {
+        if (e.keyCode === 13 && tagValue){
+
+            // Split the tag value into an array of words
+            const words = tagValue.split(" ");
+
+            // Check if the number of words is less than or equal to 2
+            if (words.length <= 2){
+
+                // Check if the length of the tagValue is less than or equal to 16
+                if (tagValue.length <= 16){
+
+                    // Check if the tag already exists in the workTags array
+                    if (!workTags.includes(tagValue)) {
+                        setTags([...workTags, tagValue]);
+                        setTagValue("");
+                    } else {
+                        setShowErrorTags(true);
+                    }
+                } else {
+                    setShowErrorTags(true);
+                }
+            } else {
+                setShowErrorTags(true);
+            }
+
+
+        }
+    };
+
+    // When the tag is deleted
+    const deleteTag = (val) => {
+        let reaminTags = workTags.filter((t) => t !== val);
+        setTags(reaminTags);
+    }
 
     return (
         <Box
@@ -213,7 +269,8 @@ export default function WorkCreationForm() {
             onSubmit={handleSubmit}
             flex={4}
             p={2}
-            sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+            className="workForm"
+            sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
             <h1>Crear Trabajo Voluntario</h1>
 
@@ -248,6 +305,7 @@ export default function WorkCreationForm() {
                                     onBlur={() => handleFocus(input.name, true)}
 
                                 />
+
                             }
                             {focused[input.name] && <span>{input.errormessage}</span>}
                         </div>
@@ -260,31 +318,39 @@ export default function WorkCreationForm() {
                         // if is selected the work by recurrent
                         values.workType == "1"
                             ? (
-                                <div>
+                                <div className="workRecurrent">
                                     {blocks.map((block, blockIndex) => {
                                         return (
                                             <div key={blockIndex}>
                                                 <p>Seleccione el bloque {blockIndex + 1}</p>
+                                                <div className="selectDay">
+                                                    <label htmlFor="" >Dia</label>
+                                                    <select
+                                                        required
+                                                        name="day"
+                                                        value={block.day}
+                                                        onChange={(e) => handleBlockChange(blockIndex, e)} id=""
+                                                    >
+                                                        <option value="">Seleccione un día</option>
+                                                        {days.map((day) => (
+                                                            <option key={day} value={day}>
+                                                                {day}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
 
-                                                <label htmlFor="" >Dia</label>
-                                                <select required name="day" value={block.day} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                                    <option value="">Seleccione un día</option>
-                                                    {days.map((day) => (
-                                                        <option key={day} value={day}>
-                                                            {day}
-                                                        </option>
-                                                    ))}
-                                                </select>
-
-                                                <label htmlFor="" >Hora</label>
-                                                <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
-                                                    <option value="">Seleccione una hora</option>
-                                                    {hours.map((hour) => (
-                                                        <option key={hour} value={hour}>
-                                                            {hour}
-                                                        </option>
-                                                    ))}
-                                                </select>
+                                                <div className="selectHour">
+                                                    <label htmlFor="" >Hora</label>
+                                                    <select required name="hour" value={block.hour} onChange={(e) => handleBlockChange(blockIndex, e)} id="">
+                                                        <option value="">Seleccione una hora</option>
+                                                        {hours.map((hour) => (
+                                                            <option key={hour} value={hour}>
+                                                                {hour}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
                                         )
                                     })}
@@ -301,11 +367,52 @@ export default function WorkCreationForm() {
                                     >
                                         Agregar bloque
                                     </button>
+
+                                    <div className="startDate">
+                                        <label htmlFor="" >Fecha de inicio</label>
+                                        <input
+                                            name={"startDate"}
+                                            type={"date"}
+                                            placeholder="Fecha de inicio"
+                                            label={"Fecha de inicio"}
+                                            required={true}
+
+                                            // Ensures that the state always reflects the current value of the input
+                                            // and stays in sync with changes made by the user
+                                            onChange={handleChange}
+
+                                            // To display the error message when the input is focused
+                                            // set to true to keep the error message as long as the input is invalid
+                                            onBlur={() => handleFocus("startDate", true)}
+                                        >
+                                        </input>
+
+                                        <label htmlFor="" >Fecha de culminación</label>
+                                        <input
+                                            name={"endDate"}
+                                            type={"date"}
+                                            placeholder="Fecha de culminación"
+                                            label={"Fecha de culminación"}
+                                            required={true}
+
+                                            // Ensures that the state always reflects the current value of the input
+                                            // and stays in sync with changes made by the user
+                                            onChange={handleChange}
+
+                                            // To display the error message when the input is focused
+                                            // set to true to keep the error message as long as the input is invalid
+                                            onBlur={() => handleFocus("endDate", true)}
+                                        >
+                                        </input>
+
+                                        {showErrorDate &&
+                                        <span>La fecha de culminacion debe ser mayor que la de inicio.</span>}
+                                    </div>
                                 </div>
 
                             ) : (
                                 // if is selected work by session
-                                <div className="workCreationForm">
+                                <div className="workBySession">
                                     <label htmlFor={5}>Seleccione la fecha del trabajo </label>
                                     <input
                                         name={"workDate"}
@@ -328,7 +435,7 @@ export default function WorkCreationForm() {
                                     />
                                     {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
 
-                                    <label htmlFor="" >Hora</label>
+                                    <label htmlFor="">Hora</label>
                                     <select required name="hour" value={blocks[0]?.hour} onChange={handleChangeSessionHour} id="">
                                         <option value="">Seleccione una hora</option>
                                         {hours.map((hour) => (
@@ -345,10 +452,44 @@ export default function WorkCreationForm() {
                     null
             }
 
+            {/*Part of workTags*/}
+            <label className="labelTag" htmlFor="workTags-input">Ingrese los Tags</label>
+            <div className="tagInput ">
+                {workTags.map((item, index) => {
+                    return <button key={index}>
+                            {item}
+                            <p className="delete-tag"
+                            onClick={() => deleteTag(item)}>
+                                X
+                            </p>
+
+                        </button>
+                })}
+                <input
+                    name={"workTags"}
+                    type={"text"}
+                    placeholder={"Escriba los Tags y presione enter"}
+                    value={tagValue}
+                    onChange={(e) => setTagValue(e.target.value)}
+                    onKeyDown={addTags}
+
+                />
+                {showErrorTags && (
+                <p className="error-message">
+                    El tag debe ser de 2 palabras, máximo 16 caracteres y no debe repetirse.</p>
+                )}
+
+            </div>
+
             <Button
                 type="submit"
                 variant="contained"
-                sx={{ marginTop: '50px', alignSelf: 'center' }}
+                sx={{ marginTop: '20px',
+                    alignSelf: 'center',
+                    background: '#a04af1',
+                    borderRadius: '5px',
+                    fontWeight: 'bold',
+                    fontSize: '18px'}}
             >
                 Crear
             </Button>

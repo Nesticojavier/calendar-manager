@@ -61,10 +61,12 @@ export default function WorkListProvider() {
                         }
                         title={work.title}
                         subheader={work.type}
+
                     />
                     <CardContent>
                         <Typography variant="body2" color="text.secondary">
                             {work.description}
+                            {/* {work.tags} */}
                         </Typography>
                     </CardContent>
                     <CardActions disableSpacing>
