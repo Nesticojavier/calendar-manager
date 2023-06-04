@@ -1,4 +1,5 @@
 const { Work } = require("../Models/Work");
+const { Op } = require("sequelize");
 const { insertTag } = require("./utils");
 // Controller to create a job
 const createJob = (req, res) => {
@@ -155,6 +156,9 @@ const updateJob = async (req, res) => {
     where: {
       users_id,
       title,
+      id: {
+        [Op.ne]: id,
+      },
     },
   });
   if (consult !== null) {
