@@ -127,22 +127,6 @@ export default function WorkCreationForm() {
                 { value: "2", label: "Una sesión" },
             ],
         },
-        // {
-        //     name: "workDate",
-        //     type: "date",
-        //     placeholder: "Fecha del trabajo",
-        //     errormessage: "Debe seleccionar una fecha.",
-        //     label: "Fecha del trabajo",
-        //     required: true,
-        // },
-        // {
-        //     name: "workTime",
-        //     type: "time",
-        //     placeholder: "Hora del trabajo",
-        //     errormessage: "Debe seleccionar una hora.",
-        //     label: "Hora del trabajo",
-        //     required: true,
-        // },
     ];
 
     // state used to set the blocks of hours
@@ -155,7 +139,7 @@ export default function WorkCreationForm() {
     }
 
     // blocks of hours and days
-    const days = ["Lun", "Mar", "Mie", "Jue", "Vie"];
+    const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
     const hours = [
         "7:00 AM",
         "8:00 AM",
@@ -219,7 +203,7 @@ export default function WorkCreationForm() {
             onSubmit={handleSubmit}
             flex={4}
             p={2}
-            sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+            sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
             <h1>Editar Trabajo de {work.title}</h1>
 
