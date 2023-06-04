@@ -9,6 +9,7 @@ import Cookies from "js-cookie";
 import WorkCreation from "./Components/Pages/WorkCreation";
 import WorkList from "./Components/Pages/WorkList";
 import WorkEdit from "./Components/Pages/WorkEdit";
+import Home from "./Components/Pages/Home";
 
 function App() {
 
@@ -32,7 +33,7 @@ function App() {
     <BrowserRouter>
       <Navbar isLoggedIn = {isLoggedIn} setIsLoggedIn = {changeLoggedIn}/>
       <Routes>
-        <Route path="/" element={<h1>Welcome to Calendar Manager for volunter Work</h1>} />
+        <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/dashboard" element={<Dashboard setIsLoggedIn = {changeLoggedIn}/>} />
