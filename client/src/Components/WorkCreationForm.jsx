@@ -471,8 +471,12 @@ export default function WorkCreationForm() {
                     placeholder={"Escriba los Tags y presione enter"}
                     value={tagValue}
                     onChange={(e) => setTagValue(e.target.value)}
-                    onKeyDown={addTags}
-
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter'){
+                            e.preventDefault();
+                            addTags(e)
+                        }
+                    }}
                 />
                 {showErrorTags && (
                 <p className="error-message">

@@ -15,7 +15,7 @@ export default function Sidebar() {
     <Box
       flex={1}
       p={2}
-      sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+      sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       borderRight={1}
       borderColor="divider"
     >

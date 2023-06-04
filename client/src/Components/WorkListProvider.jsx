@@ -54,7 +54,7 @@ export default function WorkListProvider() {
         <Box
             flex={4}
             p={2}
-            sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+            sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
             {workData.map((work) => (
                 <Card key={work.id} sx={{ marginBottom: '20px' }}>
