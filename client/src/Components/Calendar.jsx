@@ -8,7 +8,7 @@ export default function Calendar({ setIsLoggedIn }) {
         <Box
             flex={4}
             p={2}
-            sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}
+            sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh'}}
         >
             <h1> Calendario del Proveedor </h1>
             <p> Aqui se mostrara el calendario del proveedor </p>

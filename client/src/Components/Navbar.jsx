@@ -31,25 +31,28 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     </li>
                 ) : (
                     <>
-                        <li>
-                            <NavLink
-                                to="/login"
-                                className={({ isActive }) => (isActive ? "active" : "")}
-                            >
-                                Iniciar sesión
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink
-                                to="/signup"
-                                className={({ isActive }) => (isActive ? "active" : "")}
-                            >
-                                Registrarse
-                            </NavLink>
-                        </li>
+                        <div style={{ marginLeft: 'auto', display: 'flex' }}>
+                            <li>
+                                <NavLink
+                                    to="/login"
+                                    className={({ isActive }) => (isActive ? "active" : "")}
+                                >
+                                    Iniciar sesión
+                                </NavLink>
+                            </li>
+                            <li>
+                                <NavLink
+                                    to="/signup"
+                                    className={({ isActive }) => (isActive ? "active" : "")}
+                                >
+                                    Registrarse
+                                </NavLink>
+                            </li>
+                        </div>
                     </>
                 )}
             </ul>
         </nav>
     );
+
 }

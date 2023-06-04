@@ -54,6 +54,15 @@ input {
   font-size: 14px;
 }
 
+select {
+  margin: 10px;
+  padding: 15px;
+  border: none;
+  border-radius: 5px;
+  width: 280px;
+  font-size: 14px;
+}
+
 form button {
   width: 280px;
   height: 50px;
