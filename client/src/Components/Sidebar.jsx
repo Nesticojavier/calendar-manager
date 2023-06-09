@@ -26,7 +26,7 @@ export default function Sidebar() {
           <ListItemButton
             component={NavLink}
             // component="a"
-            to="/WorkCreation"
+            to="workcreation"
             // href="/WorkCreation"
             selected={selectedIndex === 0}
             onClick={(event) =>
@@ -50,7 +50,7 @@ export default function Sidebar() {
             // component="a"
             // href="/WorkList"
             component={NavLink}
-            to="/WorkList"
+            to="worklist"
             selected={selectedIndex === 1}
             onClick={(event) =>
               handleListItemClick(event, 1)}
@@ -73,7 +73,7 @@ export default function Sidebar() {
             // component="a"
             // href="/dashboard"
             component={NavLink}
-            to="/dashboard"
+            to="calendar"
             selected={selectedIndex === 2}
             onClick={(event) =>
               handleListItemClick(event, 2)}

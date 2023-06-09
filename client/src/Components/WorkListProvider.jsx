@@ -35,7 +35,7 @@ export default function WorkListProvider() {
 
     const navigate = useNavigate();
     const handleEdit = (work) => {
-        navigate(`/WorkEdit/${work.id}`, { state: { work } });
+        navigate(`/provider/workedit/${work.id}`, { state: { work } });
     };
 
     useEffect(() => {

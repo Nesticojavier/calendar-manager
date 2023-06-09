@@ -96,7 +96,7 @@ export default function WorkCreationForm() {
                         title: "Trabajo actualizado exitosamente",
                         icon: "success",
                     }).then(() => {
-                        navigate(`/WorkList`);
+                        navigate(`/provider/worklist`);
                     })
                 })
                 .catch((error) => {
@@ -208,7 +208,7 @@ export default function WorkCreationForm() {
     }
 
     const handleCancel = (e) => {
-        navigate(`/WorkList`);
+        navigate(`/provider/worklist`);
     }
 
     useEffect(() => {

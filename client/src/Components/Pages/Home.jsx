@@ -4,8 +4,10 @@ import Cookies from 'js-cookie';
 
 export default function Home() {
 
-    if (Cookies.get('token')) {
-        return <Navigate to={"/dashboard"} replace />;
+    const token = Cookies.get('token')
+    
+    if (token) {
+        return <Navigate to={"/provider/calendar"} replace />;
     }
     return (
         <div className='App'>
