@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
+import { Button } from '@mui/material'
+
 
 export default function Home() {
     const [rol, setRol] = useState('');
@@ -45,8 +47,28 @@ export default function Home() {
     }
 
     return (
-        <div className="App">
+        <div className="">
             <h1>Bienvenido al Calendar Manager para trabajo voluntario</h1>
+            <div style={{ display: 'flex', marginTop: '80px', marginLeft: '10px' }} >
+                <Button
+                    type="button"
+                    variant="contained" color="secondary"
+                    onClick={() => navigate("/signup")}
+                >
+                    Registrarse
+                </Button>
+                <Button
+                    type="button"
+                    variant="contained" color="primary"
+                    onClick={() => navigate("/login")}
+                >
+                    Acceder
+                </Button>
+
+            </div>
+            <div>
+                <Link to="/adminlogin">¿Eres administrador?</Link>
+            </div>
         </div>
     );
 }
