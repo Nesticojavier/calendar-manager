@@ -19,6 +19,12 @@ import WorkListVolunter from "./Components/VolunterComponents/WorkListVolunter";
 import ProfileVolunter from "./Components/VolunterComponents/ProfileVolunter";
 import EditVolunterProfile from "./Components/VolunterComponents/EditVolunterProfile";
 
+import Admin from "./Components/Pages/Admin";
+import AdminLogin from "./Components/Pages/AdminLogin";
+import EditUser from "./Components/AdminComponents/EditUser"
+import UsersTable from "./Components/AdminComponents/UsersTable"
+
+
 function App() {
 
   // A state is created to know if the user is logged in
@@ -46,7 +52,7 @@ function App() {
         <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/signup" element={<Signup/>} />
-        {/* <Route path="/adminlogin" element={<AdminLogin/>} /> */}
+        <Route path="/adminlogin" element={<AdminLogin/>} />
 
         {/* Routes manage for provider */}
         <Route path="/provider/*" element={<Provider/>}>
@@ -66,10 +72,10 @@ function App() {
         </Route>
 
         {/* Routess manage for Admin */}
-        {/* <Route path="/admin/*" element={<Volunter/>}>
+        <Route path="/admin/*" element={<Admin/>}>
           <Route path="userstable" element={<UsersTable />} />
           <Route path="edituser/:id" element={<EditUser />} />
-        </Route> */}
+        </Route>
 
 
 
