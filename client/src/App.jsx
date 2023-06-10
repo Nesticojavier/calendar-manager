@@ -7,7 +7,6 @@ import Navbar from "./Components/Navbar";
 import Cookies from "js-cookie";
 import Home from "./Components/Pages/Home";
 
-
 import Provider from "./Components/Pages/Provider";
 import WorkCreationForm from "./Components/WorkCreationForm"
 import Calendar from "./Components/Calendar"
@@ -47,6 +46,16 @@ function App() {
           <Route path="worklist" element={<WorkListProvider />} />
           <Route path="workedit/:id" element={<WorkEditForm />} />
         </Route>
+
+        {/* <Route path="/volunter/*" element={<Volunter/>}>
+          <Route path="myworks" element={<WorkListVolunter />} />
+          <Route path="myperfil" element={<ProfileVolunter />} />
+          <Route path="editprofile/:id" element={<EditVolunterProfile />} />
+          <Route path="workview/:id" element={<WorkView />} />
+          <Route path="calendar" element={<Calendar />} />
+        </Route> */}
+
+
 
 
 

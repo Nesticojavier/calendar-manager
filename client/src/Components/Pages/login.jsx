@@ -48,7 +48,7 @@ export default function Login ({ setIsLoggedIn }) {
 
                 // Redirect to dashboard
                 setIsLoggedIn(true);
-                navigate('/provider/calendar')
+                navigate('/')
 
             })
             .catch((error) => {
