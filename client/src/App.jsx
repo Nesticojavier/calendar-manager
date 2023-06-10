@@ -75,6 +75,7 @@ function App() {
         <Route path="/admin/*" element={<Admin/>}>
           <Route path="userstable" element={<UsersTable />} />
           <Route path="edituser/:id" element={<EditUser />} />
+          
         </Route>
 
 
