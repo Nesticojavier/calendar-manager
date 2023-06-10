@@ -35,7 +35,7 @@ export default function Home() {
             if (rol === 'proveedor') {
                 navigate('/provider/calendar', { replace: true });
             } else if (rol === 'voluntario') {
-                navigate('/volunteer/calendar', { replace: true });
+                navigate('/volunter/calendar', { replace: true });
             }
         }
     }, [rol, isLoading, navigate]);

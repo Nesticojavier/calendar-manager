@@ -8,10 +8,16 @@ import Cookies from "js-cookie";
 import Home from "./Components/Pages/Home";
 
 import Provider from "./Components/Pages/Provider";
-import WorkCreationForm from "./Components/WorkCreationForm"
+import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm"
 import Calendar from "./Components/Calendar"
-import WorkListProvider from "./Components/WorkListProvider"
-import WorkEditForm from "./Components/WorkEditForm"
+import WorkListProvider from "./Components/ProviderComponents/WorkListProvider"
+import WorkEditForm from "./Components/ProviderComponents/WorkEditForm"
+
+import Volunter from "./Components/Pages/Volunter";
+import WorkViewVolunter from "./Components/VolunterComponents/WorkViewVolunter";
+import WorkListVolunter from "./Components/VolunterComponents/WorkListVolunter";
+import ProfileVolunter from "./Components/VolunterComponents/ProfileVolunter";
+import EditVolunterProfile from "./Components/VolunterComponents/EditVolunterProfile";
 
 function App() {
 
@@ -36,10 +42,13 @@ function App() {
       <Navbar isLoggedIn = {isLoggedIn} setIsLoggedIn = {changeLoggedIn}/>
       <Routes>
         
+        {/* Routes manage for user no logged */}
         <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/signup" element={<Signup/>} />
+        {/* <Route path="/adminlogin" element={<AdminLogin/>} /> */}
 
+        {/* Routes manage for provider */}
         <Route path="/provider/*" element={<Provider/>}>
           <Route path="workcreation" element={<WorkCreationForm />} />
           <Route path="calendar" element={<Calendar />} />
@@ -47,24 +56,23 @@ function App() {
           <Route path="workedit/:id" element={<WorkEditForm />} />
         </Route>
 
-        {/* <Route path="/volunter/*" element={<Volunter/>}>
+        {/* Routess manage for volunter */}
+        <Route path="/volunter/*" element={<Volunter/>}>
           <Route path="myworks" element={<WorkListVolunter />} />
           <Route path="myperfil" element={<ProfileVolunter />} />
           <Route path="editprofile/:id" element={<EditVolunterProfile />} />
-          <Route path="workview/:id" element={<WorkView />} />
+          <Route path="workview/:id" element={<WorkViewVolunter />} />
           <Route path="calendar" element={<Calendar />} />
+        </Route>
+
+        {/* Routess manage for Admin */}
+        {/* <Route path="/admin/*" element={<Volunter/>}>
+          <Route path="userstable" element={<UsersTable />} />
+          <Route path="edituser/:id" element={<EditUser />} />
         </Route> */}
 
 
 
-
-
-
-
-        {/* <Route path="/dashboard" element={<Dashboard setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/WorkCreation" element={<WorkCreation setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/WorkList" element={<WorkList setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/WorkEdit/:id" element={<WorkEdit setIsLoggedIn = {changeLoggedIn}/>} /> */}
       </Routes>
     </BrowserRouter>
   );
