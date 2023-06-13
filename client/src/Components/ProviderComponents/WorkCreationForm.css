@@ -16,7 +16,7 @@
     font-size: 16px;
     margin-left: 10px;
     width: 280px;
-    height: 50%;
+    height: 50px;
     margin-bottom: 20px;
 }
 
@@ -38,9 +38,9 @@
     width: 160px;
     height: 40px;
     border: none;
-    background: #a04af1;
+    background: rgb(1, 20, 128);
     padding: 10px;
-    color: #fff;
+    color: white;
     border-radius: 5px;
     font-weight: bold;
     font-size: 18px;
@@ -97,7 +97,7 @@
     font-size: 16px;
     margin-left: 10px;
     width: 280px;
-    height: 44px;
+    height: 50px;
     margin-bottom: 20px;
 }
 
@@ -127,6 +127,7 @@
 
 .startDate input{
     margin-left: 0px;
+    border: 1px solid #000000;
 }
 
 .tagInput{
@@ -161,7 +162,7 @@
 
 .tagInput button {
     color: white;
-    background-color: #a04af1;
+    background-color: rgb(1, 20, 128);
     outline: none;
     border: none;
     width: auto;

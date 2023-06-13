@@ -86,7 +86,9 @@ export default function AdminLogin ({ setIsLoggedIn }) {
     return (
         <div className="App-admin">
             <div className="auth-form-container">
-                <h1>Iniciar sesión</h1>
+                <h1>Iniciar sesión
+                    Administrador
+                </h1>
                 <form className = "login-form" onSubmit={handleSubmit}>
                     {inputs.map((input) => (
                         <div key={input.id} className = "formLogin">

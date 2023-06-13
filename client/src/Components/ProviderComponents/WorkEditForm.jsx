@@ -155,6 +155,9 @@ export default function WorkCreationForm() {
         },
     ];
 
+    const RECURRENT = values.workType == "1";
+    const SESSION = values.workType == "2";
+
     // state used to set the blocks of hours
     const [blocks, setBlocks] = useState([workBlocks]);
 
@@ -275,7 +278,7 @@ export default function WorkCreationForm() {
         <Box
             component="form"
             onSubmit={handleSubmit}
-            flex={4}
+            flex={7}
             p={2}
             sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
@@ -319,10 +322,10 @@ export default function WorkCreationForm() {
                 })
             }
             {
-                values.workType == "1" || values.workType == "2"
+                RECURRENT || SESSION
                     ? (
                         // if is selected the work by recurrent
-                        values.workType == "1"
+                        RECURRENT
                             ? (
                                 <div className="workRecurrent">
                                     {blocks.map((block, blockIndex) => {
