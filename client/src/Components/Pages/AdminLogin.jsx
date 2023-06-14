@@ -46,7 +46,7 @@ export default function AdminLogin ({ setIsLoggedIn }) {
                 // localStorage.setItem('token', token);
                 Cookies.set('token', token, { expires: 1 });
 
-                // Redirect to dashboard
+                // Redirect to 
                 setIsLoggedIn(true);
                 navigate('/admin/*')
 
