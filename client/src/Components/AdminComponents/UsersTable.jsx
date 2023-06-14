@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 
 export default function UsersTable() {
 
+  // completar pedir users al be.
   const users = [
     { id: 1, name: 'Usuario 1', role: 'Rol 1' },
     { id: 2, name: 'Usuario 2', role: 'Rol 2' },
