@@ -13,11 +13,11 @@ import Calendar from "./Components/Calendar"
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider"
 import WorkEditForm from "./Components/ProviderComponents/WorkEditForm"
 
-import Volunter from "./Components/Pages/Volunter";
-import WorkViewVolunter from "./Components/VolunterComponents/WorkViewVolunter";
-import WorkListVolunter from "./Components/VolunterComponents/WorkListVolunter";
-import ProfileVolunter from "./Components/VolunterComponents/ProfileVolunter";
-import EditVolunterProfile from "./Components/VolunterComponents/EditVolunterProfile";
+import Volunteer from "./Components/Pages/Volunteer";
+import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVolunteer";
+import WorkListVolunteer from "./Components/VolunteerComponents/WorkListVolunteer";
+import ProfileVolunteer from "./Components/VolunteerComponents/ProfileVolunteer";
+import EditVolunteerProfile from "./Components/VolunteerComponents/EditVolunteerProfile";
 
 import Admin from "./Components/Pages/Admin";
 import AdminLogin from "./Components/Pages/AdminLogin";
@@ -47,7 +47,7 @@ function App() {
     <BrowserRouter>
       <Navbar isLoggedIn = {isLoggedIn} setIsLoggedIn = {changeLoggedIn}/>
       <Routes>
-        
+
         {/* Routes manage for user no logged */}
         <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
         <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
@@ -63,11 +63,11 @@ function App() {
         </Route>
 
         {/* Routess manage for volunter */}
-        <Route path="/volunter/*" element={<Volunter/>}>
-          <Route path="myworks" element={<WorkListVolunter />} />
-          <Route path="myperfil" element={<ProfileVolunter />} />
-          <Route path="editprofile/:id" element={<EditVolunterProfile />} />
-          <Route path="workview/:id" element={<WorkViewVolunter />} />
+        <Route path="/volunteer/*" element={<Volunteer/>}>
+          <Route path="myworks" element={<WorkListVolunteer />} />
+          <Route path="myprofile" element={<ProfileVolunteer />} />
+          <Route path="editprofile/:id" element={<EditVolunteerProfile />} />
+          <Route path="workview/:id" element={<WorkViewVolunteer />} />
           <Route path="calendar" element={<Calendar />} />
         </Route>
 
@@ -75,7 +75,7 @@ function App() {
         <Route path="/admin/*" element={<Admin/>}>
           <Route path="userstable" element={<UsersTable />} />
           <Route path="edituser/:id" element={<EditUser />} />
-          
+
         </Route>
 
 

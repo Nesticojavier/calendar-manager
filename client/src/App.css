@@ -6,7 +6,7 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background-image: linear-gradient(75deg, #fbc2eb 0%, #a6c1ee 100%);
+  background-image: url("https://th.bing.com/th/id/R.cece70b93fbb41eccd6513553ce99887?rik=fnj%2b6TJSGfkfFw&pid=ImgRaw&r=0");
   background-position: center;
   background-size: cover;
   font-family: Arial;
@@ -20,11 +20,29 @@
 
 .auth-form-container{
     padding: 50px;
-    border: 1px solid white;
+    border: 1px solid black;
     border-radius: 10px;
     margin: 5px;
+    background-color: rgb(127, 145, 248);
 }
 
+.homepage {
+  display: flex;
+  min-height: 100vh;
+  background-image: url("https://th.bing.com/th/id/R.cece70b93fbb41eccd6513553ce99887?rik=fnj%2b6TJSGfkfFw&pid=ImgRaw&r=0");
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage button {
+  margin: 10px;
+}
+
+.homepage h1 {
+  color: rgb(1, 20, 128);
+  margin: auto;
+}
 
 h1 {
   text-align: center;
@@ -67,7 +85,7 @@ form button {
   width: 280px;
   height: 50px;
   border: none;
-  background: #a04af1;
+  background: rgb(1, 20, 128);
   padding: 10px;
   color: #fff;
   border-radius: 5px;
@@ -79,7 +97,7 @@ form button {
 
 .button-switch{
   background: none;
-  color: #a04af1;
+  color: rgb(1, 20, 128);
   text-decoration: underline;
   border: none;
   font-size: 14px;

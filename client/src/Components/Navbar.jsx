@@ -13,7 +13,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
     return (
         <nav className="navbar">
             <ul>
-                <li>
+                <li className="home">
                     <NavLink
                         to="/"
                         className={({ isActive }) => (isActive ? "active" : "")}
@@ -22,7 +22,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                     </NavLink>
                 </li>
                 {isLoggedIn ? (
-                    <li>
+                    <li className="logout">
                         <button
                             className="logout-button"
                             onClick = {handleClick} >
@@ -32,7 +32,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                 ) : (
                     <>
                         <div style={{ marginLeft: 'auto', display: 'flex' }}>
-                            <li>
+                            <li className="login">
                                 <NavLink
                                     to="/login"
                                     className={({ isActive }) => (isActive ? "active" : "")}
@@ -40,7 +40,7 @@ export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
                                     Iniciar sesión
                                 </NavLink>
                             </li>
-                            <li>
+                            <li className="signup">
                                 <NavLink
                                     to="/signup"
                                     className={({ isActive }) => (isActive ? "active" : "")}

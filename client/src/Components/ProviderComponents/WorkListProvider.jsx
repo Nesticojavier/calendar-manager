@@ -52,12 +52,12 @@ export default function WorkListProvider() {
 
     return (
         <Box
-            flex={4}
+            flex={7}
             p={2}
             sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
         >
             {workData.map((work) => (
-                <Card key={work.id} sx={{ marginBottom: '20px' }}>
+                <Card key={work.id} sx={{ marginBottom: '20px', border: '1px solid black'}}>
                     <CardHeader
                         action={
                             <IconButton onClick={() => handleEdit(work)}>

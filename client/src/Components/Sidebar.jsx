@@ -16,7 +16,7 @@ export default function Sidebar() {
   return (
     <Box
       flex={1}
-      p={2}
+      p={1}
       sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
       borderRight={1}
       borderColor="divider"
@@ -33,16 +33,16 @@ export default function Sidebar() {
               handleListItemClick(event, 0)}
             sx={{
               '&.Mui-selected': {
-                backgroundColor: '#fbc2eb',
+                backgroundColor: 'rgb(180, 190, 247)',
                 color: 'black',
-                '&:hover': { backgroundColor: '#d8b7f7' }
+                '&:hover': { backgroundColor: 'rgb(127, 145, 248)' }
               }
             }}
           >
             <ListItemIcon>
               <AddIcon />
             </ListItemIcon>
-            <ListItemText primary="Crear trabajo voluntario" />
+            <ListItemText primary="Crear trabajo voluntario"/>
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
@@ -56,9 +56,9 @@ export default function Sidebar() {
               handleListItemClick(event, 1)}
             sx={{
               '&.Mui-selected': {
-                backgroundColor: '#fbc2eb',
+                backgroundColor: 'rgb(180, 190, 247)',
                 color: 'black',
-                '&:hover': { backgroundColor: '#d8b7f7' }
+                '&:hover': { backgroundColor: 'rgb(127, 145, 248)' }
               }
             }}
           >
@@ -79,9 +79,9 @@ export default function Sidebar() {
               handleListItemClick(event, 2)}
             sx={{
               '&.Mui-selected': {
-                backgroundColor: '#fbc2eb',
+                backgroundColor: 'rgb(180, 190, 247)',
                 color: 'black',
-                '&:hover': { backgroundColor: '#d8b7f7' }
+                '&:hover': { backgroundColor: 'rgb(127, 145, 248)' }
               }
             }}
           >

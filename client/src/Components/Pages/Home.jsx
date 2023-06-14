@@ -4,7 +4,6 @@ import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button } from '@mui/material'
 
-
 export default function Home() {
     const [rol, setRol] = useState('');
     const [isLoading, setIsLoading] = useState(true);
@@ -47,28 +46,30 @@ export default function Home() {
     }
 
     return (
-        <div className="">
-            <h1>Bienvenido al Calendar Manager para trabajo voluntario</h1>
-            <div style={{ display: 'flex', marginTop: '80px', marginLeft: '10px' }} >
+        <div className="homepage">
+            <div className='hometitle'>
+                <h1>Bienvenido al Calendar Manager para trabajo voluntario</h1>
+            </div>
+            {/* <div className='buttonshome'>
                 <Button
                     type="button"
-                    variant="contained" color="secondary"
+                    variant="contained"
                     onClick={() => navigate("/signup")}
                 >
                     Registrarse
                 </Button>
                 <Button
                     type="button"
-                    variant="contained" color="primary"
+                    variant="contained"
                     onClick={() => navigate("/login")}
                 >
                     Acceder
                 </Button>
 
-            </div>
-            <div>
+            </div> */}
+            {/* <div className='homelink'>
                 <Link to="/adminlogin">¿Eres administrador?</Link>
-            </div>
+            </div> */}
         </div>
     );
 }
