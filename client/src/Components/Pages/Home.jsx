@@ -42,7 +42,7 @@ export default function Home() {
                 navigate('/volunter/calendar', { replace: true });
             }
         }
-    }, [rol, isLoading, navigate]);
+    }, [rol, isLoading, navigate, isLoggedIn]);
 
     if (isLoading) {
         return <div>Loading...</div>;

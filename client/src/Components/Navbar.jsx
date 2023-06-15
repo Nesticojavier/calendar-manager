@@ -7,12 +7,13 @@ import "./navbar.css";
 
 // export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
 export default function Navbar() {
-    const { isLoggedIn, changeLoggedIn } = useContext(UserContext)
+    const { isLoggedIn, changeLoggedIn, changeProfile } = useContext(UserContext)
 
     const navigate = useNavigate()
     const handleClick = () => {
         Cookies.remove('token');
         changeLoggedIn(false)
+        changeProfile(null)
         navigate('/', { replace: true })
     }
     return (
