@@ -7,10 +7,6 @@ import { useNavigate, Navigate } from "react-router-dom";
 
 const Signup = () => {
 
-    if (Cookies.get('token')) {
-        return <Navigate to={"/dashboard"} replace />;
-    }
-
     const navigate = useNavigate()
 
     // A state is created for the values of the form inputs

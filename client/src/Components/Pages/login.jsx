@@ -9,10 +9,6 @@ export default function Login () {
 
     const { changeLoggedIn } = useContext(UserContext)
 
-    if (Cookies.get('token')) {
-        return <Navigate to={"/dashboard"} replace />;
-    }
-
     // A state is created for the values of the form inputs
     // Saved to an object with empty initial values
     const [values, setValues] = useState({

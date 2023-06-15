@@ -1,24 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import axios from 'axios';
 import { Button } from '@mui/material'
+import { UserContext } from "../../Context/UserContext";
 
 export default function Home() {
     const [rol, setRol] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const navigate = useNavigate();
+    const { isLoggedIn, changeProfile } = useContext(UserContext)
 
     useEffect(() => {
         const token = Cookies.get('token');
 
-        if (token) {
+        if (isLoggedIn) {
             const headers = { Authorization: `Bearer ${token}` };
             axios
                 .get('http://localhost:3000/dashboard', { headers })
                 .then((response) => {
                     setRol(response.data.profile.rol);
                     console.log(response.data);
+                    changeProfile(response.data.profile)
                 })
                 .catch((error) => {
                     console.error(error.response.data.message);
