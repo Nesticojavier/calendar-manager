@@ -40,7 +40,7 @@ export default function WorkListProvider() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:3000/provider/myJobs", { headers })
+            .get(`${import.meta.env.VITE_API_URL}/provider/myJobs` , { headers })
             .then((response) => {
                 setWorkData(response.data);
                 setIsDeleted(false);
