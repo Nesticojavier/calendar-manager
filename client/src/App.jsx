@@ -28,7 +28,7 @@ import UsersTable from "./Components/AdminComponents/UsersTable"
 
 
 function App() {
-  const { setIsLoggedIn, profile } = useContext(UserContext);
+  const { isLoggedIn, profile } = useContext(UserContext);
   // A state is created to know if the user is logged in
 
   // when the page is reloaded, to know if the user is logged in
@@ -38,7 +38,6 @@ function App() {
   //   }
   // }, []);
 
-
   return (
 
     <BrowserRouter>
@@ -47,7 +46,7 @@ function App() {
 
         <Route path="/" element={<Home/>} />
         {/* Routes manage for user no logged */}
-        <Route element={<ProtectedRoutes isAllowed={!profile} />}>
+        <Route element={<ProtectedRoutes isAllowed={!isLoggedIn} />}>
           <Route path="/login" element={<Login/>} />
           <Route path="/signup" element={<Signup/>} />
           <Route path="/adminlogin" element={<AdminLogin/>} />
