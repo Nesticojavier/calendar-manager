@@ -18,7 +18,7 @@ export default function Home() {
                 .get('http://localhost:3000/dashboard', { headers })
                 .then((response) => {
                     setRol(response.data.profile.rol);
-                    console.log(rol);
+                    console.log(response.data);
                 })
                 .catch((error) => {
                     console.error(error.response.data.message);

@@ -45,12 +45,12 @@ function App() {
   return (
 
     <BrowserRouter>
-      <Navbar isLoggedIn = {isLoggedIn} setIsLoggedIn = {changeLoggedIn}/>
+      <Navbar />
       <Routes>
 
         {/* Routes manage for user no logged */}
-        <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
+        <Route path="/" element={<Home/>} />
+        <Route path="/login" element={<Login/>} />
         <Route path="/signup" element={<Signup/>} />
         <Route path="/adminlogin" element={<AdminLogin/>} />
 

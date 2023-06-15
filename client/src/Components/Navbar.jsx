@@ -1,13 +1,18 @@
-import React from "react";
+import { UserContext } from "../Context/UserContext";
+import { useContext } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Cookies from 'js-cookie';
 import "./navbar.css";
 
-export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
+
+// export default function Navbar({ isLoggedIn, setIsLoggedIn }) {
+export default function Navbar() {
+    const { isLoggedIn, changeLoggedIn } = useContext(UserContext)
+
     const navigate = useNavigate()
     const handleClick = () => {
         Cookies.remove('token');
-        setIsLoggedIn(false)
+        changeLoggedIn(false)
         navigate('/', { replace: true })
     }
     return (

@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from 'axios';
 import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { UserContext } from "../../Context/UserContext";
 
-export default function Login ({ setIsLoggedIn }) {
+export default function Login () {
+
+
+    const { changeLoggedIn } = useContext(UserContext)
 
     if (Cookies.get('token')) {
         return <Navigate to={"/dashboard"} replace />;
@@ -46,14 +50,16 @@ export default function Login ({ setIsLoggedIn }) {
                 // localStorage.setItem('token', token);
                 Cookies.set('token', token, { expires: 1 });
 
-                // Redirect to dashboard
-                setIsLoggedIn(true);
+                changeLoggedIn(true)
+
+                // Redirect to home
                 navigate('/')
 
             })
             .catch((error) => {
                 // Handle request error
-                setErrorMessage(error.response.data.message)
+                // setErrorMessage(error.response.data.message)
+                console.log("ha ocurrido un errror")
             });
 
     };
