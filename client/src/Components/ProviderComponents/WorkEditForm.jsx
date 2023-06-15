@@ -89,7 +89,7 @@ export default function WorkCreationForm() {
             const valuesEnd = { ...values, blocks }
             console.log(valuesEnd);
             axios
-                .put(`http://localhost:3000/provider/job/${workId}`,valuesEnd, { headers })
+                .put(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, valuesEnd, { headers })
                 .then((response) => {
                     // Handle request response successful
                     swal({

@@ -38,7 +38,7 @@ export default function Login () {
         e.preventDefault();
 
         axios
-            .post("http://localhost:3000/login", values)
+            .post(`${import.meta.env.VITE_API_URL}/login`, values)
             .then((response) => {
                 // Handle request response successful
                 const token = response.data.token

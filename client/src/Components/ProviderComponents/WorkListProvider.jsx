@@ -23,7 +23,7 @@ export default function WorkListProvider() {
 
     const handleDelete = (workId) => {
         axios
-            .delete(`http://localhost:3000/provider/job/${workId}`, { headers })
+            .delete(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, { headers })
             .then((response) => {
                 setIsDeleted(true)
                 console.log(response.data.message);

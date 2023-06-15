@@ -12,15 +12,15 @@ export default function Home() {
     const { isLoggedIn, changeProfile } = useContext(UserContext)
 
     useEffect(() => {
+        const api_url = import.meta.env.VITE_API_URL;
         const token = Cookies.get('token');
 
         if (isLoggedIn) {
             const headers = { Authorization: `Bearer ${token}` };
             axios
-                .get('http://localhost:3000/dashboard', { headers })
+                .get(`${api_url}/dashboard`, { headers })
                 .then((response) => {
                     setRol(response.data.profile.rol);
-                    console.log(response.data);
                     changeProfile(response.data.profile)
                 })
                 .catch((error) => {

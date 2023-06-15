@@ -45,7 +45,7 @@ const Signup = () => {
 
         // Used to submit the form via the post method
         axios
-            .post("http://localhost:3000/signup", values)
+            .post(`${import.meta.env.VITE_API_URL}/signup`, values)
             .then((response) => {
                 // Handle request response successful
                 swal({

@@ -84,14 +84,14 @@ export default function WorkCreationForm() {
             const valuesEnd = { ...values, blocks }
             console.log(valuesEnd);
             axios
-                .post("http://localhost:3000/provider/create", valuesEnd, { headers })
+                .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, { headers })
                 .then((response) => {
                     // Handle request response successful
                     swal({
                         title: "Trabajo creado exitosamente",
                         icon: "success",
                     }).then(() => {
-                        navigate(`/WorkList`);
+                        navigate(`/provider/worklist`);
                     })
                 })
                 .catch((error) => {
