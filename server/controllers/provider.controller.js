@@ -1,6 +1,8 @@
 const { Work } = require("../Models/Work");
 const { Op } = require("sequelize");
 const { insertTag } = require("./utils");
+const { sq } = require("../db/db");
+
 // Controller to create a job
 const createJob = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
@@ -44,8 +46,8 @@ const createJob = (req, res) => {
       blocks: JSON.stringify(blocks),
     },
   })
-    .then(([row, creado]) => {
-      if (creado) {
+    .then(([row, created]) => {
+      if (created) {
         insertTag(row.dataValues.id, tags);
         res.json({ message: "Trabajo creado exitosamente" });
       } else {
@@ -58,28 +60,24 @@ const createJob = (req, res) => {
 };
 
 // Controller to display a job from a user
-const showJob = (req, res) => {
+const showJob = async (req, res) => {
   const { id: users_id } = req.userData.profile;
   const { id } = req.params;
 
-  Work.findOne({
-    where: {
-      users_id,
-      id,
-    },
-  })
-    .then((result) => {
-      if (result) {
-        res.json(result);
-      } else {
-        res.status(404).json({
-          message: "Error, trabajo no encontrado o no pertenece al usuario",
-        });
-      }
-    })
-    .catch(() => {
-      res.status(500).json({ message: "Ha ocurrido un error en el servidor" });
-    });
+  sq.query(
+    `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+    FROM works wo 
+    LEFT JOIN "workTags" w ON wo.id = w.works_id 
+    LEFT JOIN tags t ON t.id = w.tags_id
+    WHERE wo.id = :WORKID
+    GROUP BY wo.id`,
+    {
+      replacements: { WORKID: id },
+      type: sq.QueryTypes.SELECT,
+    }
+  ).then((results) => {
+    res.json(results);
+  });
 };
 
 // Controller to display jobs from a user
@@ -88,13 +86,21 @@ const showJobs = (req, res) => {
   if (rol !== "proveedor") {
     return res.status(403).json({ message: "El usuario no es proveedor" });
   }
-  Work.findAll({
-    where: {
-      users_id,
-    },
-  })
-    .then((myWorks) => {
-      return res.json(myWorks);
+
+  sq.query(
+    `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+    FROM works wo 
+    LEFT JOIN "workTags" w ON wo.id = w.works_id 
+    LEFT JOIN tags t ON t.id = w.tags_id
+    WHERE wo.users_id = :USERID
+    GROUP BY wo.id`,
+    {
+      replacements: { USERID: users_id },
+      type: sq.QueryTypes.SELECT,
+    }
+  )
+    .then((results) => {
+      res.json(results);
     })
     .catch((error) => {
       res.status(500).json({ message: "Ha ocurrido un error en el servidor " });
