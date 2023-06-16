@@ -28,16 +28,11 @@ import UsersTable from "./Components/AdminComponents/UsersTable"
 
 
 function App() {
+
+
+  // Context to know if the user is logged in
   const { isLoggedIn, profile } = useContext(UserContext);
-  // A state is created to know if the user is logged in
-
-  // when the page is reloaded, to know if the user is logged in
-  // useEffect(() => {
-  //   if (Cookies.get("token")) {
-  //     setIsLoggedIn(true)
-  //   }
-  // }, []);
-
+  
   return (
 
     <BrowserRouter>
