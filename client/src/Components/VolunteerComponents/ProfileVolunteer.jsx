@@ -1,33 +1,45 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box } from "@mui/material";
+import Cookies from "js-cookie";
+import { Box, IconButton } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileVolunteer() {
-  // this obtein the data from the user
-  // const handleProfile = () => {
-  //   axios.get("http://localhost:3001/volunteer/profile")
-  // }
+  // const token = Cookies.get("token");
+  // const headers = { Authorization: `Bearer ${token}` };
+
+  // // A state is created for the data of the user
+  // const [userData, setUserData] = useState([]);
+
+  // To navigate to the edit profile page
+  const navigate = useNavigate();
+  const handleEdit = (user) => {
+    navigate(`/volunteer/editprofile/${user.id}`, { state: { user } });
+  };
+
+  // // this obtein the data from the user
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:3000/volunteer/user", { headers })
+  //     .then((response) => {
+  //       setUserData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error.response.data.message);
+  //     });
+  // });
 
   // A state is created for the values of the form inputs
   // Saved to an object with the data of the user as initial values
   const [values, setValues] = useState({
-    username: "",
-    password: "",
-    fullName: "",
-    birthDate: "",
-    institutionalId: "",
-    rol: "voluntario",
-  });
-
-  // A state is created to know if the input is focused or not
-  const [focused, setFocused] = useState({
-    username: false,
-    password: false,
-    fullName: false,
-    birthDate: false,
-    institutionalId: false,
-    rol: false,
+    username: "pepito",
+    password: "jajajaja",
+    fullName: "ola k ase",
+    birthDate: "01/01/2000",
+    institutionalId: "123456789",
+    rol: "Voluntario",
   });
 
   // inputs with their restrictions and message errors
@@ -68,7 +80,7 @@ export default function ProfileVolunteer() {
     {
       id: 4,
       name: "birthDate",
-      type: "date",
+      type: "text",
       placeholder: "Fecha de nacimiento",
       label: "Fecha de nacimiento",
       required: true,
@@ -96,36 +108,6 @@ export default function ProfileVolunteer() {
         { value: "proveedor", label: "Proveedor" },
       ],
     },
-    {
-      id: 7,
-      name: "label",
-      type: "text",
-      placeholder: "Agregar etiqueta",
-      errormessage: "Debes agregar al menos una etiqueta",
-      label: "Etiqueta",
-      required: true,
-    },
-    {
-      id: 8,
-      name: "time",
-      type: "select",
-      placeholder: "Agregue el horario de preferencia",
-      errormessage: "Debes agregar al menos un horario de preferencia",
-      label: "Horario de preferencia",
-      required: true,
-      options: [
-        { value: "7:00 AM", label: "7:00 AM" },
-        { value: "8:00 AM", label: "8:00 AM" },
-        { value: "9:00 AM", label: "9:00 AM" },
-        { value: "10:00 AM", label: "10:00 AM" },
-        { value: "11:00 AM", label: "11:00 AM" },
-        { value: "12:00 PM", label: "12:00 PM" },
-        { value: "1:00 PM", label: "1:00 PM" },
-        { value: "2:00 PM", label: "2:00 PM" },
-        { value: "3:00 PM", label: "3:00 PM" },
-        { value: "4:00 PM", label: "4:00 PM" },
-      ],
-    },
   ];
 
   return (
@@ -142,18 +124,42 @@ export default function ProfileVolunteer() {
         textAlign: "center",
       }}
     >
-      <div>
-        <AccountCircleIcon sx={{ fontSize: 100 }} />
-        <h1>Nombre Apellido</h1>
-      </div>
-      <Box
-        sx={{
-          textAlign: "left",
-        }}
-      >
-        {inputs.map((input) => (
-          <div key={input.id}>
-            {input.id <= 6 && (
+      {/* {userData.map((user) => ( */}
+      <>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: "30px",
+            }}
+          >
+            <AccountCircleIcon sx={{ fontSize: 100 }} />
+            <IconButton onClick={() => handleEdit(user)}>
+              <EditIcon />
+            </IconButton>
+          </div>
+          <h1>Nombre Apellido</h1>
+          {/* <h1>{user.fullName}</h1> */}
+        </div>
+        <Box
+          sx={{
+            textAlign: "left",
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
+          {inputs.map((input) => (
+            <div key={input.id}>
               <>
                 <label htmlFor={input.name}>{input.label}</label>
                 <input
@@ -165,52 +171,16 @@ export default function ProfileVolunteer() {
                   style={{
                     border: "1px solid black",
                     display: "flex",
-                    flexDirection: "row",
+                    flexDirection: "flex-start",
                     alignItems: "center",
                   }}
                 />
               </>
-            )}
-            {input.id >= 7 && (
-              <>
-                <label htmlFor={input.name}>{input.label}</label>
-                {input.type === "select" ? (
-                  <select
-                    id={input.name}
-                    name={input.name}
-                    value={values[input.name]}
-                    style={{
-                      border: "1px solid black",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  >
-                    {input.options.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    id={input.name}
-                    name={input.name}
-                    type={input.type}
-                    value={values[input.name]}
-                    style={{
-                      border: "1px solid black",
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "center",
-                    }}
-                  />
-                )}
-              </>
-            )}
-          </div>
-        ))}
-      </Box>
+            </div>
+          ))}
+        </Box>
+      </>
+      {/* ))} */}
     </Box>
   );
 }
