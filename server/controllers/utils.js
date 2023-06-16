@@ -24,6 +24,16 @@ const insertTag = (works_id, tags) => {
   });
 };
 
+const updateTag = (works_id, tags) => {
+  WorkTags.destroy({
+    where: {
+      works_id: works_id
+    }
+  });
+  insertTag(works_id, tags)
+}
+
 module.exports = {
   insertTag,
+  updateTag,
 };
