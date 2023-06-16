@@ -1,6 +1,6 @@
 const { Work } = require("../Models/Work");
 const { Op } = require("sequelize");
-const { insertTag } = require("./utils");
+const { insertTag, updateTag } = require("./utils");
 const { sq } = require("../db/db");
 const error = require("../error/error");
 
@@ -171,9 +171,7 @@ const updateJob = async (req, res) => {
     },
   });
   if (consult !== null) {
-    return res
-      .status(400)
-      .json(error.errorJobAlreadyExists);
+    return res.status(400).json(error.errorJobAlreadyExists);
   }
 
   Work.update(
@@ -183,7 +181,6 @@ const updateJob = async (req, res) => {
       type,
       volunteerCountMax,
       blocks: JSON.stringify(blocks),
-      tags,
     },
     {
       where: {
@@ -193,13 +190,12 @@ const updateJob = async (req, res) => {
     }
   )
     .then((result) => {
+      updateTag(id, tags);
       console.log(result);
       return res.json(error.successUpdate);
     })
     .catch(() => {
-      return res
-        .status(500)
-        .json(error.successUpdate);
+      return res.status(500).json(error.successUpdate);
     });
 };
 
