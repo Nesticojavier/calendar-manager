@@ -28,20 +28,22 @@ export default function UsersTable() {
 
   return (
       <Box
-        flex={4}
+        flex={7}
         p={4}
         sx={{ 
           display: "flex", 
           flexDirection: "column", 
           minHeight: "100vh",
-          minWidth: "100vh",
+          minWidth: "150vh",
           overflow: "auto",    
         }}
       >
 
         <div>
 
-          <h1>Usuarios registrados en el sistema</h1>
+          <h1 style={{ marginBottom: '50px' }}>
+            Usuarios registrados en el sistema
+          </h1>
           
             <Table>
               <TableHead>
@@ -64,8 +66,7 @@ export default function UsersTable() {
                   </TableRow>
                 ))}
               </TableBody>
-            </Table>
-          
+            </Table>         
         
         </div>
 
