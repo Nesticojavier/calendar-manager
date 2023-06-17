@@ -63,9 +63,10 @@ export default function WorkListProvider() {
                             <IconButton onClick={() => handleEdit(work)}>
                                 <EditIcon />
                             </IconButton>
-                        }
+                        }   
                         title={work.title}
-                        subheader={work.type}
+                        subheader= {(`Trabajo ${work.type === "1" ? "recurrente" : "de sesión"}`)}
+                        
 
                     />
                     <CardContent>
