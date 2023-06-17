@@ -14,6 +14,8 @@ const createJob = (req, res) => {
     workersNeeded: volunteerCountMax,
     blocks,
     workTags: tags,
+    startDate: dateInit,
+    endDate: dateEnd,
   } = req.body;
 
   if (
@@ -21,7 +23,9 @@ const createJob = (req, res) => {
     !description ||
     !type ||
     !volunteerCountMax ||
-    blocks.length == 0
+    blocks.length == 0 ||
+    !dateInit ||
+    !dateEnd
   ) {
     return res.status(400).json(error.errorMissingData);
   }
@@ -43,7 +47,9 @@ const createJob = (req, res) => {
       type,
       volunteerCountMax,
       blocks: JSON.stringify(blocks),
+
     },
+
   })
     .then(([row, created]) => {
       if (created) {
@@ -102,6 +108,10 @@ const showJobs = (req, res) => {
     }
   )
     .then((results) => {
+      results.map((e) => {
+        e.tags = e.tags?.split(",");
+        return e;
+      });
       res.json(results);
     })
     .catch((error) => {
