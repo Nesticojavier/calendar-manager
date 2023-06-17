@@ -18,6 +18,7 @@ import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVoluntee
 import WorkListVolunteer from "./Components/VolunteerComponents/WorkListVolunteer";
 import ProfileVolunteer from "./Components/VolunteerComponents/ProfileVolunteer";
 import EditVolunteerProfile from "./Components/VolunteerComponents/EditVolunteerProfile";
+import CalendarVolunteer from "./Components/CalendarVolunteer";
 
 import Admin from "./Components/Pages/Admin";
 import AdminLogin from "./Components/Pages/AdminLogin";
@@ -68,7 +69,7 @@ function App() {
           <Route path="myprofile" element={<ProfileVolunteer />} />
           <Route path="editprofile/:id" element={<EditVolunteerProfile />} />
           <Route path="workview/:id" element={<WorkViewVolunteer />} />
-          <Route path="calendar" element={<Calendar />} />
+          <Route path="calendar" element={<CalendarVolunteer />} />
         </Route>
 
         {/* Routess manage for Admin */}

@@ -96,7 +96,7 @@ export default function WorkCreationForm() {
                         title: "Trabajo creado exitosamente",
                         icon: "success",
                     }).then(() => {
-                        navigate(`/WorkList`);
+                        navigate(`/provider/WorkList`);
                     })
                 })
                 .catch((error) => {

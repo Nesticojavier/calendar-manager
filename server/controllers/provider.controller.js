@@ -7,13 +7,15 @@ const error = require("../error/error");
 // Controller to create a job
 const createJob = (req, res) => {
   const { id: users_id, rol } = req.userData.profile;
-  const {
+  let {
     workDescription: description,
     workTitle: title,
     workType: type,
     workersNeeded: volunteerCountMax,
     blocks,
     workTags: tags,
+    startDate: dateInit,
+    endDate: dateEnd,
   } = req.body;
 
   if (
@@ -30,6 +32,15 @@ const createJob = (req, res) => {
     return res.status(403).json(error.errorUnauthorized);
   }
 
+  if (type == 2) {
+    const dayOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    dateInit = blocks[0].day
+    dateEnd = dateInit
+    const date = new Date(dateInit)
+    blocks[0].day = dayOfWeek[date.getDay()]
+    blocks = [blocks[0]]
+  }
+
   Work.findOrCreate({
     where: {
       users_id,
@@ -43,6 +54,8 @@ const createJob = (req, res) => {
       type,
       volunteerCountMax,
       blocks: JSON.stringify(blocks),
+      dateEnd,
+      dateInit,
     },
   })
     .then(([row, created]) => {
@@ -102,6 +115,11 @@ const showJobs = (req, res) => {
     }
   )
     .then((results) => {
+      results.map((e) => {
+        e.tags = e.tags?.split(",");
+        e.blocks = JSON.parse(e.blocks);
+        return e;
+      });
       res.json(results);
     })
     .catch((error) => {

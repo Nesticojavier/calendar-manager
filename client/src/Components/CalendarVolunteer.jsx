@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export default function Calendar({ setIsLoggedIn }) {
+export default function CalendarVolunteer({ setIsLoggedIn }) {
   const navigate = useNavigate();
 
   // days of the week
@@ -107,8 +107,31 @@ export default function Calendar({ setIsLoggedIn }) {
         setWorkData(response.data);
       })
       .catch((error) => {
-        console.error(error.response.data.message);
+        if (error.response) {
+          console.error(error.response.data.message);
+        } else {
+          console.error(error.message);
+        }
       });
+  };
+
+  // to show the works tags in the calendar
+  const isWorkOnDay = (work, day) => {
+    // Convertir el día a un formato de fecha
+    const date = new Date(currentYear, currentMonth, day);
+
+    // Obtener el nombre del día en español
+    const dayName = date.toLocaleDateString("es-ES", { weekday: "long" });
+
+    // Comprobar si el trabajo tiene un bloque que coincide con el día y la hora
+    const hasBlock = work.blocks.some((block) => block.day === dayName);
+
+    // Comprobar si el trabajo está dentro del rango de inicio y fin
+    const isInRange =
+      date >= new Date(work.dateInit) && date <= new Date(work.dateEnd);
+
+    // Devolver true si ambas condiciones se cumplen, y false si no
+    return hasBlock && isInRange;
   };
 
   //   const [dialogOpen, setDialogOpen] = useState(false);
@@ -198,9 +221,9 @@ export default function Calendar({ setIsLoggedIn }) {
 
         {/* To display the days of the month */}
         {[...Array(daysInMonth)].map((_, index) => {
+          handleAddWorks(currentYear, currentMonth);
           // to get the date of the day
           const date = new Date(currentYear, currentMonth, index + 1);
-          console.log(date);
           // to handle the click on the day
           const handleIconClick = (e) => {
             setSelectedDay(index + 1);
@@ -208,21 +231,14 @@ export default function Calendar({ setIsLoggedIn }) {
             setSelectedYear(currentYear);
             navigate(`/provider/workcreation`);
           };
-          // // Add a condition to check if a tag should be added to this day
-          // const shouldAddTag = trabajos.some((trabajo) => {
-          //   console.log(trabajo.blocks);
-          //   console.log(trabajo.dateInit);
-          //   console.log(trabajo.dateEnd);
-          //   return trabajo.blocks.some(
-          //     (block) =>
-          //       block.day ===
-          //         date.toLocaleDateString("es-VE", { weekday: "long" }) &&
-          //       date >= new Date(trabajo.dateInit) &&
-          //       date <= new Date(trabajo.dateEnd)
-          //   )
-          // });
-          // const tags = shouldAddTag ? [titles[index]] : [];
-          // console.log(shouldAddTag);
+          // Add a condition to check if a tag should be added to this day
+          // Filtrar los trabajos que corresponden a este día
+          const worksOnDay = workData.filter((work) => {
+            console.log(`Checking work ${work.id} on day ${index + 1}`);
+            const result = isWorkOnDay(work, index + 1);
+            console.log(`Result: ${result}`);
+            return result;
+          });
 
           return (
             <Grid
@@ -247,9 +263,9 @@ export default function Calendar({ setIsLoggedIn }) {
                   width: "100%",
                 }}
               >
-                {/* {tags.map((tag) => (
+                {worksOnDay.map((work) => (
                   <span
-                    key={tag}
+                    key={work.id}
                     style={{
                       display: "inline-block",
                       padding: "2px 6px",
@@ -259,9 +275,9 @@ export default function Calendar({ setIsLoggedIn }) {
                       margin: "2px",
                     }}
                   >
-                    {tag}
+                    {work.title}
                   </span>
-                ))} */}
+                ))}
               </div>
             </Grid>
           );
