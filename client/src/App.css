@@ -12,6 +12,18 @@
   font-family: Arial;
 }
 
+.App-admin{
+  display: flex;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-image: linear-gradient(75deg, #fafafa 0%, rgb(1, 20, 128) 100%);
+  background-position: center;
+  background-size: cover;
+  font-family: Arial;
+}
+
 .auth-form-container, .login-form, .register-form {
   display: flex;
   flex-direction: column;
@@ -37,8 +49,26 @@
 
 .homepage button {
   margin: 10px;
+    background-color: rgb(127, 145, 248);
 }
 
+.homepage {
+  display: flex;
+  min-height: 100vh;
+  background-image: url("https://th.bing.com/th/id/R.cece70b93fbb41eccd6513553ce99887?rik=fnj%2b6TJSGfkfFw&pid=ImgRaw&r=0");
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage button {
+  margin: 10px;
+}
+
+.homepage h1 {
+  color: rgb(1, 20, 128);
+  margin: auto;
+}
 .homepage h1 {
   color: rgb(1, 20, 128);
   margin: auto;
@@ -95,7 +125,32 @@ form button {
   margin-top: 15px;
 }
 
+.button-admin {
+  width: 280px;
+  height: 50px;
+  border: none;
+  background: rgb(1, 20, 128);
+  padding: 10px;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: bold;
+  font-size: 18px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
 .button-switch{
+  background: none;
+  color: rgb(1, 20, 128);
+  text-decoration: underline;
+  border: none;
+  font-size: 14px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.button-switch-admin{
   background: none;
   color: rgb(1, 20, 128);
   text-decoration: underline;

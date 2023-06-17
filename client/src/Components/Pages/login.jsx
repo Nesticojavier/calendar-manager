@@ -118,6 +118,9 @@ export default function Login ({ setIsLoggedIn }) {
                     <button type="submit">Iniciar sesión</button>
                 </form>
                 <p className="error">{errorMessage}</p>
+                <button className = "button-switch" onClick={() => navigate("/adminlogin")}>
+                    ¿Eres administrador? Inicia sesión aquí.
+                </button>
                 <button className = "button-switch" onClick={() => navigate("/signup")}>
                     ¿No tienes una cuenta? Regístrate aquí.
                 </button>
