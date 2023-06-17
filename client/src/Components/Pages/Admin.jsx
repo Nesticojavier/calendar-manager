@@ -14,7 +14,7 @@ export default function Admin({ setIsLoggedIn }) {
     return (
         <Box className='boxWorkForm'>
         <Stack direction="row" spacing={2} justifyContent="space-between">
-            <Sidebar /> {/** this must be the volunter's sidebar */}
+       {/** <Sidebar /> this must be the admin sidebar */}
             <Outlet/>
         </Stack>
         </Box>
