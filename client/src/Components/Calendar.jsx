@@ -4,6 +4,8 @@ import { getDaysInMonth } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function Calendar({ setIsLoggedIn }) {
   const navigate = useNavigate();
@@ -90,10 +92,39 @@ export default function Calendar({ setIsLoggedIn }) {
     }
   };
 
-  // Function to handle adding a new work item from the form
-  const handleAddWorkItem = (workItem) => {
-    setWorkItems([...workItems, workItem]);
+  // to get the work data
+  const [workData, setWorkData] = useState([]);
+  const token = Cookies.get("token");
+  const headers = { Authorization: `Bearer ${token}` };
+
+  const handleAddWorks = (currentYear, currentMonth) => {
+    axios
+      .get(
+        `http://localhost:3000/volunteer/jobs/${currentYear}/${currentMonth}`,
+        { headers }
+      )
+      .then((response) => {
+        setWorkData(response.data);
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+      });
   };
+
+  let blockDays = [];
+  let dateInits = [];
+  let dateEnds = [];
+  let titles = [];
+
+  for (let i = 0; i < trabajos.length; i++) {
+    let blocks = trabajos[i].blocks;
+    for (let j = 0; j < blocks.length; j++) {
+      blockDays.push(blocks[j].day);
+    }
+    dateInits.push(trabajos[i].dateInit);
+    dateEnds.push(trabajos[i].dateEnd);
+    titles.push(trabajos[i].title);
+  }
 
   //   const [dialogOpen, setDialogOpen] = useState(false);
 
@@ -167,6 +198,7 @@ export default function Calendar({ setIsLoggedIn }) {
         {/* }
           return null;
         })}  */}
+
         {/* To display the days of the week */}
         {days.map((day) => (
           <Grid key={day} item xs={1.6} minHeight={70} sx={{ display: "flex" }}>
@@ -181,9 +213,9 @@ export default function Calendar({ setIsLoggedIn }) {
 
         {/* To display the days of the month */}
         {[...Array(daysInMonth)].map((_, index) => {
-          // to know if the day is sunday
+          // to get the date of the day
           const date = new Date(currentYear, currentMonth, index + 1);
-          const isSunday = date.getDay() === 0;
+          console.log(date);
           // to handle the click on the day
           const handleIconClick = (e) => {
             setSelectedDay(index + 1);
@@ -192,23 +224,21 @@ export default function Calendar({ setIsLoggedIn }) {
             navigate(`/provider/workcreation`);
           };
           // Add a condition to check if a tag should be added to this day
-          const isMondayOrWednesday =
-            date.getDay() === 1 || date.getDay() === 3;
-          const isWithinDateRange =
-            date >= new Date(currentYear, 5, 5) &&
-            date <= new Date(currentYear, 5, 28);
-          const shouldAddTag = isMondayOrWednesday && isWithinDateRange;
-          const tags = shouldAddTag
-            ? [
-                "Trabajo1",
-                "Trabajo2",
-                "Trabajo 3",
-                "Habia una vez pepito",
-                "Yo no se",
-                "Otro trabajo",
-                "OTROO",
-              ]
-            : [];
+          const shouldAddTag = trabajos.some((trabajo) => {
+            console.log(trabajo.blocks);
+            console.log(trabajo.dateInit);
+            console.log(trabajo.dateEnd);
+            return trabajo.blocks.some(
+              (block) =>
+                block.day ===
+                  date.toLocaleDateString("es-VE", { weekday: "long" }) &&
+                date >= new Date(trabajo.dateInit) &&
+                date <= new Date(trabajo.dateEnd)
+            )
+          });
+          const tags = shouldAddTag ? [titles[index]] : [];
+          console.log(shouldAddTag);
+
           return (
             <Grid
               key={index}
