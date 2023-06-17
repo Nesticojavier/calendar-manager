@@ -12,22 +12,22 @@ const { Tags, WorkTags } = require("./Models/Tags");
 
 // Synchronize model
 (async () => {
-  await Users.sync().then(() => {
+  await Users.sync({force:true}).then(() => {
     console.log("Users Model synced 2");
   });
-  await Credential.sync().then(() => {
+  await Credential.sync({force:true}).then(() => {
     console.log("Credential Model synced 2");
   });
 
-  await Work.sync().then(() => {
+  await Work.sync({force:true}).then(() => {
     console.log("Work Model synced 2");
   });
   
-  await Tags.sync().then(() => {
+  await Tags.sync({force:true}).then(() => {
     console.log("Tags Model synced 2");
   });
 
-  await WorkTags.sync().then(() => {
+  await WorkTags.sync({force:true}).then(() => {
     console.log("WorkTags Model synced 2");
   });
 })();

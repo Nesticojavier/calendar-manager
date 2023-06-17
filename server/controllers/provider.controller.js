@@ -13,7 +13,7 @@ const createJob = (req, res) => {
     workType: type,
     workersNeeded: volunteerCountMax,
     blocks,
-    tags,
+    workTags: tags,
   } = req.body;
 
   if (
