@@ -1,4 +1,5 @@
-import React from 'react'
+import { useEffect } from 'react'
+import axios from 'axios';
 import { Box } from "@mui/material"
 import { 
   Table, 
@@ -14,6 +15,17 @@ import { useNavigate } from 'react-router-dom';
 export default function UsersTable() {
 
   // completar pedir users al be.
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000/admin/userslist")
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+      });
+  }, []);
+
   const users = [
     { id: 1, name: 'Usuario 1', role: 'Rol 1' },
     { id: 2, name: 'Usuario 2', role: 'Rol 2' },

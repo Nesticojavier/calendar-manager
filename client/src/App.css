@@ -49,8 +49,26 @@
 
 .homepage button {
   margin: 10px;
+    background-color: rgb(127, 145, 248);
 }
 
+.homepage {
+  display: flex;
+  min-height: 100vh;
+  background-image: url("https://th.bing.com/th/id/R.cece70b93fbb41eccd6513553ce99887?rik=fnj%2b6TJSGfkfFw&pid=ImgRaw&r=0");
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.homepage button {
+  margin: 10px;
+}
+
+.homepage h1 {
+  color: rgb(1, 20, 128);
+  margin: auto;
+}
 .homepage h1 {
   color: rgb(1, 20, 128);
   margin: auto;
