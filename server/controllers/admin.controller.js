@@ -1,11 +1,24 @@
-const { Credential } = require("../Models/Users");
+const { Credential, Users } = require("../Models/Users");
 
 const usersList = async (req, res) => {
+
   try {
-    const users = await Credential.findAll();
-    res.json(users);
+
+    const result = await Credential.findAll({   
+      attributes: ["id", "username"],
+      include: [
+        {
+          model: Users,
+          attributes: ["rol"],
+        },
+      ],
+    });
+
+    // send response
+    res.json(result);
   } catch (error) {
-    res.status(500).json({ error: "Error al obtener usuarios" });
+    console.log(error)
+    res.status(500).json({ message: "Error al obtener usuarios" });
   }
 };
 
