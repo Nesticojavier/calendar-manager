@@ -113,8 +113,8 @@ export default function Calendar({ setIsLoggedIn }) {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
-        minWidth: "100vh",
+        minHeight: "auto",
+        minWidth: "auto",
         overflow: "auto",
       }}
     >
@@ -130,8 +130,7 @@ export default function Calendar({ setIsLoggedIn }) {
           onClick={handlePrevMonthClick}
         />
         <h1 style={{ color: "rgb(127, 145, 248)" }}>
-          {" "}
-          {monthNames[currentMonth]} {currentYear}{" "}
+          {monthNames[currentMonth]} {currentYear}
         </h1>
         <ArrowForwardIosIcon
           sx={{ cursor: "pointer" }}
@@ -142,15 +141,15 @@ export default function Calendar({ setIsLoggedIn }) {
         container
         spacing={2}
         sx={{
-          margin: "0",
+          margin: "0px",
           minWidth: "100%",
-          "--Grid-borderWidth": "2px",
-          borderTop: "var(--Grid-borderWidth) solid",
+          "--Grid-borderWidth": "1px",
           borderLeft: "var(--Grid-borderWidth) solid",
           borderColor: "black",
           "& > div": {
             borderRight: "var(--Grid-borderWidth) solid",
             borderBottom: "var(--Grid-borderWidth) solid",
+            borderTop: "var(--Grid-borderWidth) solid",
             borderColor: "black",
           },
         }}
@@ -170,20 +169,14 @@ export default function Calendar({ setIsLoggedIn }) {
         })}  */}
         {/* To display the days of the week */}
         {days.map((day) => (
-          <Grid
-            key={day}
-            item
-            xs={1.7144}
-            minHeight={70}
-            sx={{ display: "flex" }}
-          >
+          <Grid key={day} item xs={1.6} minHeight={70} sx={{ display: "flex" }}>
             <h3 style={{ margin: 0 }}>{day}</h3>
           </Grid>
         ))}
 
         {/* To display the first day of the month on the corresponding day of the week */}
         {[...Array(firstDay)].map((_, index) => (
-          <Grid key={index} item xs={1.7144} minHeight={100} />
+          <Grid key={index} item xs={1.6} minHeight={100} />
         ))}
 
         {/* To display the days of the month */}
@@ -205,12 +198,22 @@ export default function Calendar({ setIsLoggedIn }) {
             date >= new Date(currentYear, 5, 5) &&
             date <= new Date(currentYear, 5, 28);
           const shouldAddTag = isMondayOrWednesday && isWithinDateRange;
-          const tags = shouldAddTag ? ["Trabajo1", "Trabajo2", "Trabajo 3", "Habia una vez pepito", "Yo no se", "Otro trabajo", "OTROO"] : [];
+          const tags = shouldAddTag
+            ? [
+                "Trabajo1",
+                "Trabajo2",
+                "Trabajo 3",
+                "Habia una vez pepito",
+                "Yo no se",
+                "Otro trabajo",
+                "OTROO",
+              ]
+            : [];
           return (
             <Grid
               key={index}
               item
-              xs={1.7144}
+              xs={1.6}
               minHeight={100}
               sx={{
                 display: "flex",

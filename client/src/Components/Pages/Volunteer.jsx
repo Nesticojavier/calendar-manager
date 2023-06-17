@@ -4,7 +4,7 @@ import SidebarVolunteer from '../SidebarVolunteer';
 import { Box, Stack } from '@mui/material';
 import { Outlet } from 'react-router-dom'
 
-export default function Volunter({ setIsLoggedIn }) {
+export default function Volunteer({ setIsLoggedIn }) {
     // const token = Cookies.get('token');
 
     // if (!token) {

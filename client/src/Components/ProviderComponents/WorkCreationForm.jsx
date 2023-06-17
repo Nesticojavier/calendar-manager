@@ -76,12 +76,17 @@ export default function WorkCreationForm() {
             setTimeout(() => {
                 setShowError(false);
             }, 1000);
+        } else if (workTags.length === 0) {
+            setShowErrorTags(true);
+            setTimeout(() => {
+                setShowErrorTags(false);
+            }, 1000);
         } else {
             // get token from cookies
             const token = Cookies.get('token');
             // construct object representing an HTTP authorization header with the Bearer scheme.
             const headers = { Authorization: `Bearer ${token}` };
-            const valuesEnd = { ...values, blocks }
+            const valuesEnd = { ...values, blocks, workTags }
             console.log(valuesEnd);
             axios
                 .post("http://localhost:3000/provider/create", valuesEnd, { headers })
