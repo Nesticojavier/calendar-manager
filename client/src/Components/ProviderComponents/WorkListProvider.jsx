@@ -71,7 +71,7 @@ export default function WorkListProvider() {
             }
             title={work.title}
             subheader={`Trabajo ${
-              work.type === "1" ? "recurrente" : "de sesión"
+              work.type === 1 ? "recurrente" : "de sesión"
             }`}
           />
           <CardContent>

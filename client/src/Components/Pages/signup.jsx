@@ -109,7 +109,7 @@ const Signup = () => {
         "El nombre completo debe contener solo letras y no tener mas de 64 caracteres.",
       label: "Nombre completo",
       required: true,
-      pattern: "[a-zA-ZñÑ]{1,64}",
+      pattern: "[a-zA-ZñÑ ]{1,64}",
     },
     {
       id: 4,

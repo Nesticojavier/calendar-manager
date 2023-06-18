@@ -71,14 +71,10 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  const handleAddWorks = (currentYear, currentMonth) => {
+  // const handleAddWorks = (currentYear, currentMonth) => {
+  useEffect(() => {
     axios
-      .get(
-        `http://localhost:3000/volunteer/jobs/${currentYear}/${
-          currentMonth + 1
-        }`,
-        { headers }
-      )
+      .get(`http://localhost:3000/volunteer/jobs/`, { headers })
       .then((response) => {
         setWorkData(response.data);
       })
@@ -89,11 +85,11 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           console.error(error.message);
         }
       });
-  };
+  });
 
-  useEffect(() => {
-    handleAddWorks(currentYear, currentMonth);
-  }, [currentYear, currentMonth]);
+  // useEffect(() => {
+  //   handleAddWorks(currentYear, currentMonth);
+  // }, [currentYear, currentMonth]);
 
   // to show the works tags in the calendar
   const isWorkOnDay = (work, day) => {
