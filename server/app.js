@@ -8,7 +8,7 @@ const cors = require("cors");
 const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
 const { Tags, WorkTags, UserTags } = require("./Models/Tags");
-
+const { Blocks, UserBlocks } = require("./Models/Blocks");
 
 // Synchronize model
 (async () => {
@@ -22,10 +22,8 @@ const { Tags, WorkTags, UserTags } = require("./Models/Tags");
   await Work.sync().then(() => {
     console.log("Work Model synced 2");
   });
-  
-  await Tags.sync().then(() => {
-    console.log("Tags Model synced 2");
-  });
+
+  await Tags.sync().then(() => {});
 
   await WorkTags.sync().then(() => {
     console.log("WorkTags Model synced 2");
@@ -35,7 +33,44 @@ const { Tags, WorkTags, UserTags } = require("./Models/Tags");
     console.log("UserTags Model synced 2");
   });
 
+  await Blocks.sync({ force: true }).then(() => {
+    const daysOfWeek = [
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+      "Domingo",
+    ];
+    const hoursOfDay = [
+      "7:00 AM",
+      "8:00 AM",
+      "9:00 AM",
+      "10:00 AM",
+      "11:00 AM",
+      "12:00 PM",
+      "1:00 PM",
+      "2:00 PM",
+      "3:00 PM",
+      "4:00 PM",
+    ];
+    const instances = [];
+    for (const day of daysOfWeek) {
+      for (const hour of hoursOfDay) {
+        instances.push({ day, hour });
+      }
+    }
+    return Blocks.bulkCreate(instances);
+  });
+
+  await UserBlocks.sync().then(()=> {
+    console.log("UserBlocks Model synced 2");
+
+  }) 
 })();
+
+
 
 var app = express();
 
@@ -55,16 +90,14 @@ app.use(express.static(path.join(__dirname, "public")));
 var indexRouter = require("./routes/index");
 var authRouter = require("./routes/auth");
 var providerRouter = require("./routes/provider");
-var adminRouter = require("./routes/admin")
-var volunteerRouter = require("./routes/volunteer")
-
+var adminRouter = require("./routes/admin");
+var volunteerRouter = require("./routes/volunteer");
 
 app.use(indexRouter);
 app.use(authRouter);
 app.use("/provider", providerRouter);
 app.use("/admin", adminRouter);
 app.use("/volunteer", volunteerRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

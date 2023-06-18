@@ -1,7 +1,7 @@
 const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
 
-// Credential Table
+// Tags Table
 const Tags = sq.define("tags", {
   id: {
     type: DataTypes.INTEGER,
@@ -14,7 +14,7 @@ const Tags = sq.define("tags", {
   },
 });
 
-// Users Table
+// Work Tags
 const WorkTags = sq.define(
   "workTag",
   {

@@ -1,5 +1,7 @@
 const { sq } = require("../db/db");
-const error = require("../error/error")
+const error = require("../error/error");
+const { updateUserTag } = require("../controllers/utils");
+const { Blocks, UserBlocks } = require("../Models/Blocks");
 
 const getAllJobs = (req, res) => {
   sq.query(
@@ -80,12 +82,44 @@ const getJobByMonth = (req, res) => {
     });
 };
 
-const editProfile = (req, res) => {
-  res.send("Test routesuu");
+const editProfile = async (req, res) => {
+  const { id: users_id } = req.userData.profile;
+  const { tags, blocks } = req.body;
+
+  if (!tags || !blocks) {
+    return res.status(400).json(error.errorMissingData);
+  }
+
+  UserBlocks.destroy({
+    where: {
+      users_id,
+    },
+  });
+
+  for (const block of blocks) {
+    const result = await Blocks.findOne({
+      where: {
+        day: block.day,
+        hour: block.hour,
+      },
+    });
+
+    if (result != null) {
+      console.log(result.dataValues.id);
+      UserBlocks.create({
+        users_id,
+        blocks_id: result.dataValues.id,
+      });
+    } else {
+      return res.status(404).json(error.error404);
+    }
+  }
+  updateUserTag(users_id, tags);
+  return res.json(error.successUpdate);
 };
 
 const showProfile = (req, res) => {
-  console.log(req.userData)
+  console.log(req.userData);
   const { id } = req.userData.profile;
   sq.query(
     `SELECT *
@@ -97,8 +131,8 @@ const showProfile = (req, res) => {
     }
   )
     .then((results) => {
-      req.userData.profile.tags = results
-      console.log(results)
+      req.userData.profile.tags = results;
+      console.log(results);
       res.json(req.userData);
     })
     .catch(() => {
@@ -108,7 +142,7 @@ const showProfile = (req, res) => {
 
 module.exports = {
   getAllJobs,
-  getOneJob, 
+  getOneJob,
   getJobByMonth,
   editProfile,
   showProfile,
