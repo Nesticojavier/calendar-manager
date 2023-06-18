@@ -130,7 +130,7 @@ export default function EditUser({ user, handleClose }) {
                   // set to true to keep the error message as long as the input is invalid
                   onBlur={() => handleFocus(input.name, true)}
 
-                  disabled={input.name === 'username'}
+                  readOnly={input.name === 'username'}
 
                 // Shows the error message if the input is focused and the value does not match the pattern
                 //focused = {focused.toString()}
