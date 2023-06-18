@@ -54,6 +54,8 @@ Estructura del proyecto:
 $ docker compose up
 ```
 
+Si no es la primera vez que corre este proyecto, ejecute `./restart-docker.sh` para eliminar las imagenes antiguas antes de hacer `docker compose up`
+
 #### Para ejecutar en segundo plano:
 ```
 $ docker compose up -d
