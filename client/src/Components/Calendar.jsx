@@ -28,7 +28,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     "Junio",
     "Julio",
     "Agosto",
-    "Setiembre",
+    "Septiembre",
     "Octubre",
     "Noviembre",
     "Diciembre",
@@ -246,8 +246,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           <DialogContent>
             {selectedWork && (
               <div>
-                <p>Titulo: {selectedWork.title} </p>
-                <p>Descripcion: {selectedWork.description} </p>
+                <p>Título: {selectedWork.title} </p>
+                <p>Descripción: {selectedWork.description} </p>
                 <p>
                   Tipo:{" "}
                   {`Trabajo ${
