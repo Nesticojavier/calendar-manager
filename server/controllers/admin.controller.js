@@ -22,6 +22,18 @@ const usersList = async (req, res) => {
   }
 };
 
+
+const updatepwd = (req, res) => {
+  res.send("test update")
+}
+
+
+const login = (req, res) => {
+  res.send("test login")
+}
+
 module.exports = {
   usersList,
+  updatepwd,
+  login
 };

@@ -2,20 +2,12 @@ import Typography from '@mui/material/Typography';
 import {
   Box,
   Modal,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  TextField,
-  ThemeProvider,
-  Grid
 
 } from '@mui/material';
 
 import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate, Navigate } from "react-router-dom";
-import Cookies from 'js-cookie';
 
 import "./editUser.css"
 
@@ -29,13 +21,6 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
-};
-
-const style2 = {
-  position: 'absolute',
-  top: '50%',
-  bgcolor: "#000",
-  p: 50
 }
 
 export default function EditUser({ user, handleClose }) {

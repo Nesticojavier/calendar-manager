@@ -1,4 +1,5 @@
 const { sq } = require("../db/db");
+const error = require("../error/error")
 
 const getAllJobs = (req, res) => {
   sq.query(
@@ -78,8 +79,36 @@ const getJobByMonth = (req, res) => {
     });
 };
 
+const editProfile = (req, res) => {
+  res.send("Test routesuu");
+};
+
+const showProfile = (req, res) => {
+  console.log(req.userData)
+  const { id } = req.userData.profile;
+  sq.query(
+    `SELECT *
+    FROM tags t, "userTags" u
+    WHERE t.id = u.tags_id AND u.id = :id `,
+    {
+      replacements: { id },
+      type: sq.QueryTypes.SELECT,
+    }
+  )
+    .then((results) => {
+      req.userData.profile.tags = results
+      console.log(results)
+      res.json(req.userData);
+    })
+    .catch(() => {
+      res.status(500).json(error.error500);
+    });
+};
+
 module.exports = {
   getAllJobs,
-  getOneJob,
+  getOneJob, 
   getJobByMonth,
+  editProfile,
+  showProfile,
 };

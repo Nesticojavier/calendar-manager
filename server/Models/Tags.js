@@ -52,4 +52,42 @@ const WorkTags = sq.define(
   }
 );
 
-module.exports = { Tags, WorkTags };
+const UserTags = sq.define(
+  "userTag",
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    users_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "users",
+        key: "id",
+      },
+      onDelete: 'CASCADE',
+    },
+    tags_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: "tags",
+        key: "id",
+      },
+      onDelete: 'CASCADE',
+    },
+  },
+  {
+    indexes: [
+        { 
+            unique: true, 
+            fields: ["users_id", "tags_id"] 
+        }
+    ],
+  }
+);
+
+
+module.exports = { Tags, WorkTags, UserTags };

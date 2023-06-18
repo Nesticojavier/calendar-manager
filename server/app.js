@@ -7,29 +7,34 @@ const cors = require("cors");
 // Import Models
 const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
-const { Tags, WorkTags } = require("./Models/Tags");
+const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 
 
 // Synchronize model
 (async () => {
-  await Users.sync({}).then(() => {
+  await Users.sync().then(() => {
     console.log("Users Model synced 2");
   });
-  await Credential.sync({}).then(() => {
+  await Credential.sync().then(() => {
     console.log("Credential Model synced 2");
   });
 
-  await Work.sync({}).then(() => {
+  await Work.sync().then(() => {
     console.log("Work Model synced 2");
   });
 
-  await Tags.sync({}).then(() => {
+  await Tags.sync().then(() => {
     console.log("Tags Model synced 2");
   });
 
-  await WorkTags.sync({}).then(() => {
+  await WorkTags.sync().then(() => {
     console.log("WorkTags Model synced 2");
   });
+
+  await UserTags.sync().then(() => {
+    console.log("UserTags Model synced 2");
+  });
+
 })();
 
 var app = express();
