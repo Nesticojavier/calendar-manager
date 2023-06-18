@@ -159,7 +159,9 @@ const deleteJob = (req, res) => {
 const updateJob = async (req, res) => {
   const { id: users_id } = req.userData.profile;
   const { id } = req.params;
-  const {
+  let {
+    startDate: dateInit,
+    endDate: dateEnd,
     workDescription: description,
     workTitle: title,
     workType: type,
@@ -176,6 +178,16 @@ const updateJob = async (req, res) => {
     blocks.length == 0
   ) {
     return res.status(400).json(error.errorMissingData);
+  }
+
+
+  if (type == 2) {
+    const dayOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
+    dateInit = blocks[0].day
+    dateEnd = dateInit
+    const date = new Date(dateInit)
+    blocks[0].day = dayOfWeek[date.getDay()]
+    blocks = [blocks[0]]
   }
 
   // Find a job created by the user with same title
@@ -199,6 +211,8 @@ const updateJob = async (req, res) => {
       type,
       volunteerCountMax,
       blocks: JSON.stringify(blocks),
+      dateInit,
+      dateEnd
     },
     {
       where: {
