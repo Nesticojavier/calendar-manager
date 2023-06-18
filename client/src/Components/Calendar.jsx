@@ -3,13 +3,10 @@ import { Box, Grid, Dialog, DialogTitle, DialogContent } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
-  const navigate = useNavigate();
-
   // days of the week
   const days = [
     "Domingo",
@@ -74,10 +71,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  useEffect (() => {
+  useEffect(() => {
     axios
-      .get(
-        `http://localhost:3000/provider/myjobs/`, { headers })
+      .get(`http://localhost:3000/provider/myjobs/`, { headers })
       .then((response) => {
         setWorkData(response.data);
       })
@@ -92,11 +88,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
   // to show the works tags in the calendar
   const isWorkOnDay = (work, day) => {
-    // console.log("--------------------");
-    // console.log("inicio de la función");
-    // console.log(currentMonth+1)
-    // console.log(work)
-
     // Add 1 day to the end date and the start date because the date-fns library
     const dateInit = addDays(new Date(work.dateInit), 1);
     const dateEnd = addDays(new Date(work.dateEnd), 1);
@@ -111,32 +102,31 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     const hasBlock = work.blocks.some(
       (block) => block.day.toLowerCase() === dayName
     );
-    // console.log(hasBlock);
 
     // Check if the work is within the start and end range
     const isInRange =
       (date >= dateInit && date <= dateEnd) ||
       isSameDay(date, dateInit) ||
       isSameDay(date, dateEnd);
-    // console.log(isInRange);
-    // console.log("fin de la función");
 
     // Return true if both conditions are true, and false otherwise
     return hasBlock && isInRange;
   };
 
+  // to show a dialog with the work information
+  const [selectedWork, setSelectedWork] = useState(null);
+
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleGridItemClick = (event) => {
+  const handleWorkClick = (work) => {
     setDialogOpen(true);
-    setSelectedDay(event.target.textContent);
+    setSelectedWork(work);
   };
 
   const handleDialogClose = (event) => {
     setDialogOpen(false);
   };
 
-  console.log(workData);
   return (
     <Box
       flex={7}
@@ -238,7 +228,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                       borderRadius: "4px",
                       fontSize: "12px",
                       margin: "2px",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleWorkClick(work)}
                   >
                     {work.title}
                   </span>
@@ -247,6 +239,42 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
             </Grid>
           );
         })}
+
+        {/* To display the dialog with the work information */}
+        <Dialog open={dialogOpen} onClose={handleDialogClose}>
+          <DialogTitle>Información del trabajo</DialogTitle>
+          <DialogContent>
+            {selectedWork && (
+              <div>
+                <p>Titulo: {selectedWork.title} </p>
+                <p>Descripcion: {selectedWork.description} </p>
+                <p>
+                  Tipo:{" "}
+                  {`Trabajo ${
+                    selectedWork.type === 1 ? "recurrente" : "de sesión"
+                  }`}{" "}
+                </p>
+                <p>Fecha de inicio: {selectedWork.dateInit} </p>
+                <p>Fecha de fin: {selectedWork.dateEnd} </p>
+                <p>Bloques:</p>
+                <ul>
+                  {selectedWork.blocks.map((block) => (
+                    <li key={block.id}>
+                      <p>Dia: {block.day}</p>
+                      <p>Hora: {block.hour}</p>
+                    </li>
+                  ))}
+                </ul>
+                <p>Etiquetas:</p>
+                <ul>
+                  {selectedWork.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
         {/* <Dialog open={dialogOpen} onClose={handleDialogClose}>
           <DialogTitle>Bloques de horarios</DialogTitle>
