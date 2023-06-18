@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Box, Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import Cookies from "js-cookie";
 
 export default function ProfileVolunteer() {
   // this obtein the data from the user
@@ -73,18 +74,17 @@ export default function ProfileVolunteer() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    console.log(workTags);
-    console.log(selectedValues);
-
-
+    const valuesEnd = {
+      tags : workTags,
+      blocks : selectedValues
+    };
+    console.log(valuesEnd);
     // get token from cookies
     const token = Cookies.get("token");
     // construct object representing an HTTP authorization header with the Bearer scheme.
     const headers = { Authorization: `Bearer ${token}` };
-    const valuesEnd = { ...values, blocks };
-    console.log(valuesEnd);
     axios
-      .post("http://localhost:3000/volunteer/profile", valuesEnd, { headers })
+      .put("http://localhost:3000/volunteer/profile", valuesEnd, { headers })
       .then((response) => {
         // Handle request response successful
         swal({
