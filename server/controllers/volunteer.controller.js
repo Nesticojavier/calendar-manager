@@ -143,7 +143,7 @@ const showProfile = async (req, res) => {
         res.status(500).json(error.error500);
       });
 
-      res.json(req.userData.profile)
+      res.json(req.userData)
 };
 
 module.exports = {
