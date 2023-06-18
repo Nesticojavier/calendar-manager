@@ -10,8 +10,10 @@ const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
 const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 const { UserBlocks } = require("./Models/Blocks");
-const { Admin } = require("./Models/Admin");
+const { Admin, createOrFindAdmin } = require("./Models/Admin");
 
+// require enviroments variables file
+require('dotenv').config();
 
 
 // Synchronize model
@@ -48,6 +50,9 @@ const { Admin } = require("./Models/Admin");
   });
   
 })();
+
+// Create admin
+createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
 
 
 

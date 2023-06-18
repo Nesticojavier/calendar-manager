@@ -1,11 +1,58 @@
 const { Credential, Users } = require("../Models/Users");
-const error = require("../error/error")
+const { Admin } = require("../Models/Admin")
+const error = require("../error/error");
+const jwt = require("jsonwebtoken"); //Json Web Token Generator
+const bcrypt = require("bcrypt"); //To encrypt passwords
+
+// Login
+const login = async (req, res) => {
+  const { username, password } = req.body;
+  // Verify that the input data is not undefined
+  if (!username || !password) {
+    return res.status(500).json({ message: "Error, missing login data" });
+  }
+
+  // check if the user is already registered
+  const consult = await Admin.findOne({
+    where: {
+      username,
+    },
+  });
+
+  if (consult === null) {
+    return res.status(500).json({ message: "Error, usuario no registrado" });
+  }
+
+  const password_hash = consult.password;
+  const id = consult.id;
+
+  // Validate password
+  bcrypt.compare(password, password_hash, (err, result) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Se produjo un error al validar los datos" });
+    }
+    if (result) {
+      Admin.findOne({
+        where: {
+          id,
+        },
+      }).then((profile) => {
+        // If the password is correct, we generate the JWT token and send it as a response to the client
+        const token = jwt.sign({ username }, secretKey);
+        res.json({ token });
+      });
+    } else {
+      // If the password is incorrect, we send an error message
+      res.status(401).json({ message: "Error en validacion de credenciales" });
+    }
+  });
+};
 
 const usersList = async (req, res) => {
-
   try {
-
-    const result = await Credential.findAll({   
+    const result = await Credential.findAll({
       attributes: ["id", "username"],
       include: [
         {
@@ -18,31 +65,17 @@ const usersList = async (req, res) => {
     // send response
     res.json(result);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: "Error al obtener usuarios" });
   }
 };
 
-
 const updatepwd = (req, res) => {
-  res.send("test update")
-}
-
-
-const login = (req, res) => {
-  const { username, password } = req.body
-
-
-  if (!username || !password) {
-    return res.status(500).json(error.error500);
-  }
-
-
-  
-}
+  res.send("test update");
+};
 
 module.exports = {
   usersList,
   updatepwd,
-  login
+  login,
 };
