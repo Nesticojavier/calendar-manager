@@ -1,12 +1,13 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useContext } from "react";
+import axios from 'axios';
 import { useNavigate, Navigate } from "react-router-dom";
-import Cookies from "js-cookie";
+import Cookies from 'js-cookie';
+import { UserContext } from "../../Context/UserContext";
 
-export default function Login({ setIsLoggedIn }) {
-  if (Cookies.get("token")) {
-    return <Navigate to={"/dashboard"} replace />;
-  }
+export default function Login () {
+
+
+    const { changeLoggedIn } = useContext(UserContext)
 
   // A state is created for the values of the form inputs
   // Saved to an object with empty initial values
@@ -36,24 +37,28 @@ export default function Login({ setIsLoggedIn }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    axios
-      .post("http://localhost:3000/login", values)
-      .then((response) => {
-        // Handle request response successful
-        const token = response.data.token;
+        axios
+            .post(`${import.meta.env.VITE_API_URL}/login`, values)
+            .then((response) => {
+                // Handle request response successful
+                const token = response.data.token
 
         // localStorage.setItem('token', token);
         Cookies.set("token", token, { expires: 1 });
 
-        // Redirect to dashboard
-        setIsLoggedIn(true);
-        navigate("/");
-      })
-      .catch((error) => {
-        // Handle request error
-        setErrorMessage(error.response.data.message);
-      });
-  };
+                changeLoggedIn(true)
+
+                // Redirect to home
+                navigate('/')
+
+            })
+            .catch((error) => {
+                // Handle request error
+                // setErrorMessage(error.response.data.message)
+                console.log("ha ocurrido un errror")
+            });
+
+    };
 
   // It is used to update the state of the values of the inputs
   const handleChange = (e) => {

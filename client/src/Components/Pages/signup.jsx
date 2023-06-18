@@ -5,11 +5,8 @@ import Cookies from "js-cookie";
 import { useNavigate, Navigate } from "react-router-dom";
 
 const Signup = () => {
-  if (Cookies.get("token")) {
-    return <Navigate to={"/dashboard"} replace />;
-  }
 
-  const navigate = useNavigate();
+    const navigate = useNavigate()
 
   // A state is created for the values of the form inputs
   // Saved to an object with empty initial values
@@ -45,24 +42,24 @@ const Signup = () => {
     // Used to prevent the page from reloading on form submission
     e.preventDefault();
 
-    // Used to submit the form via the post method
-    axios
-      .post("http://localhost:3000/signup", values)
-      .then((response) => {
-        // Handle request response successful
-        swal({
-          title: "Registrado exitosamente",
-          icon: "success",
-        }).then(() => {
-          navigate("/login"), { replace: true };
-        });
-      })
-      .catch((error) => {
-        // Handle request error
-        console.error(error.response.data.message);
-        setErrorMessage(error.response.data.message);
-      });
-  };
+        // Used to submit the form via the post method
+        axios
+            .post(`${import.meta.env.VITE_API_URL}/signup`, values)
+            .then((response) => {
+                // Handle request response successful
+                swal({
+                    title: "Registrado exitosamente",
+                    icon : "success",
+                }).then(() => {
+                    navigate("/login"), {replace : true};
+                })
+            })
+            .catch((error) => {
+                // Handle request error
+                console.error(error.response.data.message);
+                setErrorMessage(error.response.data.message)
+            });
+    };
 
   // It is used to update the state of the values of the inputs
   const handleChange = (e) => {
