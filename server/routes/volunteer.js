@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const {getAllJobs, getOneJob, getJobByMonth } = require("../controllers/volunteer.controller");
+const {getAllJobs, getOneJob, getJobByMonth, editProfile, showProfile } = require("../controllers/volunteer.controller");
 const {verifyToken} = require("../controllers/auth.controller")
 
 router.use(verifyToken)
@@ -15,11 +15,11 @@ router.get("/jobs/:id", getOneJob);
 // Show jobs by mouth and year
 router.get("/jobs/:year/:month", getJobByMonth);
 
+// Edit volunteer profile
+router.put('/profile', editProfile)
 
-// Edit tags from profile
+// View volunteer profile
+router.get('/profile', showProfile)
 
-// Preferences hours
-
-// Filter
 
 module.exports = router;

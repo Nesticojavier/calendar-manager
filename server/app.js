@@ -7,7 +7,7 @@ const cors = require("cors");
 // Import Models
 const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
-const { Tags, WorkTags } = require("./Models/Tags");
+const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 
 
 // Synchronize model
@@ -30,6 +30,11 @@ const { Tags, WorkTags } = require("./Models/Tags");
   await WorkTags.sync().then(() => {
     console.log("WorkTags Model synced 2");
   });
+
+  await UserTags.sync().then(() => {
+    console.log("UserTags Model synced 2");
+  });
+
 })();
 
 var app = express();
