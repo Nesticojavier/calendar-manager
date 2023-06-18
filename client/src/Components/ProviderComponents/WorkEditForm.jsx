@@ -159,7 +159,7 @@ export default function WorkCreationForm() {
   const SESSION = values.workType == "2";
 
   // state used to set the blocks of hours
-  const [blocks, setBlocks] = useState([workBlocks]);
+  const [blocks, setBlocks] = useState(workBlocks);
 
   // this is used to increase the number of blocks
   const handleMore = (e) => {
