@@ -72,7 +72,7 @@ export default function WorkCreationForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    
     // show error message if blocks variable is void
     if (blocks.length === 0) {
       setShowError(true);
@@ -84,25 +84,26 @@ export default function WorkCreationForm() {
       const token = Cookies.get("token");
       // construct object representing an HTTP authorization header with the Bearer scheme.
       const headers = { Authorization: `Bearer ${token}` };
-      const valuesEnd = { ...values, blocks };
-      console.log(valuesEnd);
-      axios
-        .put(`http://localhost:3000/provider/job/${workId}`, valuesEnd, {
-          headers,
-        })
-        .then((response) => {
-          // Handle request response successful
-          swal({
-            title: "Trabajo actualizado exitosamente",
-            icon: "success",
-          }).then(() => {
-            navigate(`/provider/worklist`);
-          });
-        })
-        .catch((error) => {
-          // Handle request error
-          console.error(error.response.data.message);
-        });
+      const valuesEnd = { ...values, blocks, tags : workTags };
+
+
+      // axios
+      //   .put(`http://localhost:3000/provider/job/${workId}`, valuesEnd, {
+      //     headers,
+      //   })
+      //   .then((response) => {
+      //     // Handle request response successful
+      //     swal({
+      //       title: "Trabajo actualizado exitosamente",
+      //       icon: "success",
+      //     }).then(() => {
+      //       navigate(`/provider/worklist`);
+      //     });
+      //   })
+      //   .catch((error) => {
+      //     // Handle request error
+      //     console.error(error.response.data.message);
+      //   });
     }
   };
 
