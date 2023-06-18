@@ -42,7 +42,7 @@ export default function ProfileVolunteer() {
   //   rol: "Voluntario",
   // });
 
-  const [values, setValues] = useState([]);
+  const [values, setValues] = useState("");
 
 
   // get token from cookies
@@ -52,10 +52,12 @@ export default function ProfileVolunteer() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000//volunteer/profile", { headers })
+      .get("http://localhost:3000/volunteer/profile", { headers })
       .then((response) => {
-        console.log(response.data);
-        // setValues(response.data);
+        const profile = response.data.profile;
+        const user = {...profile, username : response.data.username}
+        setValues(user);
+        console.log(user);
       })
       .catch((error) => {
         console.error(error.response.data.message);
@@ -75,17 +77,6 @@ export default function ProfileVolunteer() {
       label: "Nombre de usuario",
       required: true,
       pattern: "[a-zA-Z0-9]{1,16}$",
-    },
-    {
-      id: 2,
-      name: "password",
-      type: "password",
-      placeholder: "Contraseña",
-      errormessage:
-        "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
-      label: "Contraseña",
-      required: true,
-      pattern: "[a-zA-Z0-9]{3,}$",
     },
     {
       id: 3,
@@ -108,7 +99,7 @@ export default function ProfileVolunteer() {
     },
     {
       id: 5,
-      name: "institutionalId",
+      name: "institucionalId",
       type: "text",
       placeholder: "ID Institucional",
       errormessage:
@@ -163,12 +154,12 @@ export default function ProfileVolunteer() {
             }}
           >
             <AccountCircleIcon sx={{ fontSize: 100 }} />
-            <IconButton onClick={() => handleEdit(user)}>
+            <IconButton onClick={() => handleEdit(values)}>
               <EditIcon />
             </IconButton>
           </div>
-          <h1>Nombre Apellido</h1>
-          {/* <h1>{user.fullName}</h1> */}
+          {/* <h1>Nombre Apellido</h1> */}
+          <h1>{values.fullName}</h1>
         </div>
         <Box
           sx={{

@@ -33,79 +33,6 @@ export default function ProfileVolunteer() {
   // inputs with their restrictions and message errors
   const inputs = [
     {
-      id: 1,
-      name: "username",
-      type: "text",
-      placeholder: "Nombre de usuario",
-      errormessage:
-        "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
-      label: "Nombre de usuario",
-      required: true,
-      pattern: "[a-zA-Z0-9]{1,16}$",
-    },
-    {
-      id: 2,
-      name: "password",
-      type: "password",
-      placeholder: "Contraseña",
-      errormessage:
-        "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
-      label: "Contraseña",
-      required: true,
-      pattern: "[a-zA-Z0-9]{3,}$",
-    },
-    {
-      id: 3,
-      name: "fullName",
-      type: "text",
-      placeholder: "Nombre completo",
-      errormessage:
-        "El nombre completo debe contener solo letras y no tener mas de 64 caracteres.",
-      label: "Nombre completo",
-      required: true,
-      pattern: "[a-zA-Z ]{1,64}",
-    },
-    {
-      id: 4,
-      name: "birthDate",
-      type: "date",
-      placeholder: "Fecha de nacimiento",
-      label: "Fecha de nacimiento",
-      required: true,
-    },
-    {
-      id: 5,
-      name: "institutionalId",
-      type: "text",
-      placeholder: "ID Institucional",
-      errormessage:
-        "El ID institucional debe contener solo números y no tener mas de 16 caracteres.",
-      label: "ID Institucional",
-      pattern: "[0-9.]{1,16}$",
-    },
-    {
-      id: 6,
-      name: "rol",
-      type: "select",
-      placeholder: "seleccione rol",
-      errormessage: "Debes seleccionar un rol",
-      label: "Rol",
-      required: true,
-      options: [
-        { value: "voluntario", label: "Voluntario" },
-        { value: "proveedor", label: "Proveedor" },
-      ],
-    },
-    {
-      id: 7,
-      name: "label",
-      type: "text",
-      placeholder: "Agregar etiqueta",
-      errormessage: "Debes agregar al menos una etiqueta",
-      label: "Etiquetas",
-      required: true,
-    },
-    {
       id: 8,
       name: "time",
       type: "select-multiple",
@@ -130,6 +57,7 @@ export default function ProfileVolunteer() {
 
   const [selectedValues, setSelectedValues] = useState([]);
 
+
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
     if (checked && selectedValues.length < 3) {
@@ -141,8 +69,13 @@ export default function ProfileVolunteer() {
     }
   };
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    console.log(workTags);
+    console.log(selectedValues);
+
 
     // get token from cookies
     const token = Cookies.get("token");
@@ -167,6 +100,53 @@ export default function ProfileVolunteer() {
       });
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+  }
+
+  const [showErrorTags, setShowErrorTags] = useState(false);
+  const [tagValue, setTagValue] = useState("");
+  const [workTags, setTags] = useState([]);
+
+  const addTags = (e) => {
+    if (e.keyCode === 13 && tagValue) {
+
+      // Split the tag value into an array of words
+      const words = tagValue.split(" ");
+
+      // Check if the number of words is less than or equal to 2
+      if (words.length <= 2) {
+
+        // Check if the length of the tagValue is less than or equal to 16
+        if (tagValue.length <= 16) {
+
+          // Check if the tag already exists in the workTags array
+          if (!workTags.includes(tagValue)) {
+            setTags([...workTags, tagValue]);
+            setTagValue("");
+          } else {
+            setShowErrorTags(true);
+          }
+        } else {
+          setShowErrorTags(true);
+        }
+      } else {
+        setShowErrorTags(true);
+      }
+
+
+    }
+  };
+
+  // When the tag is deleted
+  const deleteTag = (val) => {
+    let reaminTags = workTags.filter((t) => t !== val);
+    setTags(reaminTags);
+  }
+
+
+
   return (
     <Box
       component="form"
@@ -185,7 +165,7 @@ export default function ProfileVolunteer() {
     >
       <div>
         <AccountCircleIcon sx={{ fontSize: 100 }} />
-        <h1>Nombre Apellido</h1>
+        <h1>Editar preferencias</h1>
       </div>
       <Box
         sx={{
@@ -206,6 +186,7 @@ export default function ProfileVolunteer() {
                   name={input.name}
                   type={input.type}
                   value={values[input.name]}
+                  onChange={handleChange}
                   style={{
                     border: "1px solid black",
                     display: "flex",
@@ -271,7 +252,7 @@ export default function ProfileVolunteer() {
                     id={input.name}
                     name={input.name}
                     type={input.type}
-                    value={values[input.name]}
+                    // value={values[input.name]}
                     style={{
                       border: "1px solid black",
                       display: "flex",
@@ -283,8 +264,42 @@ export default function ProfileVolunteer() {
                 )}
               </Box>
             )}
+
           </div>
         ))}
+        <div>
+          <label className="labelTag" htmlFor="workTags-input">Etiquetas</label>
+          <div className="tagInput ">
+            {workTags.map((item, index) => {
+              return <button key={index}>
+                {item}
+                <p className="delete-tag"
+                  onClick={() => deleteTag(item)}>
+                  X
+                </p>
+
+              </button>
+            })}
+            <input
+              name={"workTags"}
+              type={"text"}
+              placeholder={"Escriba los Tags y presione enter"}
+              value={tagValue}
+              onChange={(e) => setTagValue(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  addTags(e)
+                }
+              }}
+            />
+            {showErrorTags && (
+              <p className="error-message">
+                El tag debe ser de 2 palabras, máximo 16 caracteres y no debe repetirse.</p>
+            )}
+
+          </div>
+        </div>
       </Box>
       <Button
         type="submit"
