@@ -11,7 +11,7 @@ export default function WorkCreationForm() {
   const { id: workId } = useParams();
   const workBlocks = work.blocks;
   // const workBlocks = JSON.parse(work.blocks);
-  const navigate = useNavigate();
+  const navigate = useNavigate();   
 
   const [values, setValues] = useState({
     workTitle: work.title,
@@ -84,7 +84,7 @@ export default function WorkCreationForm() {
       const token = Cookies.get("token");
       // construct object representing an HTTP authorization header with the Bearer scheme.
       const headers = { Authorization: `Bearer ${token}` };
-      const valuesEnd = { ...values, blocks };
+      const valuesEnd = { ...values, blocks, tags: workTags };
       console.log(valuesEnd);
       axios
         .put(`http://localhost:3000/provider/job/${workId}`, valuesEnd, {
