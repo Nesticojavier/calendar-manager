@@ -84,7 +84,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           console.error(error.message);
         }
       });
-  });
+  }, []);
 
   // to show the works tags in the calendar
   const isWorkOnDay = (work, day) => {
@@ -100,7 +100,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
     // Check if the work has a block that matches the day
     const hasBlock = work.blocks.some(
-      (block) => block.day.toLowerCase() === dayName
+      (block) => block.day && block.day.toLowerCase() === dayName
     );
 
     // Check if the work is within the start and end range
