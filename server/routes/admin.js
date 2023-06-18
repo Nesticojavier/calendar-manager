@@ -8,9 +8,9 @@ const {
   updatepwd,
 } = require("../controllers/admin.controller");
 
-router.get("/userslist", usersList);
+router.get("/userslist", verifyTokenADMIN, usersList);
 
-router.get("/updatepwd", updatepwd);
+router.put("/updatepwd", verifyTokenADMIN, updatepwd);
 
 router.post("/login", login);
 
