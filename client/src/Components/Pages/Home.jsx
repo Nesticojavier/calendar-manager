@@ -1,45 +1,48 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import Cookies from "js-cookie";
-import axios from "axios";
-import { Button } from "@mui/material";
+import React, { useEffect, useState, useContext } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import axios from 'axios';
+import { Button } from '@mui/material'
+import { UserContext } from "../../Context/UserContext";
 
 export default function Home() {
-  const [rol, setRol] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
+    const [rol, setRol] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+    const navigate = useNavigate();
+    const { isLoggedIn, changeProfile } = useContext(UserContext)
 
-  useEffect(() => {
-    const token = Cookies.get("token");
+    useEffect(() => {
+        const api_url = import.meta.env.VITE_API_URL;
+        const token = Cookies.get('token');
 
-    if (token) {
-      const headers = { Authorization: `Bearer ${token}` };
-      axios
-        .get("http://localhost:3000/dashboard", { headers })
-        .then((response) => {
-          setRol(response.data.profile.rol);
-          console.log(rol);
-        })
-        .catch((error) => {
-          console.error(error.response.data.message);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    } else {
-      setIsLoading(false);
-    }
-  }, []);
+        if (isLoggedIn) {
+            const headers = { Authorization: `Bearer ${token}` };
+            axios
+                .get(`${api_url}/dashboard`, { headers })
+                .then((response) => {
+                    setRol(response.data.profile.rol);
+                    changeProfile(response.data.profile)
+                })
+                .catch((error) => {
+                    console.error(error.response.data.message);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        } else {
+            setIsLoading(false);
+        }
+    }, []);
 
-  useEffect(() => {
-    if (!isLoading) {
-      if (rol === "proveedor") {
-        navigate("/provider/calendar", { replace: true });
-      } else if (rol === "voluntario") {
-        navigate("/volunteer/calendar", { replace: true });
-      }
-    }
-  }, [rol, isLoading, navigate]);
+    useEffect(() => {
+        if (!isLoading) {
+            if (rol === 'proveedor') {
+                navigate('/provider/calendar', { replace: true });
+            } else if (rol === 'voluntario') {
+                navigate('/volunteer/calendar', { replace: true });
+            }
+        }
+    }, [rol, isLoading, navigate]);
 
   if (isLoading) {
     return <div>Loading...</div>;
