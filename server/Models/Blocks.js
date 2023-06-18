@@ -46,21 +46,16 @@ const UserBlocks = sq.define(
       },
       onDelete: "CASCADE",
     },
-    blocks_id: {
-      type: DataTypes.INTEGER,
+    hour: {
+      type: DataTypes.STRING,
       allowNull: false,
-      references: {
-        model: "blocks",
-        key: "id",
-      },
-      onDelete: "CASCADE",
     },
   },
   {
     indexes: [
       {
         unique: true,
-        fields: ["users_id", "blocks_id"],
+        fields: ["users_id", "hour"],
       },
     ],
   }

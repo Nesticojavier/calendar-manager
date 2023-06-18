@@ -1,4 +1,5 @@
 const { Credential, Users } = require("../Models/Users");
+const error = require("../error/error")
 
 const usersList = async (req, res) => {
 
@@ -29,7 +30,15 @@ const updatepwd = (req, res) => {
 
 
 const login = (req, res) => {
-  res.send("test login")
+  const { username, password } = req.body
+
+
+  if (!username || !password) {
+    return res.status(500).json(error.error500);
+  }
+
+
+  
 }
 
 module.exports = {
