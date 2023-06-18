@@ -189,6 +189,22 @@ export default function ProfileVolunteer() {
               </>
             </div>
           ))}
+          <div>
+            <label>Horarios de preferencia</label>
+            <ul>
+                {values.blocks?.map((block,index) => (
+                  <li key={index}>{block}</li>
+                ))}
+            </ul>
+          </div>
+          <div>
+            <label>Mis etiquetas</label>
+            <ul>
+                {values.tags?.map((tag,index) => (
+                  <li key={index}>{tag}</li>
+                ))}
+            </ul>
+          </div>
         </Box>
       </>
       {/* ))} */}
