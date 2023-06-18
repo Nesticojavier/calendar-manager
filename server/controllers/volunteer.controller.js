@@ -96,48 +96,54 @@ const editProfile = async (req, res) => {
     },
   });
 
-  for (const block of blocks) {
-    const result = await Blocks.findOne({
-      where: {
-        day: block.day,
-        hour: block.hour,
-      },
-    });
+  UserBlocks.bulkCreate(
+    blocks.map((e) => {
+      return { users_id, hour: e };
+    })
+  );
 
-    if (result != null) {
-      console.log(result.dataValues.id);
-      UserBlocks.create({
-        users_id,
-        blocks_id: result.dataValues.id,
-      });
-    } else {
-      return res.status(404).json(error.error404);
-    }
-  }
+  console.log(tags);
   updateUserTag(users_id, tags);
   return res.json(error.successUpdate);
 };
 
-const showProfile = (req, res) => {
-  console.log(req.userData);
+const showProfile = async (req, res) => {
   const { id } = req.userData.profile;
-  sq.query(
-    `SELECT *
+  await sq.query(
+    `SELECT t.title
     FROM tags t, "userTags" u
-    WHERE t.id = u.tags_id AND u.id = :id `,
+    WHERE t.id = u.tags_id AND u.users_id = :id `,
     {
       replacements: { id },
       type: sq.QueryTypes.SELECT,
     }
   )
     .then((results) => {
-      req.userData.profile.tags = results;
       console.log(results);
-      res.json(req.userData);
+      req.userData.profile.tags = results.map((e) => e.title);
     })
     .catch(() => {
       res.status(500).json(error.error500);
     });
+
+   await sq.query(
+      `SELECT b.hour
+      FROM userblocks b
+      WHERE b.users_id = :id `,
+      {
+        replacements: { id },
+        type: sq.QueryTypes.SELECT,
+      }
+    )
+      .then((results) => {
+        console.log(results);
+        req.userData.profile.blocks = results.map((e) => e.hour);
+      })
+      .catch(() => {
+        res.status(500).json(error.error500);
+      });
+
+      res.json(req.userData.profile)
 };
 
 module.exports = {

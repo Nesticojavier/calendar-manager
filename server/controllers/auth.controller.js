@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken"); //Json Web Token Generator
 secretKey = "my_secret_key";
 
 // Signup
-// TODO: Check HTTP codes. Return the appropriate one in each case
 const signup = async (req, res) => {
   const { username, password, rol, fullName, birthDate, institutionalId } =
     req.body;
