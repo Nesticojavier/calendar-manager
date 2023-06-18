@@ -8,10 +8,10 @@ import Cookies from "js-cookie";
 import Home from "./Components/Pages/Home";
 
 import Provider from "./Components/Pages/Provider";
-import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm"
-import Calendar from "./Components/Calendar"
-import WorkListProvider from "./Components/ProviderComponents/WorkListProvider"
-import WorkEditForm from "./Components/ProviderComponents/WorkEditForm"
+import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm";
+import Calendar from "./Components/Calendar";
+import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
+import WorkEditForm from "./Components/ProviderComponents/WorkEditForm";
 
 import Volunteer from "./Components/Pages/Volunteer";
 import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVolunteer";
@@ -22,14 +22,12 @@ import CalendarVolunteer from "./Components/CalendarVolunteer";
 
 import Admin from "./Components/Pages/Admin";
 import AdminLogin from "./Components/Pages/AdminLogin";
-import EditUser from "./Components/AdminComponents/EditUser"
-import UsersTable from "./Components/AdminComponents/UsersTable"
-
+import EditUser from "./Components/AdminComponents/EditUser";
+import UsersTable from "./Components/AdminComponents/UsersTable";
 
 function App() {
-
   // A state is created to know if the user is logged in
-  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get("token"))
+  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get("token"));
 
   // when the page is reloaded, to know if the user is logged in
   // useEffect(() => {
@@ -38,25 +36,25 @@ function App() {
   //   }
   // }, []);
 
-
   const changeLoggedIn = (value) => {
     setIsLoggedIn(value);
   };
 
   return (
-
     <BrowserRouter>
-      <Navbar isLoggedIn = {isLoggedIn} setIsLoggedIn = {changeLoggedIn}/>
+      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={changeLoggedIn} />
       <Routes>
-
         {/* Routes manage for user no logged */}
-        <Route path="/" element={<Home setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/login" element={<Login setIsLoggedIn = {changeLoggedIn}/>} />
-        <Route path="/signup" element={<Signup/>} />
-        <Route path="/adminlogin" element={<AdminLogin/>} />
+        <Route path="/" element={<Home setIsLoggedIn={changeLoggedIn} />} />
+        <Route
+          path="/login"
+          element={<Login setIsLoggedIn={changeLoggedIn} />}
+        />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/adminlogin" element={<AdminLogin />} />
 
         {/* Routes manage for provider */}
-        <Route path="/provider/*" element={<Provider/>}>
+        <Route path="/provider/*" element={<Provider />}>
           <Route path="workcreation" element={<WorkCreationForm />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="worklist" element={<WorkListProvider />} />
@@ -64,7 +62,7 @@ function App() {
         </Route>
 
         {/* Routess manage for volunter */}
-        <Route path="/volunteer/*" element={<Volunteer/>}>
+        <Route path="/volunteer/*" element={<Volunteer />}>
           <Route path="myworks" element={<WorkListVolunteer />} />
           <Route path="myprofile" element={<ProfileVolunteer />} />
           <Route path="editprofile/:id" element={<EditVolunteerProfile />} />
@@ -73,14 +71,10 @@ function App() {
         </Route>
 
         {/* Routess manage for Admin */}
-        <Route path="/admin/*" element={<Admin/>}>
+        <Route path="/admin/*" element={<Admin />}>
           <Route path="userstable" element={<UsersTable />} />
           <Route path="edituser/:id" element={<EditUser />} />
-
         </Route>
-
-
-
       </Routes>
     </BrowserRouter>
   );
