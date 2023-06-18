@@ -209,7 +209,6 @@ const updateJob = async (req, res) => {
   )
     .then((result) => {
       updateTag(id, tags);
-      console.log(result);
       return res.json(error.successUpdate);
     })
     .catch(() => {
