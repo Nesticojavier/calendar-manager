@@ -9,7 +9,8 @@ export default function WorkCreationForm() {
   const location = useLocation();
   const { work } = location.state;
   const { id: workId } = useParams();
-  const workBlocks = JSON.parse(work.blocks);
+  const workBlocks = work.blocks;
+  // const workBlocks = JSON.parse(work.blocks);
   const navigate = useNavigate();
 
   const [values, setValues] = useState({

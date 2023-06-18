@@ -57,7 +57,6 @@ export default function ProfileVolunteer() {
         const profile = response.data.profile;
         const user = {...profile, username : response.data.username}
         setValues(user);
-        console.log(user);
       })
       .catch((error) => {
         console.error(error.response.data.message);
