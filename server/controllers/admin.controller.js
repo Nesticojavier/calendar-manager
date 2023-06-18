@@ -1,5 +1,5 @@
 const { Credential, Users } = require("../Models/Users");
-const { Admin } = require("../Models/Admin")
+const { Admin } = require("../Models/Admin");
 const error = require("../error/error");
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
 const bcrypt = require("bcrypt"); //To encrypt passwords
@@ -9,7 +9,7 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   // Verify that the input data is not undefined
   if (!username || !password) {
-    return res.status(500).json({ message: "Error, missing login data" });
+    return res.status(500).json(error.errorMissingData);
   }
 
   // check if the user is already registered
@@ -40,7 +40,10 @@ const login = async (req, res) => {
         },
       }).then((profile) => {
         // If the password is correct, we generate the JWT token and send it as a response to the client
-        const token = jwt.sign({ username }, secretKey);
+        const token = jwt.sign(
+          { username, role: "admin" },
+          process.env.ADMIN_ENCRYPT
+        );
         res.json({ token });
       });
     } else {
@@ -71,7 +74,43 @@ const usersList = async (req, res) => {
 };
 
 const updatepwd = (req, res) => {
-  res.send("test update");
+  const { username, password } = req.body;
+  console.log(username)
+  console.log(password)
+
+  // Verify that the input data is not undefined
+  if (!username || !password) {
+    return res.status(500).json(error.errorMissingData);
+  }
+
+  bcrypt.hash(password, 10, (err, hash) => {
+    if (err) {
+      return res
+        .status(500)
+        .json({ message: "Error almacenando los datos de autenticacion" });
+    }
+
+    Credential.update(
+      {
+        password: hash,
+      },
+      {
+        where: {
+          username
+        },
+      }
+    ).then((results)=> {
+      if (results[0] == 1) {
+
+        return res.json(error.successUpdate)
+      } else {
+        return res.status(404).json(error.error404)
+      }
+    })
+      .catch(() => {
+        return res.status(500).json(error.error500);
+      });
+  });
 };
 
 module.exports = {

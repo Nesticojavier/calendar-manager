@@ -2,8 +2,7 @@ const { Credential, Users } = require("../Models/Users"); //import database conn
 const bcrypt = require("bcrypt"); //To encrypt passwords
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
 
-// Must be placed in an environment variable
-secretKey = "my_secret_key";
+// Must be placed in an environment variable;
 
 // Signup
 const signup = async (req, res) => {
@@ -29,7 +28,9 @@ const signup = async (req, res) => {
   // If the user does not exist, we encrypt his password and save it in the database
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) {
-      return res.status(500).json({ message: "Error almacenando los datos de autenticacion" });
+      return res
+        .status(500)
+        .json({ message: "Error almacenando los datos de autenticacion" });
     }
 
     try {
@@ -89,7 +90,7 @@ const login = async (req, res) => {
         },
       }).then((profile) => {
         // If the password is correct, we generate the JWT token and send it as a response to the client
-        const token = jwt.sign({ username, profile }, secretKey);
+        const token = jwt.sign({ username, profile }, process.env.USERS_ENCRYPT);
         res.json({ token });
       });
     } else {
@@ -124,7 +125,25 @@ const verifyToken = (req, res, next) => {
   const token = header.split(" ")[1];
 
   try {
-    req.userData = jwt.verify(token, secretKey);;
+    req.userData = jwt.verify(token, process.env.USERS_ENCRYPT);
+    next();
+  } catch (ex) {
+    res.status(400).json({ message: "Error, token invalido" });
+  }
+};
+
+const verifyTokenADMIN = (req, res, next) => {
+  const header = req.headers["authorization"];
+
+  if (!header) {
+    return res.status(401).json({ message: "Acceso denegado" });
+    // return res.status(401).send("Acceso denegado");
+  }
+
+  const token = header.split(" ")[1];
+
+  try {
+    req.userData = jwt.verify(token, process.env.ADMIN_ENCRYPT);
     next();
   } catch (ex) {
     res.status(400).json({ message: "Error, token invalido" });
@@ -137,4 +156,5 @@ module.exports = {
   dashboard,
   showUsers,
   verifyToken,
+  verifyTokenADMIN,
 };
