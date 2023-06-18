@@ -62,8 +62,8 @@ const getJobByMonth = (req, res) => {
                 LEFT JOIN "workTags" w ON wo.id = w.works_id 
                 LEFT JOIN tags t ON t.id = w.tags_id
                 GROUP BY wo.id
-                HAVING ( EXTRACT(MONTH FROM wo."dateInit") = :MONTH OR EXTRACT(MONTH FROM wo."dateEnd") = :MONTH ) AND 
-                       ( EXTRACT(YEAR FROM wo."dateInit") = :YEAR OR EXTRACT(YEAR FROM wo."dateEnd") = :YEAR )`,
+                HAVING ( EXTRACT(MONTH FROM wo."dateInit") <= :MONTH AND EXTRACT(MONTH FROM wo."dateEnd") >= :MONTH ) AND 
+                       ( EXTRACT(YEAR FROM wo."dateInit") <= :YEAR OR EXTRACT(YEAR FROM wo."dateEnd") >= :YEAR )`,
     {
       replacements: { MONTH: month, YEAR: year },
       type: sq.QueryTypes.SELECT,
@@ -90,19 +90,18 @@ const editProfile = async (req, res) => {
     return res.status(400).json(error.errorMissingData);
   }
 
-  UserBlocks.destroy({
+  await UserBlocks.destroy({
     where: {
       users_id,
     },
   });
 
-  UserBlocks.bulkCreate(
+  await UserBlocks.bulkCreate(
     blocks.map((e) => {
       return { users_id, hour: e };
     })
   );
 
-  console.log(tags);
   updateUserTag(users_id, tags);
   return res.json(error.successUpdate);
 };
