@@ -7,7 +7,7 @@ import {
   TableHead,
   TableRow,
   IconButton,
-  Box
+  Box,
 } from '@mui/material';
 
 import EditIcon from '@mui/icons-material/Edit'
@@ -37,12 +37,6 @@ export default function UsersTable() {
     { id: 2, name: 'Usuario 2', role: 'Rol 2' },
     { id: 3, name: 'Usuario 3', role: 'Rol 3' },
   ];
-
-  const navigate = useNavigate();
-
-  // const handleEdit = (user) => {
-  //   navigate(`/admin/edituser/${user.id}`, { state: { user } });
-  // };
 
   const handleEdit = (user) => {
     setSelectedUser(user);

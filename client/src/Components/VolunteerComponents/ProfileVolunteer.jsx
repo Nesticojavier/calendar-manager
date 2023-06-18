@@ -33,14 +33,35 @@ export default function ProfileVolunteer() {
 
   // A state is created for the values of the form inputs
   // Saved to an object with the data of the user as initial values
-  const [values, setValues] = useState({
-    username: "pepito",
-    password: "jajajaja",
-    fullName: "ola k ase",
-    birthDate: "01/01/2000",
-    institutionalId: "123456789",
-    rol: "Voluntario",
-  });
+  // const [values, setValues] = useState({
+  //   username: "pepito",
+  //   password: "jajajaja",
+  //   fullName: "ola k ase",
+  //   birthDate: "01/01/2000",
+  //   institutionalId: "123456789",
+  //   rol: "Voluntario",
+  // });
+
+  const [values, setValues] = useState([]);
+
+
+  // get token from cookies
+  const token = Cookies.get('token');
+  // construct object representing an HTTP authorization header with the Bearer scheme.
+  const headers = { Authorization: `Bearer ${token}` };
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:3000//volunteer/profile", { headers })
+      .then((response) => {
+        console.log(response.data);
+        // setValues(response.data);
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+      });
+  }, []);
+
 
   // inputs with their restrictions and message errors
   const inputs = [
