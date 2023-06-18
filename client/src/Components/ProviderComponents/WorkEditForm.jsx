@@ -72,7 +72,7 @@ export default function WorkCreationForm() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
+    
     // show error message if blocks variable is void
     if (blocks.length === 0) {
       setShowError(true);
