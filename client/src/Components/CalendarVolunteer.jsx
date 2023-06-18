@@ -71,7 +71,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  // const handleAddWorks = (currentYear, currentMonth) => {
   useEffect(() => {
     axios
       .get(`http://localhost:3000/volunteer/jobs/`, { headers })
@@ -85,7 +84,25 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           console.error(error.message);
         }
       });
-  });
+  }, []);
+
+  // const handleAddWorks = (currentYear, currentMonth) => {
+  //   axios
+  //     .get(
+  //       `http://localhost:3000/volunteer/jobs/${currentYear}/${currentMonth+1}`,
+  //       { headers }
+  //     )
+  //     .then((response) => {
+  //       setWorkData(response.data);
+  //     })
+  //     .catch((error) => {
+  //       if (error.response) {
+  //         console.error(error.response.data.message);
+  //       } else {
+  //         console.error(error.message);
+  //       }
+  //     });
+  // };
 
   // useEffect(() => {
   //   handleAddWorks(currentYear, currentMonth);
@@ -105,7 +122,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
     // Check if the work has a block that matches the day
     const hasBlock = work.blocks.some(
-      (block) => block.day.toLowerCase() === dayName
+      (block) => block.day && block.day.toLowerCase() === dayName
     );
 
     // Check if the work is within the start and end range

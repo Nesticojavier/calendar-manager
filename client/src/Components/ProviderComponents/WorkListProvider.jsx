@@ -80,7 +80,7 @@ export default function WorkListProvider() {
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Etiquetas:
-              {work.tags.map((tag, index) => (
+              {work.tags && work.tags.map((tag, index) => (
                 <span key={tag}>
                   {" "}
                   {tag}
