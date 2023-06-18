@@ -1,15 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Box, Grid, Dialog, DialogTitle, DialogContent } from "@mui/material";
-import { getDaysInMonth } from "date-fns";
+import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
-  const navigate = useNavigate();
-
   // days of the week
   const days = [
     "Domingo",
@@ -19,20 +16,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     "Jueves",
     "Viernes",
     "Sábado",
-  ];
-
-  // hours for the work
-  const hours = [
-    "7:00 am",
-    "8:00 am",
-    "9:00 am",
-    "10:00 am",
-    "11:00 am",
-    "12:00 pm",
-    "1:00 pm",
-    "2:00 pm",
-    "3:00 pm",
-    "4:00 pm",
   ];
 
   // months of the year
@@ -63,15 +46,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   // to know the first day of the month
   const firstDay = new Date(currentYear, currentMonth).getDay();
 
-  // to know the day that is being selected
-  const [selectedDay, setSelectedDay] = useState(null);
-
-  // to know the month that is being selected
-  const [selectedMonth, setSelectedMonth] = useState(null);
-
-  // to know the year that is being selected
-  const [selectedYear, setSelectedYear] = useState(null);
-
   // to change to the previuos month
   const handlePrevMonthClick = () => {
     if (currentMonth === 0) {
@@ -100,7 +74,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   const handleAddWorks = (currentYear, currentMonth) => {
     axios
       .get(
-        `http://localhost:3000/volunteer/jobs/${currentYear}/${currentMonth}`,
+        `http://localhost:3000/volunteer/jobs/${currentYear}/${
+          currentMonth + 1
+        }`,
         { headers }
       )
       .then((response) => {
@@ -115,35 +91,50 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       });
   };
 
+  useEffect(() => {
+    handleAddWorks(currentYear, currentMonth);
+  }, [currentYear, currentMonth]);
+
   // to show the works tags in the calendar
   const isWorkOnDay = (work, day) => {
-    // Convertir el día a un formato de fecha
+    // Add 1 day to the end date and the start date because the date-fns library
+    const dateInit = addDays(new Date(work.dateInit), 1);
+    const dateEnd = addDays(new Date(work.dateEnd), 1);
+
+    // Convert the day number to a Date object
     const date = new Date(currentYear, currentMonth, day);
 
-    // Obtener el nombre del día en español
+    // Get the name in Spanish of the day
     const dayName = date.toLocaleDateString("es-ES", { weekday: "long" });
 
-    // Comprobar si el trabajo tiene un bloque que coincide con el día y la hora
-    const hasBlock = work.blocks.some((block) => block.day === dayName);
+    // Check if the work has a block that matches the day
+    const hasBlock = work.blocks.some(
+      (block) => block.day.toLowerCase() === dayName
+    );
 
-    // Comprobar si el trabajo está dentro del rango de inicio y fin
+    // Check if the work is within the start and end range
     const isInRange =
-      date >= new Date(work.dateInit) && date <= new Date(work.dateEnd);
+      (date >= dateInit && date <= dateEnd) ||
+      isSameDay(date, dateInit) ||
+      isSameDay(date, dateEnd);
 
-    // Devolver true si ambas condiciones se cumplen, y false si no
+    // Return true if both conditions are true, and false otherwise
     return hasBlock && isInRange;
   };
 
-  //   const [dialogOpen, setDialogOpen] = useState(false);
+  // to show a dialog with the work information
+  const [selectedWork, setSelectedWork] = useState(null);
 
-  //   const handleGridItemClick = (event) => {
-  //     setDialogOpen(true);
-  //     setSelectedDay(event.target.textContent);
-  //   };
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  //   const handleDialogClose = (event) => {
-  //     setDialogOpen(false);
-  //   };
+  const handleWorkClick = (work) => {
+    setDialogOpen(true);
+    setSelectedWork(work);
+  };
+
+  const handleDialogClose = (event) => {
+    setDialogOpen(false);
+  };
 
   return (
     <Box
@@ -193,20 +184,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           },
         }}
       >
-        {/* Map over workItems and render a label for each item on the corresponding day in the calendar */}
-        {/* {workItems.map((workItem) => {
-          // Check if the work item is in the current month and year
-          if (
-            workItem.date.getMonth() === currentMonth &&
-            workItem.date.getFullYear() === currentYear
-          ) {
-            // Render a label for the work item on the corresponding day in the calendar
-            // return <div>{/* Render label for workItem here */}
-        {/* </div>; */}
-        {/* }
-          return null;
-        })}  */}
-
         {/* To display the days of the week */}
         {days.map((day) => (
           <Grid key={day} item xs={1.6} minHeight={70} sx={{ display: "flex" }}>
@@ -221,22 +198,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
         {/* To display the days of the month */}
         {[...Array(daysInMonth)].map((_, index) => {
-          handleAddWorks(currentYear, currentMonth);
-          // to get the date of the day
-          const date = new Date(currentYear, currentMonth, index + 1);
-          // to handle the click on the day
-          const handleIconClick = (e) => {
-            setSelectedDay(index + 1);
-            setSelectedMonth(currentMonth);
-            setSelectedYear(currentYear);
-            navigate(`/provider/workcreation`);
-          };
-          // Add a condition to check if a tag should be added to this day
-          // Filtrar los trabajos que corresponden a este día
+          // To check if a tag should be added to this day
           const worksOnDay = workData.filter((work) => {
-            console.log(`Checking work ${work.id} on day ${index + 1}`);
             const result = isWorkOnDay(work, index + 1);
-            console.log(`Result: ${result}`);
             return result;
           });
 
@@ -251,7 +215,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                 justifyContent: "flex-start",
                 alignItems: "flex-start",
               }}
-              //   onClick={!isSunday ? handleGridItemClick : undefined}
             >
               <div> {index + 1} </div>
               <div
@@ -273,7 +236,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                       borderRadius: "4px",
                       fontSize: "12px",
                       margin: "2px",
+                      cursor: "pointer",
                     }}
+                    onClick={() => handleWorkClick(work)}
                   >
                     {work.title}
                   </span>
@@ -283,39 +248,41 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           );
         })}
 
-        {/* <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Bloques de horarios</DialogTitle>
+        {/* To display the dialog with the work information */}
+        <Dialog open={dialogOpen} onClose={handleDialogClose}>
+          <DialogTitle>Información del trabajo</DialogTitle>
           <DialogContent>
-            <div>
-              {selectedDay && (
-                <Grid
-                  container
-                  spacing={4}
-                  sx={{
-                    margin: "auto",
-                    maxWidth: "100%",
-                    "--Grid-borderWidth": "1px",
-                    borderTop: "var(--Grid-borderWidth) solid",
-                    borderLeft: "var(--Grid-borderWidth) solid",
-                    borderColor: "black",
-                    "& > div": {
-                      borderRight: "var(--Grid-borderWidth) solid",
-                      borderBottom: "var(--Grid-borderWidth) solid",
-                      borderColor: "black",
-                      overflow: "hidden",
-                    },
-                  }}
-                >
-                  {hours.map((hour) => (
-                    <Grid key={hour} item xs={12} minHeight={50}>
-                      <h3 style={{ fontSize: 12 }}>{hour}</h3>
-                    </Grid>
+            {selectedWork && (
+              <div>
+                <p>Titulo: {selectedWork.title} </p>
+                <p>Descripcion: {selectedWork.description} </p>
+                <p>
+                  Tipo:{" "}
+                  {`Trabajo ${
+                    selectedWork.type === 1 ? "recurrente" : "de sesión"
+                  }`}{" "}
+                </p>
+                <p>Fecha de inicio: {selectedWork.dateInit} </p>
+                <p>Fecha de fin: {selectedWork.dateEnd} </p>
+                <p>Bloques:</p>
+                <ul>
+                  {selectedWork.blocks.map((block) => (
+                    <li key={block.id}>
+                      <p>Dia: {block.day}</p>
+                      <p>Hora: {block.hour}</p>
+                    </li>
                   ))}
-                </Grid>
-              )}
-            </div>
+                </ul>
+                <p>Etiquetas:</p>
+                <ul>
+                  {selectedWork.tags.map((tag) => (
+                    <li key={tag}>{tag}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </DialogContent>
-        </Dialog> */}
+        </Dialog>
       </Grid>
     </Box>
   );

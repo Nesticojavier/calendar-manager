@@ -22,7 +22,7 @@ const { Tags, WorkTags, UserTags } = require("./Models/Tags");
   await Work.sync().then(() => {
     console.log("Work Model synced 2");
   });
-  
+
   await Tags.sync().then(() => {
     console.log("Tags Model synced 2");
   });
