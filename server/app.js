@@ -47,12 +47,12 @@ require('dotenv').config();
 
   await Admin.sync().then(()=> {
     console.log("UserBlocks Model synced 2");
+    createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
   });
   
 })();
 
 // Create admin
-createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
 
 
 
