@@ -30,3 +30,14 @@ Finalmente, puede correr el API de nodeJs en la base de datos por defecto de pos
 ```
 npm run serverstart
 ```
+
+## Variables de entornos utilizadas
+
+Si desea correr este proyecto en su ordenador sin un contenedor de docker, debe establecer las variables de entorno que se indican a continuación en su sistema operativo o simplemente añadiendo un archivo `.env` a la raíz del server:
+
+- `DATABASE_HOST` Indica el host de la base de datos
+- `DATABASE_PWD` Indica la contraseña de la base de datos
+- `ADMIN_USER` Indica el usuario administrador del calendario
+- `ADMIN_PWD` Indica la contraseña del perfil de administrador del calendario
+- `ADMIN_ENCRYPT` Indica la clave de cifrado para encriptar el jwt token del admin
+- `USERS_ENCRYPT` Indica la clave de cifrado para encriptar los jwt token de los usuarios
