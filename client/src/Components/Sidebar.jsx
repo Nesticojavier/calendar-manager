@@ -9,6 +9,7 @@ import {
 import AddIcon from "@mui/icons-material/Add";
 import SummarizeIcon from "@mui/icons-material/Summarize";
 import CalendarMonthIcon from "@mui/icons-material/CalendarMonth";
+import EventRepeatIcon from '@mui/icons-material/EventRepeat';
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
@@ -73,14 +74,36 @@ export default function Sidebar() {
             <ListItemText primary="Ver trabajos existentes" />
           </ListItemButton>
         </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton
+            component={NavLink}
+            to="workinprogress"
+            selected={selectedIndex === 2}
+            onClick={(event) => handleListItemClick(event, 2)}
+            sx={{
+              "&.Mui-selected": {
+                backgroundColor: "rgb(180, 190, 247)",
+                color: "black",
+                "&:hover": { backgroundColor: "rgb(127, 145, 248)" },
+              },
+            }}
+          >
+            <ListItemIcon>
+              <EventRepeatIcon />
+            </ListItemIcon>
+            <ListItemText primary="Trabajos en curso" />
+          </ListItemButton>
+        </ListItem>
+
         <ListItem disablePadding>
           <ListItemButton
             // component="a"
             // href="/dashboard"
             component={NavLink}
             to="calendar"
-            selected={selectedIndex === 2}
-            onClick={(event) => handleListItemClick(event, 2)}
+            selected={selectedIndex === 3}
+            onClick={(event) => handleListItemClick(event, 3)}
             sx={{
               "&.Mui-selected": {
                 backgroundColor: "rgb(180, 190, 247)",

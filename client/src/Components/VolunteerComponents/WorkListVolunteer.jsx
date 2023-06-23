@@ -1,11 +1,9 @@
 import { useState } from "react";
-import {
-  Box,
-} from "@mui/material";
+import { Box } from "@mui/material";
 
 import "./volunteer.css";
 import ConfirmedListWorkVolunter from "./ConfirmedListWorkVolunter";
-
+import WorkStatusNavbar from "../WorkStatusNavbar";
 
 export default function WorkListVolunteer() {
   // state for status verify work
@@ -28,31 +26,12 @@ export default function WorkListVolunteer() {
         overflow: "auto",
       }}
     >
-      <div className="navStatus">
-        <nav>
-          <ul>
-            <li
-              className={statusConfirmed ? "active" : ""}
-              onClick={() => {
-                handleChangeStatus(true);
-              }}
-            >
-              Confirmados
-            </li>
-            <li
-              className={!statusConfirmed ? "active" : ""}
-              onClick={() => {
-                handleChangeStatus(false);
-              }}
-            >
-              Por confirmar
-            </li>
-          </ul>
-        </nav>
-      </div>
-      
-      <ConfirmedListWorkVolunter statusConfirmed = {statusConfirmed} />
-      
+      <WorkStatusNavbar
+        statusConfirmed={statusConfirmed}
+        handleChangeStatus={handleChangeStatus}
+      />
+
+      <ConfirmedListWorkVolunter statusConfirmed={statusConfirmed} />
     </Box>
   );
 }

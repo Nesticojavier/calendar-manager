@@ -14,6 +14,7 @@ import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm";
 import Calendar from "./Components/Calendar";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
 import WorkEditForm from "./Components/ProviderComponents/WorkEditForm";
+import WorkListInProgress from "./Components/ProviderComponents/WorkListInProgress";
 
 import Volunteer from "./Components/Pages/Volunteer";
 import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVolunteer";
@@ -52,6 +53,7 @@ function App() {
           <Route path="calendar" element={<Calendar />} />
           <Route path="worklist" element={<WorkListProvider />} />
           <Route path="workedit/:id" element={<WorkEditForm />} />
+          <Route path="workinprogress" element={<WorkListInProgress />} />
         </Route>
 
         {/* Routess manage for volunter */}
