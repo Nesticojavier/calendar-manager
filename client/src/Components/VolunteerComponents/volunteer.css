@@ -1,0 +1,40 @@
+.navStatus nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    text-align: right;
+}
+
+.navStatus nav ul li {
+    display: inline-block;
+    margin-left: 10px;
+    position: relative;
+    cursor: pointer
+}
+
+.navStatus nav ul li:not(:last-child):after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: -5px;
+    /* Ajusta la posición horizontal de la barra */
+    transform: translateY(-50%);
+    height: 10px;
+    width: 2px;
+    background-color: #ffffff;
+    /* Color de la barra vertical */
+}
+
+.navStatus nav ul li.active {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+.navStatus nav ul li:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.navStatus nav {
+    padding: 10px;
+}

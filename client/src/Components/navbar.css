@@ -1,4 +1,8 @@
-*{padding:0; margin:0;}
+*{
+    padding:0; 
+    margin:0;
+    /* font-family: Arial; */
+}
 
 .navbar {
     height: 30px;
@@ -59,7 +63,6 @@
     border: none;
     background-color: transparent;
     font-size: 20px;
-    font-family: Georgia, 'Times New Roman', Times, serif;
     cursor: pointer;
     margin-left: 1200px;
 }

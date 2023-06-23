@@ -5,6 +5,10 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const cors = require("cors");
 const bcrypt = require("bcrypt"); //To encrypt passwords
+
+// require enviroments variables file
+require('dotenv').config();
+
 // Import Models
 const { Users, Credential } = require("./Models/Users");
 const { Work } = require("./Models/Work");
@@ -12,8 +16,6 @@ const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 const { UserBlocks } = require("./Models/Blocks");
 const { Admin, createOrFindAdmin } = require("./Models/Admin");
 
-// require enviroments variables file
-require('dotenv').config();
 
 
 // Synchronize model
@@ -47,12 +49,12 @@ require('dotenv').config();
 
   await Admin.sync().then(()=> {
     console.log("UserBlocks Model synced 2");
+    // Create admin
     createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
   });
   
 })();
 
-// Create admin
 
 
 

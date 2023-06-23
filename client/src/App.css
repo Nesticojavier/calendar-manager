@@ -1,4 +1,8 @@
-*{padding:0; margin:0;}
+* {
+  font-family: Arial;
+  padding:0; 
+  margin:0;
+}
 
 .App{
   display: flex;
@@ -9,7 +13,6 @@
   background-image: url("https://th.bing.com/th/id/R.cece70b93fbb41eccd6513553ce99887?rik=fnj%2b6TJSGfkfFw&pid=ImgRaw&r=0");
   background-position: center;
   background-size: cover;
-  font-family: Arial;
 }
 
 .App-admin{
