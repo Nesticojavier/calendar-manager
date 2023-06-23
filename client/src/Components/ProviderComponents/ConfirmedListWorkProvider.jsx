@@ -9,11 +9,12 @@ import {
   Button,
 } from "@mui/material";
 
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import ChecklistIcon from "@mui/icons-material/Checklist";
+import CheckCircleIcon from "@mui/icons-material/CheckCircle";
+import ClearIcon from "@mui/icons-material/Clear";
 
-export default function ConfirmedListWorkProvider({statusConfirmed}) {
+export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   const workDataConfirmed = [
     {
       id: 1,
@@ -83,6 +84,26 @@ export default function ConfirmedListWorkProvider({statusConfirmed}) {
     setWorkData(statusConfirmed ? workDataConfirmed : workDataUnconfirmed);
   }, [statusConfirmed]);
 
+  // Handle for show volunteer data that make request
+  const handleShowVolunteer = () => {
+    alert("Mostrar datos del voluntario que hace la petición al trabajo");
+  };
+
+  //  handle for make follow up by provider
+  const handleFollow = () => {
+    alert("Se debe implementar la funcion para hacerle seguimiento al trabajo");
+  };
+
+  // handle for accept the volunteer work
+  const handleAcceptWork = () => {
+    alert("Se debe implementar la duncion para aceptar el trabajo por parte del proveedor")
+  }
+
+  // handle for decline the volunteer work
+  const handleDeclineWork = () => {
+    alert("Se debe implementar la duncion para declinar el trabajo por parte del proveedor")
+  }
+
   return (
     <div>
       {workData.map((work) => (
@@ -92,17 +113,15 @@ export default function ConfirmedListWorkProvider({statusConfirmed}) {
         >
           <CardHeader
             action={
-              !statusConfirmed ? null : (
-                <Button
-                  onClick={() => handleFollow()}
-                  type="button"
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<VisibilityIcon />}
-                >
-                  Ver seguimiento
-                </Button>
-              )
+              <Button
+                onClick={() => handleShowVolunteer()}
+                type="button"
+                variant="outlined"
+                color="primary"
+                startIcon={<VisibilityIcon />}
+              >
+                Ver Voluntario
+              </Button>
             }
             title={work.title}
             subheader={`Trabajo ${
@@ -127,15 +146,38 @@ export default function ConfirmedListWorkProvider({statusConfirmed}) {
             <Typography>Estado: {work.status}</Typography>
           </CardContent>
           <CardActions disableSpacing>
-            <Button
-              onClick={() => handleRemoveWork()}
-              type="button"
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteIcon />}
-            >
-              {statusConfirmed ? "Abandonar tabajo" : "Cancelar solicitud"}
-            </Button>
+            {statusConfirmed ? (
+              <Button
+                onClick={() => handleFollow()}
+                type="button"
+                variant="contained"
+                color="primary"
+                startIcon={<ChecklistIcon />}
+              >
+                Hacer Seguimiento
+              </Button>
+            ) : (
+              <>
+                <Button
+                  onClick={() => handleAcceptWork()}
+                  type="button"
+                  variant="outlined"
+                  color="success"
+                  startIcon={<CheckCircleIcon />}
+                >
+                  Aceptar
+                </Button>
+                <Button
+                  onClick={() => handleDeclineWork()}
+                  type="button"
+                  variant="outlined"
+                  color="error"
+                  startIcon={<ClearIcon />}
+                >
+                  Declinar
+                </Button>
+              </>
+            )}
           </CardActions>
         </Card>
       ))}
