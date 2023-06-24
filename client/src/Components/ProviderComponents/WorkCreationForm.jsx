@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Box, Button } from "@mui/material";
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./WorkCreationForm.css";
 import Cookies from "js-cookie";
@@ -76,7 +78,7 @@ export default function WorkCreationForm() {
       setTimeout(() => {
         setShowError(false);
       }, 1000);
-    } else if (workTags.length === 0) {
+    } else if (selectedTags.length === 0) {
       setShowErrorTags(true);
       setTimeout(() => {
         setShowErrorTags(false);
@@ -86,10 +88,12 @@ export default function WorkCreationForm() {
       const token = Cookies.get("token");
       // construct object representing an HTTP authorization header with the Bearer scheme.
       const headers = { Authorization: `Bearer ${token}` };
-      const valuesEnd = { ...values, blocks, workTags };
+      const valuesEnd = { ...values, blocks, workTags : selectedTags };
       console.log(valuesEnd);
       axios
-        .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, { headers })
+        .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, {
+          headers,
+        })
         .then((response) => {
           // Handle request response successful
           swal({
@@ -231,47 +235,51 @@ export default function WorkCreationForm() {
   // To display the error message for tags
   const [showErrorTags, setShowErrorTags] = useState(false);
 
-  // To add tags
-  const [tagValue, setTagValue] = useState("");
+  // To save tags selected
+  const [selectedTags, setSelectedTags] = useState([]);
 
-  const [workTags, setTags] = useState([]);
+  const handleTagSelection = (event, value) => {
 
-  // When enter is pressed, the tag is added
-  const addTags = (e) => {
-    if (e.keyCode === 13 && tagValue) {
-      // Check if the tag value contains any special characters
-      if (!/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(tagValue)) {
-        // Split the tag value into an array of words
-        const words = tagValue.split(" ");
+    console.log(event)
 
-        // Check if the number of words is less than or equal to 2
-        if (words.length <= 2) {
-          // Check if the length of the tagValue is less than or equal to 16
-          if (tagValue.length <= 16) {
-            // Check if the tag already exists in the workTags array
-            if (!workTags.includes(tagValue)) {
-              setTags([...workTags, tagValue]);
-              setTagValue("");
-            } else {
-              setShowErrorTags(true);
-            }
-          } else {
-            setShowErrorTags(true);
-          }
+    // if action is deleting
+    if (value.length < selectedTags.length){
+      setSelectedTags(value);
+      return;
+    }
+
+    // get new tag for add
+    const newTag = value[value.length - 1];
+
+    // verify tag before add to selected tags
+
+    // Check if the tag value contains any special characters
+    if (!/[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g.test(newTag)) {
+      // Split the tag value into an array of words
+      const words = newTag.split(" ");
+
+      // Check if the number of words is less than or equal to 2
+      if (words.length <= 2) {
+        // Check if the length of the tagValue is less than or equal to 16
+        if (newTag.length <= 16) {
+          setSelectedTags(value);
         } else {
           setShowErrorTags(true);
         }
       } else {
         setShowErrorTags(true);
       }
+    } else {
+      setShowErrorTags(true);
     }
+
+
   };
 
-  // When the tag is deleted
-  const deleteTag = (val) => {
-    let reaminTags = workTags.filter((t) => t !== val);
-    setTags(reaminTags);
-  };
+  const filterOptions = createFilterOptions({
+    matchFrom: "start",
+    limit: 2,
+  });
 
   return (
     <Box
@@ -459,31 +467,28 @@ export default function WorkCreationForm() {
 
       {/*Part of workTags*/}
       <label className="labelTag" htmlFor="workTags-input">
-        Ingrese los Tags
+        Ingrese las etiquetas
       </label>
-      <div className="tagInput ">
-        {workTags.map((item, index) => {
-          return (
-            <button key={index}>
-              {item}
-              <p className="delete-tag" onClick={() => deleteTag(item)}>
-                X
-              </p>
-            </button>
-          );
-        })}
-        <input
-          name={"workTags"}
-          type={"text"}
-          placeholder={"Escriba los Tags y presione enter"}
-          value={tagValue}
-          onChange={(e) => setTagValue(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              addTags(e);
-            }
-          }}
+
+      <div>
+        <Autocomplete
+          sx={{ maxWidth: 700 }}
+          filterOptions={filterOptions}
+          freeSolo
+          multiple
+          filterSelectedOptions
+          id="tags-standard"
+          options={tagsDB}
+          value={selectedTags}
+          onChange={handleTagSelection}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              variant="standard"
+              // label="Multiple values"
+              placeholder="ingrese etiqueta y presione enter"
+            />
+          )}
         />
         {showErrorTags && (
           <p className="error-message">
@@ -510,3 +515,17 @@ export default function WorkCreationForm() {
     </Box>
   );
 }
+
+// Sintetic data
+const tagsDB = [
+  "python",
+  "programacion",
+  "educacion",
+  "java",
+  "matematicas",
+  "aprendizaje",
+  "universidad",
+  "escuela",
+  "jardineria",
+  "servicios",
+];
