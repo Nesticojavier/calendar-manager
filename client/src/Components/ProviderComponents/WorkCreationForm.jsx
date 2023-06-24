@@ -88,7 +88,7 @@ export default function WorkCreationForm() {
       const token = Cookies.get("token");
       // construct object representing an HTTP authorization header with the Bearer scheme.
       const headers = { Authorization: `Bearer ${token}` };
-      const valuesEnd = { ...values, blocks, workTags : selectedTags };
+      const valuesEnd = { ...values, blocks, workTags: selectedTags };
       console.log(valuesEnd);
       axios
         .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, {
@@ -239,11 +239,10 @@ export default function WorkCreationForm() {
   const [selectedTags, setSelectedTags] = useState([]);
 
   const handleTagSelection = (event, value) => {
-
-    console.log(event)
+    console.log(event);
 
     // if action is deleting
-    if (value.length < selectedTags.length){
+    if (value.length < selectedTags.length) {
       setSelectedTags(value);
       return;
     }
@@ -272,8 +271,6 @@ export default function WorkCreationForm() {
     } else {
       setShowErrorTags(true);
     }
-
-
   };
 
   const filterOptions = createFilterOptions({
@@ -499,6 +496,7 @@ export default function WorkCreationForm() {
       </div>
 
       <Button
+        className="button-form"
         type="submit"
         variant="contained"
         sx={{

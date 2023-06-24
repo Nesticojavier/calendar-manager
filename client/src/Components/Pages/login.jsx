@@ -1,13 +1,11 @@
 import React, { useState, useContext } from "react";
-import axios from 'axios';
+import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
-import Cookies from 'js-cookie';
+import Cookies from "js-cookie";
 import { UserContext } from "../../Context/UserContext";
 
-export default function Login () {
-
-
-    const { changeLoggedIn } = useContext(UserContext)
+export default function Login() {
+  const { changeLoggedIn } = useContext(UserContext);
 
   // A state is created for the values of the form inputs
   // Saved to an object with empty initial values
@@ -37,28 +35,26 @@ export default function Login () {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-        axios
-            .post(`${import.meta.env.VITE_API_URL}/login`, values)
-            .then((response) => {
-                // Handle request response successful
-                const token = response.data.token
+    axios
+      .post(`${import.meta.env.VITE_API_URL}/login`, values)
+      .then((response) => {
+        // Handle request response successful
+        const token = response.data.token;
 
         // localStorage.setItem('token', token);
         Cookies.set("token", token, { expires: 1 });
 
-                changeLoggedIn(true)
+        changeLoggedIn(true);
 
-                // Redirect to home
-                navigate('/')
-
-            })
-            .catch((error) => {
-                // Handle request error
-                setErrorMessage(error.response.data.message)
-                console.log("ha ocurrido un errror")
-            });
-
-    };
+        // Redirect to home
+        navigate("/");
+      })
+      .catch((error) => {
+        // Handle request error
+        setErrorMessage(error.response.data.message);
+        console.log("ha ocurrido un errror");
+      });
+  };
 
   // It is used to update the state of the values of the inputs
   const handleChange = (e) => {
@@ -113,10 +109,14 @@ export default function Login () {
                 // Shows the error message if the input is focused and the value does not match the pattern
                 //focused = {focused.toString()}
               />
-              {focused[input.name] && <span>{input.errormessage}</span>}
+              {focused[input.name] && (
+                <span className="error-message">{input.errormessage}</span>
+              )}
             </div>
           ))}
-          <button type="submit">Iniciar sesión</button>
+          <button className="button-form" type="submit">
+            Iniciar sesión
+          </button>
         </form>
         <p className="error">{errorMessage}</p>
         <button
