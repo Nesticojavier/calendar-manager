@@ -287,7 +287,7 @@ export default function WorkCreationForm() {
       className="workForm"
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      <h1>Crear Trabajo Voluntario</h1>
+      <h1>Crear Trabajo</h1>
 
       {inputs.map((input) => {
         return (
