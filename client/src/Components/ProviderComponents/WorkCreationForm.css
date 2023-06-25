@@ -54,7 +54,7 @@
     cursor: default;
 }
 
-.workBySession label{
+.workBySession label {
     display: block;
 }
 
@@ -62,23 +62,24 @@
     margin-top: 10px;
 }
 
-.workBySession input {
-    background-color: #ffff;
+.workBySession input.inputDayForm {
+    background-color: #f1f1f1;
     border: 1px solid #000000;
     font-size: 16px;
     width: 248px;
     height: 15px;
 }
 
-.workBySession select {
+.workBySession select.selectHourForm {
     background-color: #f1f1f1;
     border: 1px solid #000000;
-    border-radius: 4px;
     font-size: 16px;
-    margin-left: 10px;
-    width: 280px;
-    height: 20%;
-    margin-bottom: 20px;
+    width: 248px;
+    height: 47px;
+}
+
+.workBySession, .recurrentBlocks {
+    display: flex;
 }
 
 .workRecurrent{
@@ -101,7 +102,7 @@
     margin-bottom: 20px;
 }
 
-.selectDay{
+/* .selectDay{
     margin-top: 10px;
 }
 
@@ -112,7 +113,7 @@
 .selectHour label{
     display: block;
     margin-top: 0%;
-}
+} */
 
 .startDate {
     margin-top: 15px;

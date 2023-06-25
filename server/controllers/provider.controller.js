@@ -183,9 +183,7 @@ const updateJob = async (req, res) => {
 
   if (type == 2) {
     const dayOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-    dateInit = blocks[0].day
-    dateEnd = dateInit
-    const date = new Date(dateInit)
+    const date = new Date(blocks[0].day)
     blocks[0].day = dayOfWeek[date.getDay()]
     blocks = [blocks[0]]
   }

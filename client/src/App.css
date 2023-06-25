@@ -114,7 +114,7 @@ select {
   font-size: 14px;
 }
 
-form button {
+form button.button-form {
   width: 280px;
   height: 50px;
   border: none;
@@ -164,7 +164,7 @@ form button {
   cursor: pointer;
 }
 
-form span{
+form span.error-message{
   font-size: 12px;
   padding: 3px;
   color: red;
@@ -173,7 +173,7 @@ form span{
   margin-top: 0px;
 }
 
-input:invalid + span {
+input:invalid + span.error-message {
   display: block;
 }
 
