@@ -24,7 +24,7 @@ export default function SidebarVolunteer() {
     <Box
       flex={1}
       p={1}
-      sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
+      sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", minWidth: "20vh" }}
       borderRight={1}
       borderColor="divider"
     >
