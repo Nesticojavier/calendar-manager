@@ -16,6 +16,6 @@ router.post("/signup", signup);
 // Login
 router.post("/login", login);
 // User dashboard -- protected route
-router.get("/dashboard", verifyToken, dashboard);
+router.get("/dashboard", verifyToken(process.env.USERS_ENCRYPT), dashboard);
 
 module.exports = router;
