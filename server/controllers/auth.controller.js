@@ -50,9 +50,11 @@ const login = async (req, res) => {
   }
 };
 
+// Show profile info
 const dashboard = async (req, res) => {
   res.json(req.userData);
 };
+
 
 const showUsers = async (req, res) => {
   try {
@@ -69,7 +71,7 @@ const verifyToken = (key) => {
     const header = req.headers["authorization"];
     // Verify if exists token
     if (!header) {
-      const error = serverErrors.error404;
+      const error = serverErrors.errorUnauthorized;
       return res.status(error?.status || 500).json({
         status: "FAILED",
         data: { error: error?.message || error, name: error?.name },
@@ -94,29 +96,10 @@ const verifyToken = (key) => {
   };
 };
 
-const verifyTokenADMIN = (req, res, next) => {
-  const header = req.headers["authorization"];
-
-  if (!header) {
-    return res.status(401).json({ message: "Acceso denegado" });
-    // return res.status(401).send("Acceso denegado");
-  }
-
-  const token = header.split(" ")[1];
-
-  try {
-    req.userData = jwt.verify(token, process.env.ADMIN_ENCRYPT);
-    next();
-  } catch (ex) {
-    res.status(400).json({ message: "Error, token invalido" });
-  }
-};
-
 module.exports = {
   signup,
   login,
   dashboard,
   showUsers,
   verifyToken,
-  verifyTokenADMIN,
 };

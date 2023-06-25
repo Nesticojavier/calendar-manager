@@ -10,7 +10,7 @@ const {
 } = require("../controllers/auth.controller");
 
 // show all users
-router.get("/users", showUsers);
+// router.get("/users", showUsers);
 // Signup
 router.post("/signup", signup);
 // Login

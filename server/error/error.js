@@ -19,6 +19,10 @@ const errors = {
     status: 401,
   },
 
+  errorUnauthorized: {
+    message: "Ruta protegida",
+    status: 401,
+  },
   errorUserExists: {
     message: "El usuario ya existe",
     status: 409,
@@ -39,7 +43,7 @@ const errors = {
     status: 400,
   },
 
-  errorUnauthorized: {
+  errorUnauthorizedRole: {
     message: "No tienes permisos para crear un trabajo",
     status: 403,
   },

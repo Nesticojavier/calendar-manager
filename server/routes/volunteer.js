@@ -10,7 +10,7 @@ const {
 } = require("../controllers/volunteer.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
-router.use(verifyToken);
+router.use(verifyToken(process.env.USERS_ENCRYPT));
 
 // Show all jobs
 router.get("/jobs", getAllJobs);

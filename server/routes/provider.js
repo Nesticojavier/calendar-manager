@@ -13,18 +13,20 @@ const {
   showTags,
 } = require("../controllers/provider.controller");
 
+router.use(verifyToken(process.env.USERS_ENCRYPT));
+
 // Create a job (Information of user are in JWT)
-router.post("/create", verifyToken, createJob);
+router.post("/create", createJob);
 // Show all jobs created by a user
-router.get("/myJobs", verifyToken, showJobs);
+router.get("/myJobs", showJobs);
 //Delete Job
-router.delete("/job/:id", verifyToken, deleteJob);
+router.delete("/job/:id", deleteJob);
 //Show details of a Job by id
-router.get("/job/:id", verifyToken, showJob);
+router.get("/job/:id", showJob);
 // Update a job created by a user
-router.put("/job/:id", verifyToken, updateJob);
+router.put("/job/:id", updateJob);
 //Show all the tags of a job
 router.get("/job/tags/:id", showTags);
 
-router.get("/changeStatus", verifyToken, changeStatus);
+// router.get("/changeStatus", changeStatus);
 module.exports = router;
