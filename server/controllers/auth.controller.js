@@ -71,7 +71,6 @@ const verifyToken = (key) => {
 
     try {
       req.userData = await authService.verifyToken(token, key);
-      console.log(req.userData);
       next();
     } catch (error) {
       res.status(error?.status || 500).json({

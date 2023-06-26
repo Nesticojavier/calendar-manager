@@ -73,7 +73,6 @@ const providerService = {
 
       // If everything is ok , then commit the transaction
       await t.commit();
-      console.log(work);
       return work;
     } catch (error) {
       // If any error occurs, roll back the transaction
