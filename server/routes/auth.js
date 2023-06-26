@@ -5,12 +5,9 @@ const {
   signup,
   login,
   dashboard,
-  showUsers,
   verifyToken
 } = require("../controllers/auth.controller");
 
-// show all users
-// router.get("/users", showUsers);
 // Signup
 router.post("/signup", signup);
 // Login

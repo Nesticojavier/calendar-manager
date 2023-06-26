@@ -1,4 +1,3 @@
-const { Credential, Users } = require("../Models/Users"); //import database connection
 const authService = require("../services/auth.service");
 const serverErrors = require("../error/error");
 
@@ -55,16 +54,6 @@ const dashboard = async (req, res) => {
   res.json(req.userData);
 };
 
-
-const showUsers = async (req, res) => {
-  try {
-    const users = await Users.findAll();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener usuarios" });
-  }
-};
-
 // Middleware to verify and decode JWT token
 const verifyToken = (key) => {
   return async (req, res, next) => {
@@ -100,6 +89,5 @@ module.exports = {
   signup,
   login,
   dashboard,
-  showUsers,
   verifyToken,
 };

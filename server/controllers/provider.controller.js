@@ -1,13 +1,13 @@
 const { Work } = require("../Models/Work");
 const { Op } = require("sequelize");
-const { insertTag, updateTag } = require("./utils");
 const { sq } = require("../db/db");
 const error = require("../error/error");
+const providerService = require("../services/provider.service");
 
 // Controller to create a job
-const createJob = (req, res) => {
-  const { id: users_id, rol } = req.userData.profile;
-  let {
+const createJob = async (req, res) => {
+  const user = req.userData;
+  const {
     workDescription: description,
     workTitle: title,
     workType: type,
@@ -23,57 +23,38 @@ const createJob = (req, res) => {
     !description ||
     !type ||
     !volunteerCountMax ||
+    !blocks ||
+    !dateInit ||
+    !dateEnd ||
     blocks.length == 0
   ) {
-    return res.status(400).json(error.errorMissingData);
+    return res.status(400).json({ message: error.errorMissingData.message });
   }
 
-  if (rol !== "proveedor") {
-    return res.status(403).json(error.errorUnauthorized);
-  }
+  const work = {
+    description,
+    title,
+    type,
+    volunteerCountMax,
+    blocks,
+    tags,
+    dateInit,
+    dateEnd,
+  };
 
-  if (type == 2) {
-    const dayOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-    dateInit = blocks[0].day
-    dateEnd = dateInit
-    const date = new Date(dateInit)
-    blocks[0].day = dayOfWeek[date.getDay()]
-    blocks = [blocks[0]]
+  try {
+    const createdJob = await providerService.createJob(work, user);
+    res.json(createdJob);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-
-  Work.findOrCreate({
-    where: {
-      users_id,
-      title,
-    },
-    defaults: {
-      users_id,
-      title,
-      status: "propuesto",
-      description,
-      type,
-      volunteerCountMax,
-      blocks: JSON.stringify(blocks),
-      dateEnd,
-      dateInit,
-    },
-  })
-    .then(([row, created]) => {
-      if (created) {
-        insertTag(row.dataValues.id, tags);
-        res.json(error.successJobCreation);
-      } else {
-        res.status(409).json(error.errorJobAlreadyExists);
-      }
-    })
-    .catch(() => {
-      res.status(500).json(error.error500);
-    });
 };
 
 // Controller to display a job from a user
 const showJob = async (req, res) => {
-  const { id: users_id } = req.userData.profile;
+  const { id: users_id } = req.userData;
   const { id } = req.params;
   sq.query(
     `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
@@ -97,7 +78,7 @@ const showJob = async (req, res) => {
 
 // Controller to display jobs from a user
 const showJobs = (req, res) => {
-  const { id: users_id, rol } = req.userData.profile;
+  const { id: users_id, rol } = req.userData;
   if (rol !== "proveedor") {
     return res.status(403).json(error.errorUserNotProvider);
   }
@@ -133,7 +114,7 @@ const changeStatus = (req, res) => {
 
 // Controller to delete a job
 const deleteJob = (req, res) => {
-  const { id: users_id } = req.userData.profile;
+  const { id: users_id } = req.userData;
   const { id } = req.params;
 
   Work.destroy({
@@ -157,7 +138,7 @@ const deleteJob = (req, res) => {
 };
 
 const updateJob = async (req, res) => {
-  const { id: users_id } = req.userData.profile;
+  const { id: users_id } = req.userData;
   const { id } = req.params;
   let {
     startDate: dateInit,
@@ -180,12 +161,19 @@ const updateJob = async (req, res) => {
     return res.status(400).json(error.errorMissingData);
   }
 
-
   if (type == 2) {
-    const dayOfWeek = ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado", "Domingo"]
-    const date = new Date(blocks[0].day)
-    blocks[0].day = dayOfWeek[date.getDay()]
-    blocks = [blocks[0]]
+    const dayOfWeek = [
+      "Lunes",
+      "Martes",
+      "Miercoles",
+      "Jueves",
+      "Viernes",
+      "Sabado",
+      "Domingo",
+    ];
+    const date = new Date(blocks[0].day);
+    blocks[0].day = dayOfWeek[date.getDay()];
+    blocks = [blocks[0]];
   }
 
   // Find a job created by the user with same title
@@ -210,7 +198,7 @@ const updateJob = async (req, res) => {
       volunteerCountMax,
       blocks: JSON.stringify(blocks),
       dateInit,
-      dateEnd
+      dateEnd,
     },
     {
       where: {

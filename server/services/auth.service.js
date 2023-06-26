@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt"); //To encrypt passwords
 const jwt = require("jsonwebtoken"); //Json Web Token Generator
-const { Credential, Users } = require("../Models/Users"); //import database connectiou
+const { Credential, Users } = require("../Models/Users"); //import database connection
 const serverErrors = require("../error/error");
 
 const authService = {
