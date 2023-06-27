@@ -157,6 +157,23 @@ const showTags = (req, res) => {
   res.json({ tags: ["test1", "test2"] });
 };
 
+
+const getJobByMonth = async (req, res) => {
+  const { month, year } = req.params;
+
+  try {
+    const getJobsByMonth = await providerService.getJobByMonth(month, year);
+    console.log("###################",getJobsByMonth)
+
+    res.json(getJobsByMonth);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+  
+};
+
 module.exports = {
   createJob,
   deleteJob,
@@ -165,4 +182,5 @@ module.exports = {
   changeStatus,
   showJob,
   showTags,
+  getJobByMonth
 };

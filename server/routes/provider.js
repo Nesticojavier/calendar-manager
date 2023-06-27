@@ -9,8 +9,8 @@ const {
   updateJob,
   showJobs,
   showJob,
-  changeStatus,
   showTags,
+  getJobByMonth
 } = require("../controllers/provider.controller");
 
 router.use(verifyToken(process.env.USERS_ENCRYPT));
@@ -27,6 +27,9 @@ router.get("/job/:id", showJob);
 router.put("/job/:id", updateJob);
 //Show all the tags of a job
 router.get("/job/tags/:id", showTags);
+
+router.get("/jobs/:year/:month", getJobByMonth);
+
 
 // router.get("/changeStatus", changeStatus);
 module.exports = router;

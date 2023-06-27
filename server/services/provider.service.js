@@ -245,6 +245,35 @@ const providerService = {
       throw error;
     }
   },
+  getJobByMonth: async (month, year) => {
+    const firstDay = new Date(year, month - 1, 1);
+    const endDay = new Date(year, month, 0);
+    try {
+      const jobsByDate = await sq.query(
+        `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+                    FROM works wo 
+                    LEFT JOIN "workTags" w ON wo.id = w.works_id 
+                    LEFT JOIN tags t ON t.id = w.tags_id
+                    GROUP BY wo.id
+                    HAVING wo."dateInit" >= :FIRSTDAY::DATE AND 
+                           wo."dateEnd" <=  :ENDDAY::DATE`,
+        {
+          replacements: { FIRSTDAY: firstDay, ENDDAY: endDay },
+          type: sq.QueryTypes.SELECT,
+        }
+      );
+
+      const promise = jobsByDate.map((e) => {
+        e.tags = e.tags?.split(",");
+        e.blocks = JSON.parse(e.blocks);
+        return e;
+      });
+      await Promise.all(promise);
+      return promise;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = providerService;
