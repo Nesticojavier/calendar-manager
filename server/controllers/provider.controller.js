@@ -91,7 +91,7 @@ const deleteJob = async (req, res) => {
   const user = req.userData;
   const { id: work_id } = req.params;
 
-  console.log(user)
+  console.log(user);
   try {
     await providerService.deleteJob(user, work_id);
     res.sendStatus(204);
@@ -140,7 +140,7 @@ const updateJob = async (req, res) => {
     tags,
     dateInit,
     dateEnd,
-    id
+    id,
   };
 
   try {
@@ -157,21 +157,18 @@ const showTags = (req, res) => {
   res.json({ tags: ["test1", "test2"] });
 };
 
-
 const getJobByMonth = async (req, res) => {
   const { month, year } = req.params;
+  const { id } = req.userData;
 
   try {
-    const getJobsByMonth = await providerService.getJobByMonth(month, year);
-    console.log("###################",getJobsByMonth)
-
+    const getJobsByMonth = await providerService.getJobByMonth(month, year, id);
     res.json(getJobsByMonth);
   } catch (error) {
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-  
 };
 
 module.exports = {
@@ -182,5 +179,5 @@ module.exports = {
   changeStatus,
   showJob,
   showTags,
-  getJobByMonth
+  getJobByMonth,
 };

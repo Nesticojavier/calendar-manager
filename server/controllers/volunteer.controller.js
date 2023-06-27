@@ -63,7 +63,7 @@ const getJobByMonth = (req, res) => {
                 LEFT JOIN tags t ON t.id = w.tags_id
                 GROUP BY wo.id
                 HAVING ( EXTRACT(MONTH FROM wo."dateInit") <= :MONTH AND EXTRACT(MONTH FROM wo."dateEnd") >= :MONTH ) AND 
-                       ( EXTRACT(YEAR FROM wo."dateInit") <= :YEAR OR EXTRACT(YEAR FROM wo."dateEnd") >= :YEAR )`,
+                       ( EXTRACT(YEAR FROM wo."dateInit") <= :YEAR AND EXTRACT(YEAR FROM wo."dateEnd") >= :YEAR )`,
     {
       replacements: { MONTH: month, YEAR: year },
       type: sq.QueryTypes.SELECT,

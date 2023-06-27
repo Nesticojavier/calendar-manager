@@ -27,9 +27,7 @@ router.get("/job/:id", showJob);
 router.put("/job/:id", updateJob);
 //Show all the tags of a job
 router.get("/job/tags/:id", showTags);
-
+// Show all jobs by date
 router.get("/jobs/:year/:month", getJobByMonth);
 
-
-// router.get("/changeStatus", changeStatus);
 module.exports = router;

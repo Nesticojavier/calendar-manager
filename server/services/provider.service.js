@@ -245,7 +245,7 @@ const providerService = {
       throw error;
     }
   },
-  getJobByMonth: async (month, year) => {
+  getJobByMonth: async (month, year, users_id) => {
     const firstDay = new Date(year, month - 1, 1);
     const endDay = new Date(year, month, 0);
     try {
@@ -256,9 +256,14 @@ const providerService = {
                     LEFT JOIN tags t ON t.id = w.tags_id
                     GROUP BY wo.id
                     HAVING wo."dateInit" >= :FIRSTDAY::DATE AND 
-                           wo."dateEnd" <=  :ENDDAY::DATE`,
+                           wo."dateEnd" <= :ENDDAY::DATE AND
+                           wo."users_id" = :USERID`,
         {
-          replacements: { FIRSTDAY: firstDay, ENDDAY: endDay },
+          replacements: {
+            FIRSTDAY: firstDay,
+            ENDDAY: endDay,
+            USERID: users_id,
+          },
           type: sq.QueryTypes.SELECT,
         }
       );
