@@ -44,7 +44,7 @@ const errors = {
   },
 
   errorUnauthorizedRole: {
-    message: "No tienes permisos para crear un trabajo",
+    message: "No tienes permisos para realizar esta accion",
     status: 403,
   },
 
@@ -66,6 +66,11 @@ const errors = {
   successUpdate: {
     message: "Información actualizada correctamente",
     status: 200,
+  },
+
+  errorUpdate: {
+    message: "Información no se pudo actualizar",
+    status: 409,
   },
 
   successSignup: {

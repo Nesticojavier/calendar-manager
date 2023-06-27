@@ -20,34 +20,34 @@ const { Admin, createOrFindAdmin } = require("./Models/Admin");
 
 // Synchronize model
 (async () => {
-  await Users.sync().then(() => {
+  await Users.sync({force:false}).then(() => {
     console.log("Users Model synced 2");
   });
-  await Credential.sync().then(() => {
+  await Credential.sync({force:false}).then(() => {
     console.log("Credential Model synced 2");
   });
 
-  await Work.sync().then(() => {
+  await Work.sync({force:false}).then(() => {
     console.log("Work Model synced 2");
   });
 
-  await Tags.sync().then(() => {
+  await Tags.sync({force:false}).then(() => {
     console.log("Tags Model synced 2")
   });
 
-  await WorkTags.sync().then(() => {
+  await WorkTags.sync({force:false}).then(() => {
     console.log("WorkTags Model synced 2");
   });
 
-  await UserTags.sync().then(() => {
+  await UserTags.sync({force:false}).then(() => {
     console.log("UserTags Model synced 2");
   });
 
-  await UserBlocks.sync().then(()=> {
+  await UserBlocks.sync({force:false}).then(()=> {
     console.log("UserBlocks Model synced 2");
   }) 
 
-  await Admin.sync().then(()=> {
+  await Admin.sync({force:false}).then(()=> {
     console.log("UserBlocks Model synced 2");
     // Create admin
     createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
