@@ -97,6 +97,11 @@ const providerService = {
       if (job.length == 0) {
         throw serverErrors.error404;
       }
+
+  
+      job.tags = job.tags?.split(",");
+      job.blocks = JSON.parse(job.blocks);
+
       return job;
     } catch (error) {
       throw error;
@@ -116,7 +121,13 @@ const providerService = {
           type: sq.QueryTypes.SELECT,
         }
       );
-      return jobs;
+      const promise = jobs.map((e) => {
+        e.tags = e.tags?.split(",");
+        e.blocks = JSON.parse(e.blocks);
+        return e;
+      });
+      await Promise.all(promise);
+      return promise;
     } catch (error) {
       throw error;
     }
