@@ -4,112 +4,9 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import axios from "axios";
 import "./WorkCreationForm.css";
-import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
-export default function WorkCreationForm() {
-  const navigate = useNavigate();
-
-  const [values, setValues] = useState({
-    workTitle: "",
-    workDescription: "",
-    workType: "",
-    workDate: "",
-    startDate: "",
-    endDate: "",
-    workersNeeded: "",
-  });
-
-  const [focused, setFocused] = useState({
-    workTitle: false,
-    workDescription: false,
-    workType: false,
-    workDate: false,
-    workersNeeded: false,
-  });
-
-  // Function to validate the dates of the work
-  function validateDates(startDate, endDate) {
-    if (startDate && endDate) {
-      if (startDate > endDate) {
-        // Start date is greater than end date
-        setShowErrorDate(true);
-        return false;
-      } else {
-        // Dates are valid
-        return true;
-      }
-    }
-  }
-
-  // It is used to change the state of focused to true when the input is focused
-  const handleFocus = (e, isFocused) => {
-    setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setValues({ ...values, [name]: value });
-
-    // If either the start or end date inputs were changed, validate the dates
-    if (name === "startDate" || name === "endDate") {
-      // Get the current values of the start and end date inputs from the state
-      const { startDate, endDate } = values;
-
-      // Call the validateDates function with the current start and end dates
-      validateDates(startDate, endDate);
-    }
-  };
-
-  const handleChangeSelect = (event) => {
-    const { name, value } = event.target;
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    // show error message if blocks variable is void
-    if (blocks.length === 0) {
-      setShowError(true);
-      setTimeout(() => {
-        setShowError(false);
-      }, 1000);
-    } else if (selectedTags.length === 0) {
-      setShowErrorTags(true);
-      setTimeout(() => {
-        setShowErrorTags(false);
-      }, 1000);
-    } else {
-      // get token from cookies
-      const token = Cookies.get("token");
-      // construct object representing an HTTP authorization header with the Bearer scheme.
-      const headers = { Authorization: `Bearer ${token}` };
-      const valuesEnd = { ...values, blocks, workTags: selectedTags };
-      console.log(valuesEnd);
-      axios
-        .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, {
-          headers,
-        })
-        .then((response) => {
-          // Handle request response successful
-          swal({
-            title: "Trabajo creado exitosamente",
-            icon: "success",
-          }).then(() => {
-            navigate(`/provider/worklist`);
-          });
-        })
-        .catch((error) => {
-          // Handle request error
-          console.error(error.response.data.message);
-        });
-    }
-  };
-
+export default function WorkForm({ work, onSubmit }) {
+  //Library for render form
   const inputs = [
     {
       id: 1,
@@ -159,17 +56,6 @@ export default function WorkCreationForm() {
     },
   ];
 
-  const RECURRENT = values.workType == "1";
-  const SESSION = values.workType == "2";
-
-  // state used to set the blocks of hours
-  const [blocks, setBlocks] = useState([]);
-
-  // this is used to increase the number of blocks
-  const handleMore = (e) => {
-    setBlocks([...blocks, { day: "", hour: "" }]);
-  };
-
   // blocks of hours and days
   const days = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes"];
   const hours = [
@@ -185,6 +71,85 @@ export default function WorkCreationForm() {
     "4:00 PM",
   ];
 
+  //// CONTROLLERS INPUTS
+
+  // State used to control some form values
+  const [values, setValues] = useState({
+    workTitle: work.workTitle,
+    workDescription: work.workDescription,
+    workersNeeded: work.workersNeeded,
+    workType: work.workType,
+    startDate: work.startDate,
+    endDate: work.endDate,
+  });
+
+  // state used to control the blocks of hours for recurrent work
+  const [blocks, setBlocks] = useState(work.blocks);
+
+  // State used to control tags values
+  const [selectedTags, setSelectedTags] = useState(work.tags);
+
+  const [focused, setFocused] = useState({
+    workTitle: false,
+    workDescription: false,
+    workType: false,
+    workDate: false,
+    workersNeeded: false,
+  });
+
+  const RECURRENT = values.workType == "1";
+  const SESSION = values.workType == "2";
+
+  /// HANDLERS FOR FORM MANAGE
+
+  // Function to validate the dates of the work
+  function validateDates(startDate, endDate) {
+    if (startDate && endDate) {
+      if (startDate > endDate) {
+        // Start date is greater than end date
+        setShowErrorDate(true);
+        return false;
+      } else {
+        // Dates are valid
+        return true;
+      }
+    }
+  }
+
+  // It is used to change the state of focused to true when the input is focused
+  const handleFocus = (e, isFocused) => {
+    setFocused((prevFocused) => ({ ...prevFocused, [e]: isFocused }));
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setValues({ ...values, [name]: value });
+
+    // If either the start or end date inputs were changed, validate the dates
+    if (name === "startDate" || name === "endDate") {
+      // Get the current values of the start and end date inputs from the state
+      const { startDate, endDate } = values;
+      console.log("##########");
+      console.log(endDate);
+      console.log("##########");
+      // Call the validateDates function with the current start and end dates
+      validateDates(startDate, endDate);
+    }
+  };
+
+  const handleChangeSelect = (event) => {
+    const { name, value } = event.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+  };
+
+  // this is used to increase the number of blocks
+  const handleMore = (e) => {
+    setBlocks([...blocks, { day: "", hour: "" }]);
+  };
+
   // It is used to change the state of the hour and day blocks.
   const handleBlockChange = (blockIndex, e) => {
     const { name, value } = e.target;
@@ -197,11 +162,15 @@ export default function WorkCreationForm() {
 
   const handleChangeSessionDay = (e) => {
     const { value } = e.target;
+    console.log(value);
     setBlocks((prevBlocks) => {
       const updatedBlocks = [...prevBlocks];
       updatedBlocks[0].day = value;
       return updatedBlocks;
     });
+
+    // set endDate = startDate form session work
+    setValues({ ...values, ["startDate"]: value, ["endDate"]: value });
   };
 
   const handleChangeSessionHour = (e) => {
@@ -213,19 +182,6 @@ export default function WorkCreationForm() {
     });
   };
 
-  useEffect(() => {
-    // when swicht to session mode
-    if (values.workType === "2") {
-      setBlocks([{ day: "", hour: "" }]);
-    } else if (values.workType === "1") {
-      setBlocks([]);
-      setValues((prevValues) => ({
-        ...prevValues,
-        workDate: "",
-      }));
-    }
-  }, [values.workType]);
-
   // To display the error message for blocks
   const [showError, setShowError] = useState(false);
 
@@ -234,9 +190,6 @@ export default function WorkCreationForm() {
 
   // To display the error message for tags
   const [showErrorTags, setShowErrorTags] = useState(false);
-
-  // To save tags selected
-  const [selectedTags, setSelectedTags] = useState([]);
 
   const handleTagSelection = (event, value) => {
     console.log(event);
@@ -273,21 +226,53 @@ export default function WorkCreationForm() {
     }
   };
 
+  // Filter for show just one tags suggest
   const filterOptions = createFilterOptions({
     matchFrom: "start",
-    limit: 2,
+    limit: 1,
   });
+
+  // Function for send form
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    // show error message if blocks variable is void
+    if (blocks.length === 0) {
+      setShowError(true);
+      setTimeout(() => {
+        setShowError(false);
+      }, 1000);
+    } else if (selectedTags.length === 0) {
+      setShowErrorTags(true);
+      setTimeout(() => {
+        setShowErrorTags(false);
+      }, 1000);
+    } else {
+      const valuesEnd = { ...values, blocks, workTags: selectedTags, tags: selectedTags };
+      onSubmit(valuesEnd);
+    }
+  };
+
+  useEffect(() => {
+    // when swicht to session mode
+    if (values.workType === "2") {
+      setBlocks([{ day: "", hour: "" }]);
+    } else if (values.workType === "1") {
+      setBlocks([]);
+      setValues((prevValues) => ({
+        ...prevValues,
+        workDate: "",
+      }));
+    }
+  }, [values.workType]);
 
   return (
     <Box
       component="form"
       onSubmit={handleSubmit}
-      flex={7}
-      p={2}
       className="workForm"
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-      <h1>Crear Trabajo</h1>
 
       {inputs.map((input) => {
         return (
@@ -299,6 +284,7 @@ export default function WorkCreationForm() {
                 name={input.name}
                 id={input.id}
                 onChange={handleChangeSelect}
+                value={values[input.name]}
               >
                 {input.options.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -330,41 +316,45 @@ export default function WorkCreationForm() {
             {blocks.map((block, blockIndex) => {
               return (
                 <div key={blockIndex}>
-                  <p>Seleccione el bloque {blockIndex + 1}</p>
-                  <div className="selectDay">
-                    <label htmlFor="">Dia</label>
-                    <select
-                      required
-                      name="day"
-                      value={block.day}
-                      onChange={(e) => handleBlockChange(blockIndex, e)}
-                      id=""
-                    >
-                      <option value="">Seleccione un día</option>
-                      {days.map((day) => (
-                        <option key={day} value={day}>
-                          {day}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                  <p className="nameBlock">
+                    Seleccione el bloque {blockIndex + 1}
+                  </p>
+                  <div className="recurrentBlocks">
+                    <div className="selectDay">
+                      <label htmlFor="">Dia</label>
+                      <select
+                        required
+                        name="day"
+                        value={block.day}
+                        onChange={(e) => handleBlockChange(blockIndex, e)}
+                        id=""
+                      >
+                        <option value="">Seleccione un día</option>
+                        {days.map((day) => (
+                          <option key={day} value={day}>
+                            {day}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
 
-                  <div className="selectHour">
-                    <label htmlFor="">Hora</label>
-                    <select
-                      required
-                      name="hour"
-                      value={block.hour}
-                      onChange={(e) => handleBlockChange(blockIndex, e)}
-                      id=""
-                    >
-                      <option value="">Seleccione una hora</option>
-                      {hours.map((hour) => (
-                        <option key={hour} value={hour}>
-                          {hour}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="selectHour">
+                      <label htmlFor="">Hora</label>
+                      <select
+                        required
+                        name="hour"
+                        value={block.hour}
+                        onChange={(e) => handleBlockChange(blockIndex, e)}
+                        id=""
+                      >
+                        <option value="">Seleccione una hora</option>
+                        {hours.map((hour) => (
+                          <option key={hour} value={hour}>
+                            {hour}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
                   </div>
                 </div>
               );
@@ -391,6 +381,7 @@ export default function WorkCreationForm() {
                 placeholder="Fecha de inicio"
                 label={"Fecha de inicio"}
                 required={true}
+                value={values.startDate}
                 // Ensures that the state always reflects the current value of the input
                 // and stays in sync with changes made by the user
                 onChange={handleChange}
@@ -406,6 +397,7 @@ export default function WorkCreationForm() {
                 placeholder="Fecha de culminación"
                 label={"Fecha de culminación"}
                 required={true}
+                value={values.endDate}
                 // Ensures that the state always reflects the current value of the input
                 // and stays in sync with changes made by the user
                 onChange={handleChange}
@@ -424,40 +416,51 @@ export default function WorkCreationForm() {
         ) : (
           // if is selected work by session
           <div className="workBySession">
-            <label htmlFor={5}>Seleccione la fecha del trabajo </label>
-            <input
-              name={"workDate"}
-              type={"date"}
-              placeholder={"Fecha del trabajo"}
-              label={"Fecha del trabajo"}
-              required={true}
-              // Ensures that the state always reflects the current value of the input
-              // and stays in sync with changes made by the user
-              onChange={handleChangeSessionDay}
-              // The value of the input is bound to the value stored in values[input.name]
-              // value={values["workDate"]}
+            <div>
+              <label htmlFor={5}>Seleccione la fecha del trabajo </label>
+              <input
+                className="inputDayForm"
+                name={"workDate"}
+                type={"date"}
+                placeholder={"Fecha del trabajo"}
+                label={"Fecha del trabajo"}
+                required={true}
+                value={values.endDate}
+                // Ensures that the state always reflects the current value of the input
+                // and stays in sync with changes made by the user
+                onChange={handleChangeSessionDay}
+                // The value of the input is bound to the value stored in values[input.name]
+                // value={values["workDate"]}
 
-              // To display the error message when the input is focused
-              // set to true to keep the error message as long as the input is invalid
-              onBlur={() => handleFocus("workDate", true)}
-            />
-            {focused["workDate"] && <span>Debe seleccionar una fecha.</span>}
+                // To display the error message when the input is focused
+                // set to true to keep the error message as long as the input is invalid
+                onBlur={() => handleFocus("workDate", true)}
+              />
+              {focused["workDate"] && (
+                <span className="error-message">
+                  Debe seleccionar una fecha.
+                </span>
+              )}
+            </div>
 
-            <label htmlFor="">Hora</label>
-            <select
-              required
-              name="hour"
-              value={blocks[0]?.hour}
-              onChange={handleChangeSessionHour}
-              id=""
-            >
-              <option value="">Seleccione una hora</option>
-              {hours.map((hour) => (
-                <option key={hour} value={hour}>
-                  {hour}
-                </option>
-              ))}
-            </select>
+            <div>
+              <label htmlFor="">Hora</label>
+              <select
+                className="selectHourForm"
+                required
+                name="hour"
+                value={blocks[0]?.hour}
+                onChange={handleChangeSessionHour}
+                id=""
+              >
+                <option value="">Seleccione una hora</option>
+                {hours.map((hour) => (
+                  <option key={hour} value={hour}>
+                    {hour}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         )
       ) : null}

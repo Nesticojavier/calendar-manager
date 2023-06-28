@@ -1,20 +1,18 @@
-import React, { useState, useEffect, useContext } from "react";
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Signup from "./Components/Pages/signup";
 import Login from "./Components/Pages/login";
 import Navbar from "./Components/Navbar";
-import Cookies from "js-cookie";
 import Home from "./Components/Pages/Home";
 import { UserContext } from "./Context/UserContext";
 import ProtectedRoutes from "./Components/ProtectedRoutes";
 
 import Provider from "./Components/Pages/Provider";
-import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm";
+import CreateWork from "./Components/ProviderComponents/CreateWork";
+import EditWork from "./Components/ProviderComponents/EditWork";
 import Calendar from "./Components/Calendar";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
-import WorkEditForm from "./Components/ProviderComponents/WorkEditForm";
-import WorkEditForm2 from "./Components/ProviderComponents/WorkEditForm2";
 import WorkListInProgress from "./Components/ProviderComponents/WorkListInProgress";
 
 import Volunteer from "./Components/Pages/Volunteer";
@@ -50,10 +48,10 @@ function App() {
 
         {/* Routes manage for provider */}
         <Route path="/provider/*" element={<Provider isAllowed={!!profile && profile.rol === "proveedor"}/>}>
-          <Route path="workcreation" element={<WorkCreationForm />} />
+          <Route path="workcreation" element={<CreateWork />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="worklist" element={<WorkListProvider />} />
-          <Route path="workedit/:id" element={<WorkEditForm2 />} />
+          <Route path="workedit/:id" element={<EditWork />} />
           <Route path="workinprogress" element={<WorkListInProgress />} />
         </Route>
 
