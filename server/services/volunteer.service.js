@@ -2,6 +2,7 @@ const serverErrors = require("../error/error");
 const { sq } = require("../db/db");
 const { UserTags, Tags } = require("../Models/Tags");
 const { UserBlocks } = require("../Models/Blocks");
+const { Postulation } = require("../Models/Postulation");
 
 const volunteerService = {
   getAllJobs: async () => {
@@ -146,6 +147,7 @@ const volunteerService = {
   },
   showProfile: async (user) => {
     const { id } = user;
+    const response = { id, tags: [], blocks: [] };
     await sq
       .query(
         `SELECT t.title
@@ -157,7 +159,7 @@ const volunteerService = {
         }
       )
       .then((results) => {
-        user.tags = results.map((e) => e.title);
+        response.tags = results.map((e) => e.title);
       })
       .catch(() => {
         throw serverErrors.error500;
@@ -174,13 +176,27 @@ const volunteerService = {
         }
       )
       .then((results) => {
-        user.blocks = results.map((e) => e.hour);
+        response.blocks = results.map((e) => e.hour);
       })
       .catch(() => {
         throw serverErrors.error500;
       });
 
-    return user;
+    return response;
+  },
+  postulate: async (user, works_id) => {
+    const { id: users_id, rol } = user;
+
+    if (rol !== "voluntario") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
+
+    try {
+      const postulation = await Postulation.create({ users_id, works_id });
+      return postulation
+    } catch (error) {
+      throw error
+    }
   },
 };
 

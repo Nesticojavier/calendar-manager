@@ -7,6 +7,7 @@ const {
   getJobByMonth,
   editProfile,
   showProfile,
+  postulate
 } = require("../controllers/volunteer.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -26,5 +27,9 @@ router.put("/profile", editProfile);
 
 // View volunteer profile
 router.get("/profile", showProfile);
+
+// postulation
+router.post("/postulation", postulate)
+
 
 module.exports = router;

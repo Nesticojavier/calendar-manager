@@ -7,7 +7,7 @@ const cors = require("cors");
 const bcrypt = require("bcrypt"); //To encrypt passwords
 
 // require enviroments variables file
-require('dotenv').config();
+require("dotenv").config();
 
 // Import Models
 const { Users, Credential } = require("./Models/Users");
@@ -15,48 +15,48 @@ const { Work } = require("./Models/Work");
 const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 const { UserBlocks } = require("./Models/Blocks");
 const { Admin, createOrFindAdmin } = require("./Models/Admin");
-
-
+const { Postulation } = require("./Models/Postulation");
 
 // Synchronize model
 (async () => {
-  await Users.sync({force:false}).then(() => {
+  await Users.sync({ force: false }).then(() => {
     console.log("Users Model synced 2");
   });
-  await Credential.sync({force:false}).then(() => {
+  await Credential.sync({ force: false }).then(() => {
     console.log("Credential Model synced 2");
   });
 
-  await Work.sync({force:false}).then(() => {
+  await Work.sync({ force: false }).then(() => {
     console.log("Work Model synced 2");
   });
 
-  await Tags.sync({force:false}).then(() => {
-    console.log("Tags Model synced 2")
+  await Tags.sync({ force: false }).then(() => {
+    console.log("Tags Model synced 2");
   });
 
-  await WorkTags.sync({force:false}).then(() => {
+  await WorkTags.sync({ force: false }).then(() => {
     console.log("WorkTags Model synced 2");
   });
 
-  await UserTags.sync({force:false}).then(() => {
+  await UserTags.sync({ force: false }).then(() => {
     console.log("UserTags Model synced 2");
   });
 
-  await UserBlocks.sync({force:false}).then(()=> {
+  await UserBlocks.sync({ force: false }).then(() => {
     console.log("UserBlocks Model synced 2");
-  }) 
+  });
 
-  await Admin.sync({force:false}).then(()=> {
-    console.log("UserBlocks Model synced 2");
+  await Admin.sync({ force: false }).then(() => {
+    console.log("Admin Model synced 2");
     // Create admin
     createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
   });
-  
+  await Postulation.sync({ force: false }).then(() => {
+    console.log("Postulation Model synced 2");
+    // Create admin
+    createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
+  });
 })();
-
-
-
 
 var app = express();
 
