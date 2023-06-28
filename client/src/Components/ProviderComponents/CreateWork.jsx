@@ -30,7 +30,7 @@ export default function CreateWork() {
       })
       .catch((error) => {
         // Handle request error
-        console.error(error.response.data.message);
+        console.error(error.response.data.data.error)
       });
   };
 
