@@ -13,8 +13,12 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ClearIcon from "@mui/icons-material/Clear";
+import { useNavigate } from "react-router-dom";
+
 
 export default function ConfirmedListWorkProvider({ statusConfirmed }) {
+
+  const navigate = useNavigate();
   const workDataConfirmed = [
     {
       id: 1,
@@ -90,19 +94,23 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   };
 
   //  handle for make follow up by provider
-  const handleFollow = () => {
-    alert("Se debe implementar la funcion para hacerle seguimiento al trabajo");
+  const handleWorkTracking = (work) => {
+    navigate(`/provider/work-instance-tracking/${work.id}`, { state: { work } });
   };
 
   // handle for accept the volunteer work
   const handleAcceptWork = () => {
-    alert("Se debe implementar la duncion para aceptar el trabajo por parte del proveedor")
-  }
+    alert(
+      "Se debe implementar la duncion para aceptar el trabajo por parte del proveedor"
+    );
+  };
 
   // handle for decline the volunteer work
   const handleDeclineWork = () => {
-    alert("Se debe implementar la duncion para declinar el trabajo por parte del proveedor")
-  }
+    alert(
+      "Se debe implementar la duncion para declinar el trabajo por parte del proveedor"
+    );
+  };
 
   return (
     <div>
@@ -148,7 +156,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           <CardActions disableSpacing>
             {statusConfirmed ? (
               <Button
-                onClick={() => handleFollow()}
+                onClick={() => handleWorkTracking(work)}
                 type="button"
                 variant="contained"
                 color="primary"

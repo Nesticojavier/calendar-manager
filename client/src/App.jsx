@@ -14,6 +14,7 @@ import EditWork from "./Components/ProviderComponents/EditWork";
 import Calendar from "./Components/Calendar";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
 import WorkListInProgress from "./Components/ProviderComponents/WorkListInProgress";
+import WorkInstanceTraking from "./Components/ProviderComponents/WorkInstanceTraking";
 
 import Volunteer from "./Components/Pages/Volunteer";
 import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVolunteer";
@@ -53,6 +54,7 @@ function App() {
           <Route path="worklist" element={<WorkListProvider />} />
           <Route path="workedit/:id" element={<EditWork />} />
           <Route path="workinprogress" element={<WorkListInProgress />} />
+          <Route path="work-instance-tracking/:id" element={<WorkInstanceTraking />} />
         </Route>
 
         {/* Routess manage for volunter */}
