@@ -1,7 +1,4 @@
-const { Work } = require("../Models/Work");
-const { Op } = require("sequelize");
-const { sq } = require("../db/db");
-const error = require("../error/error");
+const serverErrors = require("../error/error");
 const providerService = require("../services/provider.service");
 
 // Controller to create a job
@@ -18,6 +15,7 @@ const createJob = async (req, res) => {
     endDate: dateEnd,
   } = req.body;
 
+  console.log(req.body);
   if (
     !title ||
     !description ||
@@ -30,7 +28,10 @@ const createJob = async (req, res) => {
     tags.length == 0 ||
     blocks.length == 0
   ) {
-    return res.status(400).json({ message: error.errorMissingData.message });
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
   const work = {
@@ -91,7 +92,6 @@ const deleteJob = async (req, res) => {
   const user = req.userData;
   const { id: work_id } = req.params;
 
-  console.log(user);
   try {
     await providerService.deleteJob(user, work_id);
     res.sendStatus(204);
@@ -128,7 +128,10 @@ const updateJob = async (req, res) => {
     tags.length == 0 ||
     blocks.length == 0
   ) {
-    return res.status(400).json({ message: error.errorMissingData.message });
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
   const work = {

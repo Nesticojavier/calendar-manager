@@ -98,7 +98,6 @@ const providerService = {
         throw serverErrors.error404;
       }
 
-  
       job.tags = job.tags?.split(",");
       job.blocks = JSON.parse(job.blocks);
 

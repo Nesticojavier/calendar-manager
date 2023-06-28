@@ -14,9 +14,10 @@ const signup = async (req, res) => {
 
   // Verify that the input data is not undefined
   if (!username || !password || !rol || !fullName || !birthDate) {
+    const error = serverErrors.errorMissingData;
     return res
-      .status(500)
-      .json({ message: serverErrors.errorMissingData.message });
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
   try {
@@ -34,9 +35,10 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   // Verify that the input data is not undefined
   if (!username || !password) {
+    const error = serverErrors.errorMissingData;
     return res
-      .status(500)
-      .json({ message: serverErrors.errorMissingData.message });
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
   try {
