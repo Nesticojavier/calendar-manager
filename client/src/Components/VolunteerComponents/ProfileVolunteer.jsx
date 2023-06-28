@@ -1,68 +1,21 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { Box, IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../Context/UserContext";
+import { useContext } from "react";
 
 export default function ProfileVolunteer() {
-  // const token = Cookies.get("token");
-  // const headers = { Authorization: `Bearer ${token}` };
-
-  // // A state is created for the data of the user
-  // const [userData, setUserData] = useState([]);
+  // extract user from context
+  const { profile } = useContext(UserContext);
+  const values = profile;
 
   // To navigate to the edit profile page
   const navigate = useNavigate();
   const handleEdit = (user) => {
     navigate(`/volunteer/editprofile/${user.id}`, { state: { user } });
   };
-
-  // // this obtein the data from the user
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3000/volunteer/user", { headers })
-  //     .then((response) => {
-  //       setUserData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error.response.data.message);
-  //     });
-  // });
-
-  // A state is created for the values of the form inputs
-  // Saved to an object with the data of the user as initial values
-  // const [values, setValues] = useState({
-  //   username: "pepito",
-  //   password: "jajajaja",
-  //   fullName: "ola k ase",
-  //   birthDate: "01/01/2000",
-  //   institutionalId: "123456789",
-  //   rol: "Voluntario",
-  // });
-
-  const [values, setValues] = useState("");
-
-
-  // get token from cookies
-  const token = Cookies.get('token');
-  // construct object representing an HTTP authorization header with the Bearer scheme.
-  const headers = { Authorization: `Bearer ${token}` };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/volunteer/profile", { headers })
-      .then((response) => {
-        const profile = response.data.profile;
-        const user = {...profile, username : response.data.username}
-        setValues(user);
-      })
-      .catch((error) => {
-        console.error(error.response.data.message);
-      });
-  }, []);
-
 
   // inputs with their restrictions and message errors
   const inputs = [
@@ -192,17 +145,17 @@ export default function ProfileVolunteer() {
           <div>
             <label>Horarios de preferencia</label>
             <ul>
-                {values.blocks?.map((block,index) => (
-                  <li key={index}>{block}</li>
-                ))}
+              {values.blocks?.map((block, index) => (
+                <li key={index}>{block}</li>
+              ))}
             </ul>
           </div>
           <div>
             <label>Mis etiquetas</label>
             <ul>
-                {values.tags?.map((tag,index) => (
-                  <li key={index}>{tag}</li>
-                ))}
+              {values.tags?.map((tag, index) => (
+                <li key={index}>{tag}</li>
+              ))}
             </ul>
           </div>
         </Box>
