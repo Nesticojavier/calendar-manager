@@ -3,6 +3,7 @@ import axios from "axios";
 import { Box, Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Cookies from "js-cookie";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfileVolunteer() {
   // this obtein the data from the user
@@ -70,6 +71,7 @@ export default function ProfileVolunteer() {
     }
   };
 
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -91,7 +93,7 @@ export default function ProfileVolunteer() {
           title: "Perfil actualizado exitosamente",
           icon: "success",
         }).then(() => {
-          navigate(`/myprofile`);
+          navigate(`/volunteer/myprofile`);
         });
       })
       .catch((error) => {

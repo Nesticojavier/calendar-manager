@@ -1,12 +1,47 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  InputLabel,
+  MenuItem,
+  FormControl,
+  Select,
+  OutlinedInput,
+  Chip,
+} from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+function getStyles(tag, userTag, theme) {
+  return {
+    fontWeight:
+      userTag.indexOf(tag) === -1
+        ? theme.typography.fontWeightRegular
+        : theme.typography.fontWeightMedium,
+  };
+}
+
 export default function CalendarVolunteer({ setIsLoggedIn }) {
+  const theme = useTheme();
+
   // days of the week
   const days = [
     "Domingo",
@@ -108,8 +143,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   //   handleAddWorks(currentYear, currentMonth);
   // }, [currentYear, currentMonth]);
 
-  // to show the works tags in the calendar
-  const isWorkOnDay = (work, day) => {
+  // Function to show the works in the calendar
+  const isWorkOnDay = (work, day, selectedHour) => {
     // Add 1 day to the end date and the start date because the date-fns library
     const dateInit = addDays(new Date(work.dateInit), 1);
     const dateEnd = addDays(new Date(work.dateEnd), 1);
@@ -122,7 +157,10 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
     // Check if the work has a block that matches the day
     const hasBlock = work.blocks.some(
-      (block) => block.day && block.day.toLowerCase() === dayName
+      (block) =>
+        block.day &&
+        block.day.toLowerCase() === dayName &&
+        (selectedHour === null || block.hour === selectedHour)
     );
 
     // Check if the work is within the start and end range
@@ -149,6 +187,69 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     setDialogOpen(false);
   };
 
+  // To select one hour preference of the volunteer and show the works that match with the preference
+  const [hours, setHours] = useState([]);
+  const [userPrefHour, setUserPrefHour] = useState(null);
+  const handleHourChange = (e) => {
+    setUserPrefHour(e.target.value === "" ? null : e.target.value);
+  };
+
+  // To select one tag of the volunteer and show the works that match with it
+  const [userTags, setUserTags] = useState([]);
+  const [userPrefTag, setUserPrefTag] = useState([]);
+  const handleTagChange = (e) => {
+    const {
+      target: { value },
+    } = e;
+    setUserPrefTag(
+      // On autofill we get a stringified value.
+      typeof value === "string" ? value.split(",") : value
+    );
+  };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/volunteer/profile`, { headers })
+      .then((response) => {
+        const block = response.data.profile.blocks;
+        const userTag = response.data.profile.tags;
+        setHours(block);
+        setUserTags(userTag);
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+      });
+  }, []);
+
+  // Function to order the works by the selected tag of the volunteer
+  const sortWorksByTag = (works, selectedTags) => {
+    //Function to compare the tags of the works with the selected tag
+    const compare = (a, b) => {
+      // If both works have the selected tags or none of them have them, it doesn't change the order
+      const aHasAllTags = selectedTags.every((tag) => a.tags.includes(tag));
+      const bHasAllTags = selectedTags.every((tag) => b.tags.includes(tag));
+      if ( (aHasAllTags && bHasAllTags) || (!aHasAllTags && !bHasAllTags) ) {
+        // Compare how many tags each work has
+        if (a.tags.length !== b.tags.length) {
+          return b.tags.length - a.tags.length;
+        } else {
+          // If both works have the same number of tags, it compares the names
+          return a.title.localeCompare(b.title);
+        }
+      }
+      // If only the first work has all the selected tags, it goes first
+      if (aHasAllTags) {
+        return -1;
+      }
+      // If only the second work has all the selected tags, it goes first
+      if (bHasAllTags) {
+        return 1;
+      }
+    };
+    // Order the works by the compare function
+    works.sort(compare);
+  };
+
   return (
     <Box
       flex={7}
@@ -161,6 +262,103 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         overflow: "auto",
       }}
     >
+      {/* To filter the works by hour preference or order them by tags */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "150px",
+          }}
+        >
+          <label>
+            <h3 style={{ color: "rgb(127, 145, 248)" }}>Filtrar por</h3>
+          </label>
+          <FormControl
+            sx={{ m: 2, minWidth: 120, marginTop: "0px" }}
+          >
+            <InputLabel
+              id=""
+              style={{
+                margin: "auto",
+              }}
+            >
+              Horas
+            </InputLabel>
+            <Select
+              labelId=""
+              id=""
+              value={userPrefHour}
+              label="Hour"
+              onChange={handleHourChange}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              {hours.map((hour, index) => (
+                <MenuItem key={index} value={hour}>
+                  {hour}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            width: "auto",
+            marginRight: "80px",
+          }}
+        >
+          <label>
+            <h3 style={{ color: "rgb(127, 145, 248)" }}>Ordenar por</h3>
+          </label>
+          <FormControl sx={{ m: 2, width: "auto", marginTop: "0px" }}>
+            <InputLabel
+              id=""
+              style={{
+                margin: "auto",
+              }}
+            >
+              Tags
+            </InputLabel>
+            <Select
+              labelId=""
+              id=""
+              multiple
+              value={userPrefTag}
+              onChange={handleTagChange}
+              input={<OutlinedInput id="select-multiple-chip" label="Tags" />}
+              renderValue={(selected) => (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                  {selected.map((value) => (
+                    <Chip key={value} label={value} />
+                  ))}
+                </Box>
+              )}
+              MenuProps={MenuProps}
+            >
+              {userTags.map((tags) => (
+                <MenuItem
+                  key={tags}
+                  value={tags}
+                  style={getStyles(tags, userPrefTag, theme)}
+                >
+                  {tags}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
+      </Box>
+
       <div
         style={{
           display: "flex",
@@ -176,10 +374,12 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           {monthNames[currentMonth]} {currentYear}
         </h1>
         <ArrowForwardIosIcon
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer", marginRight: "65px" }}
           onClick={handleNextMonthClick}
         />
       </div>
+
+      {/* To display the calendar */}
       <Grid
         container
         spacing={2}
@@ -212,10 +412,13 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         {/* To display the days of the month */}
         {[...Array(daysInMonth)].map((_, index) => {
           // To check if a tag should be added to this day
-          const worksOnDay = workData.filter((work) => {
-            const result = isWorkOnDay(work, index + 1);
+          let worksOnDay = workData.filter((work) => {
+            const result = isWorkOnDay(work, index + 1, userPrefHour);
             return result;
           });
+
+          // To order the works by the selected tag
+          sortWorksByTag(worksOnDay, userPrefTag);
 
           return (
             <Grid
