@@ -1,7 +1,4 @@
-const { sq } = require("../db/db");
 const serverErrors = require("../error/error");
-const { updateUserTag } = require("../controllers/utils");
-const { Blocks, UserBlocks } = require("../Models/Blocks");
 const volunteerService = require("../services/volunteer.service");
 
 const getAllJobs = async (req, res) => {
