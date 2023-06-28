@@ -51,8 +51,7 @@ export default function Login() {
       })
       .catch((error) => {
         // Handle request error
-        setErrorMessage(error.response.data.message);
-        console.log("ha ocurrido un errror");
+        setErrorMessage(error.response.data.data.error);
       });
   };
 
