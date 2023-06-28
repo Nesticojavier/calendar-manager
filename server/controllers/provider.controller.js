@@ -15,7 +15,6 @@ const createJob = async (req, res) => {
     endDate: dateEnd,
   } = req.body;
 
-  console.log(req.body);
   if (
     !title ||
     !description ||

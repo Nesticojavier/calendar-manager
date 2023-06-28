@@ -1,4 +1,4 @@
-const errors = {
+const serverErrors = {
   error404: {
     message: "Recurso no encontrado",
     status: 404,
@@ -79,4 +79,4 @@ const errors = {
   },
 };
 
-module.exports = errors;
+module.exports = serverErrors;
