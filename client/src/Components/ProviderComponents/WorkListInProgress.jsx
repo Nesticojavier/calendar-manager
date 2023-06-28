@@ -20,7 +20,6 @@ export default function WorkListInProgress() {
         display: "flex",
         flexDirection: "column",
         minHeight: "100vh",
-        minWidth: "100vh",
         overflow: "auto",
       }}
     >
