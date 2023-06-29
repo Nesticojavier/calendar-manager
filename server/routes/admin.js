@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { verifyTokenADMIN } = require("../controllers/auth.controller");
+const { verifyToken } = require("../controllers/auth.controller");
 
 const {
   usersList,
@@ -8,9 +8,9 @@ const {
   updatepwd,
 } = require("../controllers/admin.controller");
 
-router.get("/userslist", verifyTokenADMIN, usersList);
+router.get("/userslist", verifyToken(process.env.ADMIN_ENCRYPT), usersList);
 
-router.put("/updatepwd", verifyTokenADMIN, updatepwd);
+router.put("/updatepwd", verifyToken(process.env.ADMIN_ENCRYPT), updatepwd);
 
 router.post("/login", login);
 

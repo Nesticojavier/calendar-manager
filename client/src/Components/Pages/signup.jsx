@@ -55,8 +55,7 @@ const Signup = () => {
       })
       .catch((error) => {
         // Handle request error
-        console.error(error.response.data.message);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data.data.error);
       });
   };
 

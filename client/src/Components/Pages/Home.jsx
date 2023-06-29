@@ -20,8 +20,8 @@ export default function Home() {
             axios
                 .get(`${api_url}/dashboard`, { headers })
                 .then((response) => {
-                    setRol(response.data.profile.rol);
-                    changeProfile(response.data.profile)
+                    setRol(response.data.rol);
+                    changeProfile(response.data)
                 })
                 .catch((error) => {
                     console.error(error.response.data.message);

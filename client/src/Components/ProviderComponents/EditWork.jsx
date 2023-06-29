@@ -58,8 +58,7 @@ export default function EditWork() {
       })
       .catch((error) => {
         // Handle request error
-        console.log("aqui");
-        console.error(error.response.data.message);
+        console.error(error.response.data.data.error)
       });
   };
   return (

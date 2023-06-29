@@ -52,6 +52,14 @@ const Work = sq.define("work", {
   dateEnd: {
     type: DataTypes.DATEONLY,
   },
+},
+{
+  indexes: [
+    {
+      unique: true,
+      fields: ["title", "users_id"],
+    },
+  ],
 });
 
 module.exports = { Work };

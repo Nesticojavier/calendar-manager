@@ -26,11 +26,9 @@ export default function UsersTable() {
     axios
       .get("http://localhost:3000/admin/userslist", {headers})
       .then((response) => {
-        console.log(response.data);
         setUserData(response.data);
       })
       .catch((error) => {
-        console.log("por aquiiii")
         console.error(error.response.data.message);
       });
   }, []);

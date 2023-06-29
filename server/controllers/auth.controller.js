@@ -1,57 +1,33 @@
-const { Credential, Users } = require("../Models/Users"); //import database connection
-const bcrypt = require("bcrypt"); //To encrypt passwords
-const jwt = require("jsonwebtoken"); //Json Web Token Generator
-
-// Must be placed in an environment variable;
+const authService = require("../services/auth.service");
+const serverErrors = require("../error/error");
 
 // Signup
 const signup = async (req, res) => {
-  const { username, password, rol, fullName, birthDate, institutionalId } =
-    req.body;
+  const user = ({
+    username,
+    password,
+    rol,
+    fullName,
+    birthDate,
+    institutionalId,
+  } = req.body);
 
   // Verify that the input data is not undefined
   if (!username || !password || !rol || !fullName || !birthDate) {
-    return res.status(400).json({ message: "Error, missing sign up data" });
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
-  // Check if the user is already registered
-  const consult = await Credential.findOne({
-    where: {
-      username,
-    },
-  });
-
-  if (consult !== null) {
-    return res.status(500).json({ message: "Error, usuario ya registrado" });
+  try {
+    await authService.signup(user);
+    res.json(serverErrors.successSignup);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-
-  // If the user does not exist, we encrypt his password and save it in the database
-  bcrypt.hash(password, 10, (err, hash) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Error almacenando los datos de autenticacion" });
-    }
-
-    try {
-      Users.create({
-        fullName,
-        birthDate,
-        institutionalId,
-        rol,
-      }).then((user) => {
-        Credential.create({
-          username,
-          password: hash,
-          users_id: user.id,
-        });
-      });
-
-      res.status(201).json({ message: "Registro Exitoso" });
-    } catch (error) {
-      res.status(500).json({ message: "Error al registrar usuario" });
-    }
-  });
 };
 
 // Login
@@ -59,102 +35,60 @@ const login = async (req, res) => {
   const { username, password } = req.body;
   // Verify that the input data is not undefined
   if (!username || !password) {
-    return res.status(500).json({ message: "Error, missing login data" });
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
-  // check if the user is already registered
-  const consult = await Credential.findOne({
-    where: {
-      username,
-    },
-  });
-
-  if (consult === null) {
-    return res.status(500).json({ message: "Error, usuario no registrado" });
+  try {
+    const sessionToken = await authService.login(username, password);
+    res.json({ token: sessionToken });
+  } catch (error) {
+    res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-
-  const password_hash = consult.password;
-  const id = consult.users_id;
-
-  // Validate password
-  bcrypt.compare(password, password_hash, (err, result) => {
-    if (err) {
-      return res
-        .status(500)
-        .json({ message: "Se produjo un error al validar los datos" });
-    }
-    if (result) {
-      Users.findOne({
-        where: {
-          id,
-        },
-      }).then((profile) => {
-        // If the password is correct, we generate the JWT token and send it as a response to the client
-        const token = jwt.sign({ username, profile }, process.env.USERS_ENCRYPT);
-        res.json({ token });
-      });
-    } else {
-      // If the password is incorrect, we send an error message
-      res.status(401).json({ message: "Error en validacion de credenciales" });
-    }
-  });
 };
 
+// Show profile info
 const dashboard = async (req, res) => {
   res.json(req.userData);
 };
 
-const showUsers = async (req, res) => {
-  try {
-    const users = await Users.findAll();
-    res.json(users);
-  } catch (error) {
-    res.status(500).json({ error: "Error al obtener usuarios" });
-  }
-};
-
 // Middleware to verify and decode JWT token
-const verifyToken = (req, res, next) => {
-  const header = req.headers["authorization"];
+const verifyToken = (key) => {
+  return async (req, res, next) => {
+    const header = req.headers["authorization"];
+    // Verify if exists token
+    if (!header) {
+      const error = serverErrors.errorUnauthorized;
+      return res.status(error?.status || 500).json({
+        status: "FAILED",
+        data: { error: error?.message || error, name: error?.name },
+      });
+    }
 
-  if (!header) {
-    return res.status(401).json({ message: "Acceso denegado" });
-    // return res.status(401).send("Acceso denegado");
-  }
+    const token = header.split(" ")[1];
 
-  const token = header.split(" ")[1];
-
-  try {
-    req.userData = jwt.verify(token, process.env.USERS_ENCRYPT);
-    next();
-  } catch (ex) {
-    res.status(400).json({ message: "Error, token invalido" });
-  }
-};
-
-const verifyTokenADMIN = (req, res, next) => {
-  const header = req.headers["authorization"];
-
-  if (!header) {
-    return res.status(401).json({ message: "Acceso denegado" });
-    // return res.status(401).send("Acceso denegado");
-  }
-
-  const token = header.split(" ")[1];
-
-  try {
-    req.userData = jwt.verify(token, process.env.ADMIN_ENCRYPT);
-    next();
-  } catch (ex) {
-    res.status(400).json({ message: "Error, token invalido" });
-  }
+    try {
+      req.userData = await authService.verifyToken(token, key);
+      next();
+    } catch (error) {
+      res.status(error?.status || 500).json({
+        status: "FAILED",
+        data: {
+          error: error?.message || error,
+          name: error?.name,
+        },
+      });
+    }
+  };
 };
 
 module.exports = {
   signup,
   login,
   dashboard,
-  showUsers,
   verifyToken,
-  verifyTokenADMIN,
 };
