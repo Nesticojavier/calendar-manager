@@ -15,78 +15,27 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 
-
-export default function ConfirmedListWorkProvider({ statusConfirmed }) {
-
+export default function ConfirmedListWorkProvider({
+  statusConfirmed,
+  currentPage,
+}) {
   const navigate = useNavigate();
-  const workDataConfirmed = [
-    {
-      id: 1,
-      type: 1,
-      title: "Trabajo de prueba 1",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "confirmed",
-    },
-    {
-      id: 2,
-      type: 1,
-      title: "Trabajo de prueba 2",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "confirmed",
-    },
-    {
-      id: 3,
-      type: 1,
-      title: "Trabajo de prueba 3",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "confirmed",
-    },
-  ];
 
-  const workDataUnconfirmed = [
-    {
-      id: 1,
-      type: 1,
-      title: "Trabajo de prueba 3",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "unconfirmed",
-    },
-    {
-      id: 2,
-      type: 1,
-      title: "Trabajo de prueba 4",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "unconfirmed",
-    },
-    {
-      id: 3,
-      type: 1,
-      title: "Trabajo de prueba 5",
-      description:
-        "Este es un trabajo para probar la renderización de la tarjeta",
-      tags: ["tag1", "tag2", "tag3"],
-      status: "unconfirmed",
-    },
-  ];
+  // constant to store the number of rows to display
+  const NUMBER_ROW = 4;
 
-  //
-  const [workData, setWorkData] = useState(
-    statusConfirmed ? workDataConfirmed : workDataUnconfirmed
-  );
+  // State for store data from the fetch
+  const [workData, setWorkData] = useState([]);
 
+  // Fecth data when change current page and the status bar
   useEffect(() => {
     setWorkData(statusConfirmed ? workDataConfirmed : workDataUnconfirmed);
-  }, [statusConfirmed]);
+    console.log(currentPage);
+    console.log(`se debe realizar una consulta a con`);
+    console.log(`start: ${(currentPage - 1) * NUMBER_ROW}`);
+    console.log(`limit: ${NUMBER_ROW}`);
+    console.log(`confirmed: ${statusConfirmed}`);
+  }, [currentPage, statusConfirmed]);
 
   // Handle for show volunteer data that make request
   const handleShowVolunteer = () => {
@@ -95,7 +44,9 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   //  handle for make follow up by provider
   const handleWorkTracking = (work) => {
-    navigate(`/provider/work-instance-tracking/${work.id}`, { state: { work } });
+    navigate(`/provider/work-instance-tracking/${work.id}`, {
+      state: { work },
+    });
   };
 
   // handle for accept the volunteer work
@@ -192,3 +143,63 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
     </div>
   );
 }
+
+const workDataConfirmed = [
+  {
+    id: 1,
+    type: 1,
+    title: "Trabajo de prueba 1",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "confirmed",
+  },
+  {
+    id: 2,
+    type: 1,
+    title: "Trabajo de prueba 2",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "confirmed",
+  },
+  {
+    id: 3,
+    type: 1,
+    title: "Trabajo de prueba 3",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "confirmed",
+  },
+];
+
+const workDataUnconfirmed = [
+  {
+    id: 1,
+    type: 1,
+    title: "Trabajo de prueba 3",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "unconfirmed",
+  },
+  {
+    id: 2,
+    type: 1,
+    title: "Trabajo de prueba 4",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "unconfirmed",
+  },
+  {
+    id: 3,
+    type: 1,
+    title: "Trabajo de prueba 5",
+    description:
+      "Este es un trabajo para probar la renderización de la tarjeta",
+    tags: ["tag1", "tag2", "tag3"],
+    status: "unconfirmed",
+  },
+];
