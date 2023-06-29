@@ -228,21 +228,46 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       // If both works have the selected tags or none of them have them, it doesn't change the order
       const aHasAllTags = selectedTags.every((tag) => a.tags.includes(tag));
       const bHasAllTags = selectedTags.every((tag) => b.tags.includes(tag));
-      if ( (aHasAllTags && bHasAllTags) || (!aHasAllTags && !bHasAllTags) ) {
+
+      if (aHasAllTags && bHasAllTags) {
         // Compare how many tags each work has
+        // Works with fewer tags (exact matches) go first
         if (a.tags.length !== b.tags.length) {
-          return b.tags.length - a.tags.length;
+          return a.tags.length - b.tags.length;
         } else {
-          // If both works have the same number of tags, it compares the names
+          // If both works have the same number of tags, it compares the titles
           return a.title.localeCompare(b.title);
         }
       }
+
       // If only the first work has all the selected tags, it goes first
       if (aHasAllTags) {
         return -1;
       }
       // If only the second work has all the selected tags, it goes first
       if (bHasAllTags) {
+        return 1;
+      }
+
+      // Check if both works have at least one of the selected tags
+      const aHasSomeTags = selectedTags.some((tag) => a.tags.includes(tag));
+      const bHasSomeTags = selectedTags.some((tag) => b.tags.includes(tag));
+
+      // If both works have at least one of the selected tags, or if neither work has any of the selected tags,
+      // compare how many tags each work has and their titles
+      if ((aHasSomeTags && bHasSomeTags) || (!aHasSomeTags && !bHasSomeTags)) {
+        if (a.tags.length !== b.tags.length) {
+          return b.tags.length - a.tags.length;
+        } else {
+          return a.title.localeCompare(b.title);
+        }
+      }
+
+      // If only one of the works has at least one of the selected tags, it should come first
+      if (aHasSomeTags) {
+        return -1;
+      }
+      if (bHasSomeTags) {
         return 1;
       }
     };
@@ -280,9 +305,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           <label>
             <h3 style={{ color: "rgb(127, 145, 248)" }}>Filtrar por</h3>
           </label>
-          <FormControl
-            sx={{ m: 2, minWidth: 120, marginTop: "0px" }}
-          >
+          <FormControl sx={{ m: 2, minWidth: 120, marginTop: "0px" }}>
             <InputLabel
               id=""
               style={{
@@ -356,6 +379,54 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
               ))}
             </Select>
           </FormControl>
+        </Box>
+
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            marginLeft: "auto",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{
+                display: "inline-block",
+                width: "16px",
+                height: "16px",
+                backgroundColor: "lightgreen",
+                borderRadius: "50%",
+                marginRight: "15px",
+                marginBottom: "10px",
+              }}
+            />
+            <span
+              style={{
+                marginRight: "80px",
+                marginBottom: "10px",
+              }}
+            >
+              Trabajo por sesión
+            </span>
+          </div>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <span
+              style={{
+                display: "inline-block",
+                width: "16px",
+                height: "16px",
+                backgroundColor: "lightblue",
+                borderRadius: "50%",
+                marginRight: "15px",
+              }}
+            />
+            <span
+              style={{
+                marginRight: "80px",
+              }}
+            >Trabajo recurrente</span>
+          </div>
         </Box>
       </Box>
 
@@ -448,7 +519,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                     style={{
                       display: "inline-block",
                       padding: "2px 6px",
-                      backgroundColor: "lightblue",
+                      backgroundColor:
+                        work.type === 1 ? "lightblue" : "lightgreen",
                       borderRadius: "4px",
                       fontSize: "12px",
                       margin: "2px",
