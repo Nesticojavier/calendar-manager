@@ -12,26 +12,47 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 export default function ConfirmedListWorkVolunter({
   statusConfirmed,
   currentPage,
 }) {
+  // needed by axios for auth
+  const token = Cookies.get("token");
+  const headers = { Authorization: `Bearer ${token}` };
 
   // constant to store the number of rows to display
   const NUMBER_ROW = 4;
 
   // State for store data from the fetch
   const [workData, setWorkData] = useState([]);
-  
+
   // Fecth data when change current page and the status bar
   useEffect(() => {
     setWorkData(statusConfirmed ? workDataConfirmed : workDataUnconfirmed);
     console.log(currentPage);
-    console.log(`se debe realizar una consulta a con`)
-    console.log(`start: ${ (currentPage - 1) * NUMBER_ROW}`)
-    console.log(`limit: ${NUMBER_ROW}`)
-    console.log(`confirmed: ${statusConfirmed}`)
+    console.log(`se debe realizar una consulta a con`);
+    console.log(`start: ${(currentPage - 1) * NUMBER_ROW}`);
+    console.log(`limit: ${NUMBER_ROW}`);
+    console.log(`confirmed: ${statusConfirmed}`);
+
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/provider/myJobs`, {
+        params: {
+          start: (currentPage - 1) * NUMBER_ROW,
+          limit: NUMBER_ROW,
+          confirmed: statusConfirmed,
+        },
+        headers: headers,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error(error.response.data.message);
+      });
   }, [currentPage, statusConfirmed]);
 
   //   handle for show providers follow
