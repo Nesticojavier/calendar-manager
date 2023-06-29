@@ -2,7 +2,11 @@ const { sq } = require("../db/db");
 const { Op } = require("sequelize");
 const { Work } = require("../Models/Work");
 const { Tags, WorkTags } = require("../Models/Tags");
+const { Users } = require("../Models/Users");
+const { Credential } = require("../Models/Users");
+
 const serverErrors = require("../error/error");
+const { Postulation } = require("../Models/Postulation");
 
 const providerService = {
   createJob: async (work, user) => {
@@ -287,6 +291,51 @@ const providerService = {
       return promise;
     } catch (error) {
       throw error;
+    }
+  },
+  jobsInProgress: async (users_id, start, limit, confirmed) => {
+    try {
+      const allJobs = await Postulation.findAndCountAll({
+        where: {
+          confirmed,
+        },
+        attributes: ["confirmed"],
+        include: [
+          {
+            model: Work,
+            attributes: [
+              "users_id",
+              "title",
+              "status",
+              "description",
+              "type",
+              "volunteerCount",
+              "volunteerCountMax",
+              "blocks",
+              "dateInit",
+              "dateEnd",
+            ],
+            where: {
+              users_id,
+            },
+          },
+          {
+            model: Users,
+            attributes: ["rol", "fullName", "birthDate", "institucionalId"],
+            include: [
+              {
+                model: Credential,
+                attributes: ["username"],
+              },
+            ],
+          },
+        ],
+        limit,
+        offset: start,
+      });
+      return allJobs;
+    } catch (error) {
+      throw error
     }
   },
 };

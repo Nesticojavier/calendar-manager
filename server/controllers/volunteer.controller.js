@@ -92,7 +92,7 @@ const postulate = async (req, res) => {
 };
 
 const jobsInProgress = async (req, res) => {
-  const { id: users_id } = req.userData;
+  const user = req.userData
   let { start, limit, confirmed } = req.query;
 
   if (!start || !limit || !confirmed) {
@@ -104,7 +104,7 @@ const jobsInProgress = async (req, res) => {
 
   try {
     const allJobs = await volunteerService.jobsInProgress(
-      users_id,
+      user,
       start,
       limit,
       confirmed

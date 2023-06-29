@@ -1,5 +1,6 @@
 const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
+const {Users} = require("../Models/Users")
 
 // Work Table
 const Work = sq.define("work", {
@@ -61,5 +62,7 @@ const Work = sq.define("work", {
     },
   ],
 });
+
+Work.belongsTo(Users, { foreignKey: 'users_id' });
 
 module.exports = { Work };

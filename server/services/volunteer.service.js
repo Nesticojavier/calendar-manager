@@ -4,7 +4,6 @@ const { UserTags, Tags } = require("../Models/Tags");
 const { UserBlocks } = require("../Models/Blocks");
 const { Postulation } = require("../Models/Postulation");
 const { Work } = require("../Models/Work");
-const { all } = require("../routes/volunteer");
 
 const volunteerService = {
   getAllJobs: async () => {
@@ -200,8 +199,12 @@ const volunteerService = {
       throw error;
     }
   },
-  jobsInProgress: async (users_id, start, limit, confirmed) => {
+  jobsInProgress: async (user, start, limit, confirmed) => {
+    const { id: users_id, rol } = user;
 
+    if (rol !== "voluntario") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
     try {
       const allJobs = await Postulation.findAndCountAll({
         where: {

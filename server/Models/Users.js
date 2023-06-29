@@ -53,6 +53,7 @@ const Users = sq.define("users", {
   },
 });
 
-Credential.belongsTo(Users, { foreignKey: 'users_id' });
+Users.hasOne(Credential, { foreignKey: 'users_id' });
+
 
 module.exports = { Users, Credential };

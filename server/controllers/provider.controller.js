@@ -173,6 +173,32 @@ const getJobByMonth = async (req, res) => {
   }
 };
 
+const jobsInProgress = async (req, res) => {
+  const { id: users_id } = req.userData;
+  let { start, limit, confirmed } = req.query;
+
+  if (!start || !limit || !confirmed) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  try {
+    const allJobs = await providerService.jobsInProgress(
+      users_id,
+      start,
+      limit,
+      confirmed
+    );
+    return res.json(allJobs);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+}
+
 module.exports = {
   createJob,
   deleteJob,
@@ -182,4 +208,5 @@ module.exports = {
   showJob,
   showTags,
   getJobByMonth,
+  jobsInProgress
 };
