@@ -1,4 +1,5 @@
 const serverErrors = require("../error/error");
+const { all } = require("../routes/volunteer");
 const volunteerService = require("../services/volunteer.service");
 
 const getAllJobs = async (req, res) => {
@@ -71,7 +72,7 @@ const showProfile = async (req, res) => {
 };
 
 const postulate = async (req, res) => {
-  const {workId} = req.body;
+  const { workId } = req.body;
 
   if (!workId) {
     const error = serverErrors.errorMissingData;
@@ -81,10 +82,7 @@ const postulate = async (req, res) => {
   }
 
   try {
-    const postulation = await volunteerService.postulate(
-      req.userData,
-      workId
-    );
+    const postulation = await volunteerService.postulate(req.userData, workId);
     res.json(postulation);
   } catch (error) {
     return res
@@ -93,6 +91,24 @@ const postulate = async (req, res) => {
   }
 };
 
+const jobsInProgress = async (req, res) => {
+  const { id: users_id } = req.userData;
+  let { start, limit, confirmed } = req.query;
+
+  try {
+    const allJobs = await volunteerService.jobsInProgress(
+      users_id,
+      start,
+      limit,
+      confirmed
+    );
+    return res.json(allJobs);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
 module.exports = {
   getAllJobs,
   getOneJob,
@@ -100,4 +116,5 @@ module.exports = {
   editProfile,
   showProfile,
   postulate,
+  jobsInProgress,
 };

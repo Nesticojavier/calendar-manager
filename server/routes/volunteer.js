@@ -7,7 +7,8 @@ const {
   getJobByMonth,
   editProfile,
   showProfile,
-  postulate
+  postulate,
+  jobsInProgress,
 } = require("../controllers/volunteer.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -29,7 +30,8 @@ router.put("/profile", editProfile);
 router.get("/profile", showProfile);
 
 // postulation
-router.post("/postulation", postulate)
+router.post("/postulation", postulate);
 
+router.get("/jobs-in-progress", jobsInProgress);
 
 module.exports = router;

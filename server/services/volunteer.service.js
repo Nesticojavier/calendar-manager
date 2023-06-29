@@ -3,6 +3,8 @@ const { sq } = require("../db/db");
 const { UserTags, Tags } = require("../Models/Tags");
 const { UserBlocks } = require("../Models/Blocks");
 const { Postulation } = require("../Models/Postulation");
+const { Work } = require("../Models/Work");
+const { all } = require("../routes/volunteer");
 
 const volunteerService = {
   getAllJobs: async () => {
@@ -193,9 +195,43 @@ const volunteerService = {
 
     try {
       const postulation = await Postulation.create({ users_id, works_id });
-      return postulation
+      return postulation;
     } catch (error) {
-      throw error
+      throw error;
+    }
+  },
+  jobsInProgress: async (users_id, start, limit, confirmed) => {
+
+    try {
+      const allJobs = await Postulation.findAndCountAll({
+        where: {
+          users_id,
+          confirmed,
+        },
+        include: [
+          {
+            model: Work,
+            attributes: [
+              "title",
+              "status",
+              "description",
+              "type",
+              "volunteerCount",
+              "volunteerCountMax",
+              "blocks",
+              "dateInit",
+              "dateEnd",
+            ],
+          },
+        ],
+        limit,
+        offset: start,
+        attributes: ["users_id", "confirmed"],
+      });
+      console.log(allJobs);
+      return allJobs;
+    } catch (error) {
+      throw error;
     }
   },
 };

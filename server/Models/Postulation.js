@@ -1,5 +1,6 @@
 const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
+const {Work} = require("./Work")
 
 // Postulation Table
 const Postulation = sq.define(
@@ -29,9 +30,9 @@ const Postulation = sq.define(
       onDelete: "CASCADE",
     },
     confirmed: {
-      type: DataTypes.STRING,
+      type: DataTypes.BOOLEAN,
       allowNull: false,
-      defaultValue: "unconfirmed",
+      defaultValue: false,
     },
   },
   {
@@ -43,5 +44,7 @@ const Postulation = sq.define(
     ],
   }
 );
+
+Postulation.belongsTo(Work, { foreignKey: 'works_id' });
 
 module.exports = { Postulation };
