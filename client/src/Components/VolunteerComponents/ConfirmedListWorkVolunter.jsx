@@ -8,6 +8,8 @@ import {
   Typography,
   CardActions,
   Button,
+  Pagination,
+  Box,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -15,10 +17,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import axios from "axios";
 import Cookies from "js-cookie";
 
-export default function ConfirmedListWorkVolunter({
-  statusConfirmed,
-  currentPage,
-}) {
+export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   // needed by axios for auth
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
@@ -29,9 +28,19 @@ export default function ConfirmedListWorkVolunter({
   // State for store data from the fetch
   const [workData, setWorkData] = useState([]);
 
+  //state for set current page in the pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // State for set total pages to display in the pagination
+  const [totalPages, setTotalPages] = useState(0);
+
+  // handle for change page number page value
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
+
   // Fecth data when change current page and the status bar
   useEffect(() => {
-    setWorkData(statusConfirmed ? workDataConfirmed : workDataUnconfirmed);
     console.log(currentPage);
     console.log(`se debe realizar una consulta a con`);
     console.log(`start: ${(currentPage - 1) * NUMBER_ROW}`);
@@ -39,7 +48,7 @@ export default function ConfirmedListWorkVolunter({
     console.log(`confirmed: ${statusConfirmed}`);
 
     axios
-      .get(`${import.meta.env.VITE_API_URL}/provider/myJobs`, {
+      .get(`${import.meta.env.VITE_API_URL}/volunteer/jobs-in-progress`, {
         params: {
           start: (currentPage - 1) * NUMBER_ROW,
           limit: NUMBER_ROW,
@@ -48,12 +57,19 @@ export default function ConfirmedListWorkVolunter({
         headers: headers,
       })
       .then((response) => {
-        console.log(response.data);
+        console.log(response.data.rows);
+        setWorkData(response.data.rows);
+        setTotalPages(Math.ceil(response.data.count / NUMBER_ROW));
       })
       .catch((error) => {
-        console.error(error.response.data.message);
+        console.error(error.response.data.data.error);
       });
   }, [currentPage, statusConfirmed]);
+
+  // When change status view, the page number should be reset to 1
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [statusConfirmed]);
 
   //   handle for show providers follow
   const handleFollow = () => {
@@ -74,10 +90,20 @@ export default function ConfirmedListWorkVolunter({
   };
 
   return (
+
+    // show message when work data is empty
     <div>
-      {workData.map((work) => (
+      <div>
+        {statusConfirmed && workData.length === 0 && (
+          <p>No tiene trabajos confirmados aún</p>
+        )}
+        {!statusConfirmed && workData.length === 0 && (
+          <p>No ha hecho ninguna solicitud de trabajos aún</p>
+        )}
+      </div>
+      {workData.map((row, index) => (
         <Card
-          key={work.id}
+          key={index}
           sx={{ marginBottom: "20px", border: "1px solid black" }}
         >
           <CardHeader
@@ -94,27 +120,15 @@ export default function ConfirmedListWorkVolunter({
                 </Button>
               )
             }
-            title={work.title}
+            title={row.work.title}
             subheader={`Trabajo ${
-              work.type === 1 ? "recurrente" : "de sesión"
+              row.work.type === 1 ? "recurrente" : "de sesión"
             }`}
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              {work.description}
+              {row.work.description}
             </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Etiquetas:
-              {work.tags &&
-                work.tags.map((tag, index) => (
-                  <span key={tag}>
-                    {" "}
-                    {tag}
-                    {index < work.tags.length - 1 && ", "}
-                  </span>
-                ))}
-            </Typography>
-            <Typography>Estado: {work.status}</Typography>
           </CardContent>
           <CardActions disableSpacing>
             <Button
@@ -129,6 +143,16 @@ export default function ConfirmedListWorkVolunter({
           </CardActions>
         </Card>
       ))}
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Pagination
+          onChange={handlePageChange}
+          page={currentPage}
+          count={totalPages}
+          variant="outlined"
+          color="primary"
+        />
+      </Box>
     </div>
   );
 }
