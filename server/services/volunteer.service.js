@@ -228,7 +228,6 @@ const volunteerService = {
         offset: start,
         attributes: ["users_id", "confirmed"],
       });
-      console.log(allJobs);
       return allJobs;
     } catch (error) {
       throw error;

@@ -95,6 +95,13 @@ const jobsInProgress = async (req, res) => {
   const { id: users_id } = req.userData;
   let { start, limit, confirmed } = req.query;
 
+  if (!start || !limit || !confirmed) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
   try {
     const allJobs = await volunteerService.jobsInProgress(
       users_id,
@@ -109,6 +116,7 @@ const jobsInProgress = async (req, res) => {
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 };
+
 module.exports = {
   getAllJobs,
   getOneJob,
