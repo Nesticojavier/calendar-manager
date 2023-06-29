@@ -29,9 +29,10 @@ router.put("/profile", editProfile);
 // View volunteer profile
 router.get("/profile", showProfile);
 
-// postulation
+// apply for a job
 router.post("/postulation", postulate);
 
+// Show applications from a user
 router.get("/jobs-in-progress", jobsInProgress);
 
 module.exports = router;
