@@ -201,7 +201,6 @@ const volunteerService = {
   },
   jobsInProgress: async (user, start, limit, confirmed) => {
     const { id: users_id, rol } = user;
-    console.log(rol)
 
     if (rol !== "voluntario") {
       throw serverErrors.errorUnauthorizedRole;
