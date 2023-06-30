@@ -12,6 +12,8 @@ const {
   showTags,
   getJobByMonth,
   jobsInProgress,
+  acceptPostulation,
+  declinePostulation,
 } = require("../controllers/provider.controller");
 
 router.use(verifyToken(process.env.USERS_ENCRYPT));
@@ -32,5 +34,9 @@ router.get("/job/tags/:id", showTags);
 router.get("/jobs/:year/:month", getJobByMonth);
 // Show applications from a user
 router.get("/jobs-in-progress", jobsInProgress);
+// Accept application
+router.put("/postulation/:postulationID", acceptPostulation);
+//Decline application
+router.delete("/postulation/:postulationID", declinePostulation);
 
 module.exports = router;

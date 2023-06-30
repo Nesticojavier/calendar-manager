@@ -68,6 +68,11 @@ const serverErrors = {
     status: 200,
   },
 
+  succesDelete: {
+    message: "Información eliminada correctamente",
+    status: 204,
+  },
+
   errorUpdate: {
     message: "Información no se pudo actualizar",
     status: 409,

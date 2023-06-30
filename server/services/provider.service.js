@@ -299,7 +299,7 @@ const providerService = {
         where: {
           confirmed,
         },
-        attributes: ["confirmed"],
+        attributes: ["id", "confirmed"],
         include: [
           {
             model: Work,
@@ -335,7 +335,55 @@ const providerService = {
       });
       return allJobs;
     } catch (error) {
-      throw error
+      throw error;
+    }
+  },
+  acceptPostulation: async (users_id, id) => {
+    
+    try {
+      // Update Work table
+      const rowsUpdated = await Postulation.update(
+        {
+          confirmed: true,
+        },
+        {
+          where: {
+            id,
+          },
+          include: [{ model: Work, where: users_id }],
+        }
+      );
+      console.log(rowsUpdated);
+      if (rowsUpdated[0] === 0) {
+        throw serverErrors.error404;
+      }
+
+      return serverErrors.successUpdate;
+    } catch (error) {
+      throw error;
+    }
+  },
+  declinePostulation: async (users_id, id) => {
+    
+    try {
+      // Update Work table
+      const rowsUpdated = await Postulation.destroy(
+        {
+          where: {
+            id,
+            confirmed: false
+          },
+          include: [{ model: Work, where: users_id }],
+        }
+      );
+      console.log(rowsUpdated);
+      if (rowsUpdated === 0) {
+        throw serverErrors.error404;
+      }
+
+      return serverErrors.succesDelete;
+    } catch (error) {
+      throw error;
     }
   },
 };

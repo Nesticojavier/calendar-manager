@@ -197,7 +197,53 @@ const jobsInProgress = async (req, res) => {
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-}
+};
+
+const acceptPostulation = async (req, res) => {
+  const { postulationID } = req.params;
+  const { id: provider_id } = req.userData;
+
+  if (!postulationID) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+  try {
+    const accepted = await providerService.acceptPostulation(
+      provider_id,
+      postulationID
+    );
+    return res.json(accepted);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
+const declinePostulation = async (req, res) => {
+  const { postulationID } = req.params;
+  const { id: provider_id } = req.userData;
+
+  if (!postulationID) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+  try {
+    const declined = await providerService.declinePostulation(
+      provider_id,
+      postulationID
+    );
+    return res.json(declined);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
 
 module.exports = {
   createJob,
@@ -208,5 +254,7 @@ module.exports = {
   showJob,
   showTags,
   getJobByMonth,
-  jobsInProgress
+  jobsInProgress,
+  acceptPostulation,
+  declinePostulation
 };
