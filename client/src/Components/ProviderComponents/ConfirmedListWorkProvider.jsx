@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
+import ShowVolunteerInfo from "./ShowVolunteerInfo";
 import {
   Box,
   Pagination,
@@ -13,7 +13,6 @@ import {
   Tooltip,
 } from "@mui/material";
 
-import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -41,6 +40,12 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   // State for set total pages to display in the pagination
   const [totalPages, setTotalPages] = useState(0);
+
+  // States used to crontrol the windows modal with volunteer info
+  const [openModal, setOpenModal] = useState(false);
+
+  // States used to store volunteer selected to display
+  const [selectedUser, setSelectedUser] = useState(null);
 
   // handle for change page number page value
   const handlePageChange = (event, page) => {
@@ -82,7 +87,8 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   // Handle for show volunteer data that make request
   const handleShowVolunteer = (user) => {
-    console.log(user);
+    setSelectedUser(user);
+    setOpenModal(true);
   };
 
   //  handle for make follow up by provider
@@ -180,6 +186,13 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           color="primary"
         />
       </Box>
+
+      {openModal && (
+        <ShowVolunteerInfo
+          user={selectedUser}
+          handleClose={() => setOpenModal(false)}
+        />
+      )}
     </div>
   );
 }
