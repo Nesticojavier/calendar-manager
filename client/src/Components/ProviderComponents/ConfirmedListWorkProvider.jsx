@@ -181,7 +181,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
         <Pagination
           onChange={handlePageChange}
           page={currentPage}
-          count={10}
+          count={totalPages}
           variant="outlined"
           color="primary"
         />
