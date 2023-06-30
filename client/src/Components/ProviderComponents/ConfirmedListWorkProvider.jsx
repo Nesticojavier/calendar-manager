@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 import ShowVolunteerInfo from "./ShowVolunteerInfo";
 import {
   Box,
@@ -52,15 +53,11 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
     setCurrentPage(page);
   };
 
+  // state for change monitoring when is decline a work require
+  const [isDeletedOrAccept, setIsDeletedOrAccept] = useState(false);
+
   // Fecth data when change current page and the status bar
   useEffect(() => {
-    // setWorkData(statusConfirmed ? workDataConfirmed : workDataUnconfirmed);
-    console.log(currentPage);
-    console.log(`se debe realizar una consulta a con`);
-    console.log(`start: ${(currentPage - 1) * NUMBER_ROW}`);
-    console.log(`limit: ${NUMBER_ROW}`);
-    console.log(`confirmed: ${statusConfirmed}`);
-
     axios
       .get(`${import.meta.env.VITE_API_URL}/provider/jobs-in-progress`, {
         params: {
@@ -71,14 +68,14 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
         headers: headers,
       })
       .then((response) => {
-        console.log(response.data.rows);
         setWorkData(response.data.rows);
         setTotalPages(Math.ceil(response.data.count / NUMBER_ROW));
+        setIsDeletedOrAccept(false);
       })
       .catch((error) => {
         console.error(error.response.data.data.error);
       });
-  }, [currentPage, statusConfirmed]);
+  }, [currentPage, statusConfirmed, isDeletedOrAccept]);
 
   // When change status view, the page number should be reset to 1
   useEffect(() => {
@@ -99,21 +96,82 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   };
 
   // handle for accept the volunteer work
-  const handleAcceptWork = () => {
-    alert(
-      "Se debe implementar la duncion para aceptar el trabajo por parte del proveedor"
-    );
+  const handleAcceptWork = (postulationID) => {
+    axios
+      .put(
+        `${import.meta.env.VITE_API_URL}/provider/postulation/${postulationID}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        setIsDeletedOrAccept(true);
+        showSuccessAlert("Solicitud aceptada");
+      })
+      .catch((error) => {
+        console.error(
+          "Error al aceptar el trabajo:",
+          error.response.data.data.error
+        );
+      });
   };
 
   // handle for decline the volunteer work
-  const handleDeclineWork = () => {
-    alert(
-      "Se debe implementar la duncion para declinar el trabajo por parte del proveedor"
-    );
+  const handleDeclineWork = (postulationID) => {
+    Swal.fire({
+      icon: "warning",
+      title: "¿Seguro que deseas eliminar la solicitud del voluntario?",
+      showCancelButton: true,
+      confirmButtonText: "Si",
+      cancelButtonText: "No",
+      iconColor: "red",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        requestDecline(postulationID);
+        return;
+      }
+    });
+  };
+
+  // this function is called by handleDeclineWork when you want to delete the request
+  const requestDecline = (postulationID) => {
+    axios
+      .delete(
+        `${import.meta.env.VITE_API_URL}/provider/postulation/${postulationID}`,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        setIsDeletedOrAccept(true);
+        showSuccessAlert("solicitud eliminada");
+      })
+      .catch((error) => {
+        console.error(
+          "Error al declinar solicitud el trabajo:",
+          error.response.data.data.error
+        );
+      });
+  };
+
+  // Alert used for success operation
+  const showSuccessAlert = (message) => {
+    Swal.fire({
+      icon: "success",
+      title: message,
+    });
   };
 
   return (
     <div>
+      <div>
+        {statusConfirmed && workData.length === 0 && (
+          <p>No tiene trabajos en curso aún</p>
+        )}
+        {!statusConfirmed && workData.length === 0 && (
+          <p>No tiene solicitudes de trabajos</p>
+        )}
+      </div>
       {workData.map((row, index) => (
         <Card
           key={index}
@@ -155,7 +213,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
             ) : (
               <>
                 <Button
-                  onClick={() => handleAcceptWork()}
+                  onClick={() => handleAcceptWork(row.id)}
                   type="button"
                   variant="outlined"
                   color="success"
@@ -164,7 +222,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
                   Aceptar
                 </Button>
                 <Button
-                  onClick={() => handleDeclineWork()}
+                  onClick={() => handleDeclineWork(row.id)}
                   type="button"
                   variant="outlined"
                   color="error"
