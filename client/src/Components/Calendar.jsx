@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Dialog, DialogTitle, DialogContent } from "@mui/material";
+import { Box, Grid, Dialog, DialogTitle, DialogContent, Button, Divider} from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -242,37 +242,80 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
         {/* To display the dialog with the work information */}
         <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Información del trabajo</DialogTitle>
+          <DialogTitle sx={{ textAlign: 'center' }}> 
+            <strong>Información del trabajo</strong>
+          </DialogTitle>
+    
           <DialogContent>
             {selectedWork && (
-              <div>
-                <p>Título: {selectedWork.title} </p>
-                <p>Descripción: {selectedWork.description} </p>
-                <p>
-                  Tipo:{" "}
-                  {`Trabajo ${
-                    selectedWork.type === 1 ? "recurrente" : "de sesión"
-                  }`}{" "}
+              <Box>
+                <Box sx={{ marginBottom: '20px' }}> 
+                  <p style={{ marginBottom: '10px' }}>
+                    <strong>Título:</strong> {selectedWork.title}
+                  </p>
+                  <Divider sx={{ borderBottom: '1px solid gray', margin: '10px 0' }}/>
+                </Box>
+                <Box sx={{ marginBottom: '20px' }}>
+                  <p style={{ marginBottom: '10px' }}>
+                    <strong>Descripción:</strong> {selectedWork.description}
+                  </p>
+                  <Divider sx={{ borderBottom: '1px solid gray', margin: '10px 0' }}/>
+                </Box>
+                <Box sx={{ marginBottom: '20px' }}> 
+                  <p style={{ marginBottom: '10px' }}>
+                    <strong>Tipo:</strong>{" "}
+                    {`Trabajo ${selectedWork.type === 1 ? "recurrente" : "de sesión"}`}
+                  </p>
+                  <Divider sx={{ borderBottom: '1px solid gray', margin: '10px 0' }}/>
+                </Box>
+                <Box sx={{ marginBottom: '20px' }}> 
+                  <p>
+                    <strong>Fecha de inicio:</strong> {selectedWork.dateInit}
+                  </p>
+                  <p style={{ marginBottom: '10px' }}>
+                    <strong>Fecha de fin:</strong> {selectedWork.dateEnd}
+                  </p>
+                  <Divider sx={{ borderBottom: '1px solid gray', margin: '10px 0' }}/>
+                </Box>
+                <Box sx={{ marginBottom: '20px' }}> 
+                  <p style={{ marginBottom: '10px' }}>
+                    <strong>Bloques:</strong>
+                  </p>
+                  <ul>
+                    {selectedWork.blocks.map((block) => (
+                      <div key={block.id}>
+                        <p>
+                          <strong>Día:</strong> {block.day}
+                        </p>
+                        <p style={{ marginBottom: '10px' }}>
+                          <strong>Hora:</strong> {block.hour}
+                        </p>
+                      </div>
+                    ))}
+                  </ul>
+                  <Divider sx={{ borderBottom: '1px solid gray', margin: '10px 0' }}/>
+                </Box>
+                
+                <p style={{ marginBottom: '10px' }}>
+                  <strong>Etiquetas:</strong>
                 </p>
-                <p>Fecha de inicio: {selectedWork.dateInit} </p>
-                <p>Fecha de fin: {selectedWork.dateEnd} </p>
-                <p>Bloques:</p>
-                <ul>
-                  {selectedWork.blocks.map((block) => (
-                    <li key={block.id}>
-                      <p>Dia: {block.day}</p>
-                      <p>Hora: {block.hour}</p>
-                    </li>
-                  ))}
-                </ul>
-                <p>Etiquetas:</p>
-                <ul>
+
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
                   {selectedWork.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
+                    <Box 
+                      key={tag} 
+                      sx={{ 
+                          border: "1px solid gray", 
+                          borderRadius: "20px", 
+                          padding: "5px 10px",
+                          backgroundColor: "lightgray" }}>
+                      {tag}
+                    </Box>
                   ))}
-                </ul>
-              </div>
-            )}
+                </Box>
+              </Box>
+            )} 
+
           </DialogContent>
         </Dialog>
 
