@@ -6,27 +6,31 @@ const { Postulation } = require("../Models/Postulation");
 const { Work } = require("../Models/Work");
 
 const volunteerService = {
-  getAllJobs: async () => {
+  getAllJobs: async (start, limit) => {
     try {
+      const countRows =  await Work.count()
       const allJobs = await sq.query(
         `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
         FROM works wo 
         LEFT JOIN "workTags" w ON wo.id = w.works_id 
         LEFT JOIN tags t ON t.id = w.tags_id
-        GROUP BY wo.id`,
+        GROUP BY wo.id
+        LIMIT :LIMIT
+        OFFSET :OFFSET`,
         {
+          replacements: { LIMIT: limit, OFFSET: start },
           type: sq.QueryTypes.SELECT,
         }
       );
 
-      promises = allJobs.map((e) => {
+      const promise = allJobs.map((e) => {
         e.tags = e.tags?.split(",");
         e.blocks = JSON.parse(e.blocks);
         return e;
       });
 
-      await Promise.all(promises);
-      return promises;
+      const result = {count: countRows, rows : promise}
+      return result;
     } catch (error) {
       throw error;
     }

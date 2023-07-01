@@ -3,8 +3,10 @@ const { all } = require("../routes/volunteer");
 const volunteerService = require("../services/volunteer.service");
 
 const getAllJobs = async (req, res) => {
+  const { start, limit } = req.query;
+
   try {
-    const allJobs = await volunteerService.getAllJobs();
+    const allJobs = await volunteerService.getAllJobs( start, limit);
     res.json(allJobs);
   } catch (error) {
     return res
