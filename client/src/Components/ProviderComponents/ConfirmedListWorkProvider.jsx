@@ -203,7 +203,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           <CardActions disableSpacing>
             {statusConfirmed ? (
               <Button
-                onClick={() => handleWorkTracking(work)}
+                onClick={() => handleWorkTracking(row.work)}
                 type="button"
                 variant="contained"
                 color="primary"
