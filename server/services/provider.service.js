@@ -30,7 +30,7 @@ const providerService = {
       work.blocks[0].day = dayOfWeek[date.getDay()];
     }
 
-    console.log(work)
+    console.log(work);
 
     const existWork = await Work.findOne({
       where: {
@@ -112,17 +112,25 @@ const providerService = {
       throw error;
     }
   },
-  showJobs: async (provider_id) => {
+  showJobs: async (provider_id, start, limit) => {
     try {
+
+      const countRows =  await Work.count({
+        where: {
+          users_id: provider_id
+        }
+      })
       const jobs = await sq.query(
-        `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+        `SELECT wo.*, string_agg(t.title, ',') as Tags 
         FROM works wo 
         LEFT JOIN "workTags" w ON wo.id = w.works_id 
         LEFT JOIN tags t ON t.id = w.tags_id
         WHERE wo.users_id = :USERID
-        GROUP BY wo.id`,
+        GROUP BY wo.id
+        LIMIT :LIMIT
+        OFFSET :OFFSET`,
         {
-          replacements: { USERID: provider_id },
+          replacements: { USERID: provider_id, LIMIT: limit, OFFSET: start },
           type: sq.QueryTypes.SELECT,
         }
       );
@@ -130,9 +138,11 @@ const providerService = {
         e.tags = e.tags?.split(",");
         e.blocks = JSON.parse(e.blocks);
         return e;
-      });
+      })
       await Promise.all(promise);
-      return promise;
+
+      const result = {count: countRows, rows : promise}
+      return result;
     } catch (error) {
       throw error;
     }
@@ -341,7 +351,6 @@ const providerService = {
     }
   },
   acceptPostulation: async (users_id, id) => {
-    
     try {
       // Update Work table
       const rowsUpdated = await Postulation.update(
@@ -366,18 +375,15 @@ const providerService = {
     }
   },
   declinePostulation: async (users_id, id) => {
-    
     try {
       // Update Work table
-      const rowsUpdated = await Postulation.destroy(
-        {
-          where: {
-            id,
-            confirmed: false
-          },
-          include: [{ model: Work, where: users_id }],
-        }
-      );
+      const rowsUpdated = await Postulation.destroy({
+        where: {
+          id,
+          confirmed: false,
+        },
+        include: [{ model: Work, where: users_id }],
+      });
       console.log(rowsUpdated);
       if (rowsUpdated === 0) {
         throw serverErrors.error404;
