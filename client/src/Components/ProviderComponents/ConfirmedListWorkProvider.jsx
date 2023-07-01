@@ -100,6 +100,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
     axios
       .put(
         `${import.meta.env.VITE_API_URL}/provider/postulation/${postulationID}`,
+        {},
         {
           headers,
         }
