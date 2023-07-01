@@ -13,6 +13,7 @@ import {
 import EditIcon from '@mui/icons-material/Edit'
 import { useNavigate } from 'react-router-dom';
 import EditUSer from "./EditUser";
+import Cookies from "js-cookie";
 
 export default function UsersTable() {
   const [userData, setUserData] = useState([]);
@@ -20,14 +21,14 @@ export default function UsersTable() {
   const [selectedUser, setSelectedUser] = useState(null); // Estado para almacenar el usuario seleccionado
 
   useEffect(() => {
+    const token = Cookies.get("token");
+    const headers = { Authorization: `Bearer ${token}` };
     axios
-      .get("http://localhost:3000/admin/userslist")
+      .get("http://localhost:3000/admin/userslist", {headers})
       .then((response) => {
-        console.log(response.data);
         setUserData(response.data);
       })
       .catch((error) => {
-        console.log("por aquiiii")
         console.error(error.response.data.message);
       });
   }, []);

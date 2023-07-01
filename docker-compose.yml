@@ -11,6 +11,11 @@ services:
       - NODE_ENV=docker
       - DATABASE_HOST=db
       - DATABASE_PWD=mysecretpassword
+      - ADMIN_USER=admin
+      - ADMIN_PWD=admin123
+      - ADMIN_ENCRYPT=my_secrect_key_admin
+      - USERS_ENCRYPT=my_secrect_key
+
     build:
       context: 'server'
     ports:
@@ -21,7 +26,7 @@ services:
         - client-side
         - server-side
   db:
-    image: 'postgres'
+    image: 'postgres:14'
     environment:
       POSTGRES_PASSWORD: 'mysecretpassword'
       POSTGRES_USER: 'postgres'

@@ -1,4 +1,4 @@
-import Typography from '@mui/material/Typography';
+import Cookies from "js-cookie";
 import {
   Box,
   Modal,
@@ -53,8 +53,10 @@ export default function EditUser({ user, handleClose }) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const token = Cookies.get("token");
+    const headers = { Authorization: `Bearer ${token}` };
     axios
-      .put("http://localhost:3000/admin/updatepwd", values)
+      .put("http://localhost:3000/admin/updatepwd", values, {headers})
       .then((response) => {
         // Handle request response successful
         swal({

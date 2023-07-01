@@ -11,6 +11,7 @@ const Tags = sq.define("tags", {
   title: {
     type: DataTypes.STRING,
     unique: true,
+    allowNull: false
   },
 });
 

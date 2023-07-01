@@ -1,17 +1,27 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
-import { Box, IconButton } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import { Avatar, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../../Context/UserContext";
+import { useContext } from "react";
+
+import Chip from "@mui/material/Chip";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Divider from "@mui/material/Divider";
+import Typography from "@mui/material/Typography";
+
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemAvatar from "@mui/material/ListItemAvatar";
+import ImageIcon from "@mui/icons-material/Image";
+import WorkIcon from "@mui/icons-material/Work";
+import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 
 export default function ProfileVolunteer() {
-  // const token = Cookies.get("token");
-  // const headers = { Authorization: `Bearer ${token}` };
-
-  // // A state is created for the data of the user
-  // const [userData, setUserData] = useState([]);
+  // extract user from context
+  const { profile } = useContext(UserContext);
+  const values = profile;
 
   // To navigate to the edit profile page
   const navigate = useNavigate();
@@ -19,108 +29,7 @@ export default function ProfileVolunteer() {
     navigate(`/volunteer/editprofile/${user.id}`, { state: { user } });
   };
 
-  // // this obtein the data from the user
-  // useEffect(() => {
-  //   axios
-  //     .get("http://localhost:3000/volunteer/user", { headers })
-  //     .then((response) => {
-  //       setUserData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error.response.data.message);
-  //     });
-  // });
-
-  // A state is created for the values of the form inputs
-  // Saved to an object with the data of the user as initial values
-  // const [values, setValues] = useState({
-  //   username: "pepito",
-  //   password: "jajajaja",
-  //   fullName: "ola k ase",
-  //   birthDate: "01/01/2000",
-  //   institutionalId: "123456789",
-  //   rol: "Voluntario",
-  // });
-
-  const [values, setValues] = useState("");
-
-
-  // get token from cookies
-  const token = Cookies.get('token');
-  // construct object representing an HTTP authorization header with the Bearer scheme.
-  const headers = { Authorization: `Bearer ${token}` };
-
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/volunteer/profile", { headers })
-      .then((response) => {
-        const profile = response.data.profile;
-        const user = {...profile, username : response.data.username}
-        setValues(user);
-      })
-      .catch((error) => {
-        console.error(error.response.data.message);
-      });
-  }, []);
-
-
-  // inputs with their restrictions and message errors
-  const inputs = [
-    {
-      id: 1,
-      name: "username",
-      type: "text",
-      placeholder: "Nombre de usuario",
-      errormessage:
-        "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
-      label: "Nombre de usuario",
-      required: true,
-      pattern: "[a-zA-Z0-9]{1,16}$",
-    },
-    {
-      id: 3,
-      name: "fullName",
-      type: "text",
-      placeholder: "Nombre completo",
-      errormessage:
-        "El nombre completo debe contener solo letras y no tener mas de 64 caracteres.",
-      label: "Nombre completo",
-      required: true,
-      pattern: "[a-zA-Z ]{1,64}",
-    },
-    {
-      id: 4,
-      name: "birthDate",
-      type: "text",
-      placeholder: "Fecha de nacimiento",
-      label: "Fecha de nacimiento",
-      required: true,
-    },
-    {
-      id: 5,
-      name: "institucionalId",
-      type: "text",
-      placeholder: "ID Institucional",
-      errormessage:
-        "El ID institucional debe contener solo números y no tener mas de 16 caracteres.",
-      label: "ID Institucional",
-      pattern: "[0-9.]{1,16}$",
-    },
-    {
-      id: 6,
-      name: "rol",
-      type: "select",
-      placeholder: "seleccione rol",
-      errormessage: "Debes seleccionar un rol",
-      label: "Rol",
-      required: true,
-      options: [
-        { value: "voluntario", label: "Voluntario" },
-        { value: "proveedor", label: "Proveedor" },
-      ],
-    },
-  ];
-
+  console.log(values);
   return (
     <Box
       flex={7}
@@ -132,63 +41,115 @@ export default function ProfileVolunteer() {
         minWidth: "100vh",
         overflow: "auto",
         alignItems: "center",
-        textAlign: "center",
+        // textAlign: "center",
       }}
     >
-      {/* {userData.map((user) => ( */}
       <>
         <div
           style={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "center",
           }}
         >
+          <Avatar
+            sx={{
+              bgcolor: "#1a76d2",
+              width: "80px",
+              height: "80px",
+              fontSize: "40px",
+            }}
+          >
+            {values.fullName[0]}
+          </Avatar>
           <div
             style={{
               display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-              marginLeft: "30px",
+              flexDirection: "column",
+              marginLeft: "5px",
+              // alignItems: "center",
             }}
           >
-            <AccountCircleIcon sx={{ fontSize: 100 }} />
-            <IconButton onClick={() => handleEdit(values)}>
-              <EditIcon />
-            </IconButton>
+            <h1>{values.fullName}</h1>
+            <p>@{values.username}</p>
           </div>
-          {/* <h1>Nombre Apellido</h1> */}
-          <h1>{values.fullName}</h1>
         </div>
-        <Box
-          sx={{
-            textAlign: "left",
-            alignItems: "center",
-            justifyContent: "center",
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          {inputs.map((input) => (
-            <div key={input.id}>
-              <>
-                <label htmlFor={input.name}>{input.label}</label>
-                <input
-                  id={input.name}
-                  name={input.name}
-                  type={input.type}
-                  value={values[input.name]}
-                  readOnly
-                  style={{
-                    border: "1px solid black",
-                    display: "flex",
-                    flexDirection: "flex-start",
-                    alignItems: "center",
-                  }}
-                />
-              </>
-            </div>
-          ))}
+
+        <Box sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
+          <List
+            sx={{
+              width: "100%",
+              maxWidth: 360,
+              bgcolor: "background.paper",
+            }}
+          >
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <ImageIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Tipo de cuenta"
+                secondary={`Cuenta de ${values.rol}`}
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <WorkIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Fecha de nacimiento"
+                secondary={values.birthDate}
+              />
+            </ListItem>
+            <Divider variant="inset" component="li" />
+            <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <BeachAccessIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary="Id instucional"
+                secondary={values.institucinalId}
+              />
+            </ListItem>
+          </List>
+          <Divider variant="middle" />
+
+          <Box name="preferences" sx={{ m: 2 }}>
+            <Typography gutterBottom variant="h5" component="div">
+              Preferencias
+            </Typography>
+            <Box name="tags">
+              <Typography gutterBottom variant="body1">
+                Etiquetas:
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Chip color="primary" label="programacion" />
+                <Chip color="primary" label="python" />
+                <Chip color="primary" label="educacion" />
+                <Chip color="primary" label="escuela" />
+              </Stack>
+            </Box>
+            <Box sx={{ mt: 2 }} name="blocks">
+              <Typography gutterBottom variant="body1">
+                Bloques de horario:
+              </Typography>
+              <Stack direction="row" spacing={1}>
+                <Chip label="7:00 AM" />
+                <Chip label="8:00 AM" />
+                <Chip label="9:00 AM" />
+              </Stack>
+            </Box>
+          </Box>
+          <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
+            <Button>Editar preferencias</Button>
+          </Box>
         </Box>
       </>
       {/* ))} */}

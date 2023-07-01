@@ -20,37 +20,34 @@ export default function WorkListProvider() {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-  const handleDelete = (workId) => {
-    axios
-      .delete(`http://localhost:3000/provider/job/${workId}`, { headers })
-      .then((response) => {
-        setIsDeleted(true);
-        console.log(response.data.message);
-      })
-      .catch((error) => {
-        console.error(
-          "Error al eliminar el trabajo:",
-          error.response.data.message
-        );
-      });
-  };
+    const handleDelete = (workId) => {
+        axios
+            .delete(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, { headers })
+            .then((response) => {
+                setIsDeleted(true)
+                console.log(response.data.message);
+            })
+            .catch((error) => {
+                console.error("Error al eliminar el trabajo:", error.response.data.message);
+            });
+    };
 
   const navigate = useNavigate();
   const handleEdit = (work) => {
     navigate(`/provider/workedit/${work.id}`, { state: { work } });
   };
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:3000/provider/myJobs", { headers })
-      .then((response) => {
-        setWorkData(response.data);
-        setIsDeleted(false);
-      })
-      .catch((error) => {
-        console.error(error.response.data.message);
-      });
-  }, [isDeleted]);
+    useEffect(() => {
+        axios
+            .get(`${import.meta.env.VITE_API_URL}/provider/myJobs` , { headers })
+            .then((response) => {
+                setWorkData(response.data);
+                setIsDeleted(false);
+            })
+            .catch((error) => {
+                console.error(error.response.data.message);
+            });
+    }, [isDeleted]);
 
   return (
     <Box

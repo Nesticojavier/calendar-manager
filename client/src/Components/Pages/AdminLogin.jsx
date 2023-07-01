@@ -1,13 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from 'axios';
 import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from 'js-cookie';
+import { UserContext } from "../../Context/UserContext";
 
-export default function AdminLogin ({ setIsLoggedIn }) {
+export default function AdminLogin () {
 
-    if (Cookies.get('token')) {
-        return <Navigate to={"/dashboard"} replace />;
-    }
+    const { changeLoggedIn } = useContext(UserContext)
 
     // A state is created for the values of the form inputs
     // Saved to an object with empty initial values
@@ -38,22 +37,25 @@ export default function AdminLogin ({ setIsLoggedIn }) {
         e.preventDefault();
 
         axios
-            .post("http://localhost:3000/adminlogin", values)
+            .post("http://localhost:3000/admin/login", values)
             .then((response) => {
+
                 // Handle request response successful
                 const token = response.data.token
 
+
                 // localStorage.setItem('token', token);
                 Cookies.set('token', token, { expires: 1 });
+                changeLoggedIn(true)
 
                 // Redirect to 
-                setIsLoggedIn(true);
-                navigate('/admin/*')
+                navigate('/admin/userstable')
 
             })
             .catch((error) => {
                 // Handle request error
-                setErrorMessage(error.response.data.message)
+                console.log(error.response.data.message)
+                // setErrorMessage(error.response.data.message)
             });
 
     };

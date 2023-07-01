@@ -1,15 +1,13 @@
-import "../dashboard.css";
-import Cookies from "js-cookie";
-import Sidebar from "../Sidebar";
-import { Box, Stack } from "@mui/material";
-import { Outlet } from "react-router-dom";
+import '../dashboard.css';
+import Sidebar from '../Sidebar';
+import { Box, Stack } from '@mui/material';
+import { Outlet, Navigate } from 'react-router-dom';
 
-export default function Provider({ setIsLoggedIn }) {
-  // const token = Cookies.get('token');
+export default function Provider({ isAllowed }) {
 
-  // if (!token) {
-  //     return <Navigate to={"/login"} replace />;
-  // }
+    if (!isAllowed) {
+        return <Navigate to={"/"} replace />;
+    }
 
   return (
     <Box className="boxWorkForm">

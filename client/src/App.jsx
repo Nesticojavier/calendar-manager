@@ -1,17 +1,20 @@
-import React, { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Signup from "./Components/Pages/signup";
 import Login from "./Components/Pages/login";
 import Navbar from "./Components/Navbar";
-import Cookies from "js-cookie";
 import Home from "./Components/Pages/Home";
+import { UserContext } from "./Context/UserContext";
+import ProtectedRoutes from "./Components/ProtectedRoutes";
 
 import Provider from "./Components/Pages/Provider";
-import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm";
+import CreateWork from "./Components/ProviderComponents/CreateWork";
+import EditWork from "./Components/ProviderComponents/EditWork";
 import CalendarProvider from "./Components/ProviderComponents/CalendarProvider";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
-import WorkEditForm from "./Components/ProviderComponents/WorkEditForm";
+import WorkListInProgress from "./Components/ProviderComponents/WorkListInProgress";
+import WorkInstanceTraking from "./Components/ProviderComponents/WorkInstanceTraking";
 
 import Volunteer from "./Components/Pages/Volunteer";
 import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVolunteer";
@@ -26,43 +29,36 @@ import EditUser from "./Components/AdminComponents/EditUser";
 import UsersTable from "./Components/AdminComponents/UsersTable";
 
 function App() {
-  // A state is created to know if the user is logged in
-  const [isLoggedIn, setIsLoggedIn] = useState(Cookies.get("token"));
 
-  // when the page is reloaded, to know if the user is logged in
-  // useEffect(() => {
-  //   if (Cookies.get("token")) {
-  //     setIsLoggedIn(true)
-  //   }
-  // }, []);
 
-  const changeLoggedIn = (value) => {
-    setIsLoggedIn(value);
-  };
+  // Context to know if the user is logged in
+  const { isLoggedIn, profile } = useContext(UserContext);
 
   return (
     <BrowserRouter>
-      <Navbar isLoggedIn={isLoggedIn} setIsLoggedIn={changeLoggedIn} />
+      <Navbar />
       <Routes>
+
+        <Route path="/" element={<Home/>} />
         {/* Routes manage for user no logged */}
-        <Route path="/" element={<Home setIsLoggedIn={changeLoggedIn} />} />
-        <Route
-          path="/login"
-          element={<Login setIsLoggedIn={changeLoggedIn} />}
-        />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/adminlogin" element={<AdminLogin />} />
+        <Route element={<ProtectedRoutes isAllowed={!isLoggedIn} />}>
+          <Route path="/login" element={<Login/>} />
+          <Route path="/signup" element={<Signup/>} />
+          <Route path="/adminlogin" element={<AdminLogin/>} />
+        </Route>
 
         {/* Routes manage for provider */}
-        <Route path="/provider/*" element={<Provider />}>
-          <Route path="workcreation" element={<WorkCreationForm />} />
+        <Route path="/provider/*" element={<Provider isAllowed={!!profile && profile.rol === "proveedor"}/>}>
+          <Route path="workcreation" element={<CreateWork />} />
           <Route path="calendar" element={<CalendarProvider />} />
           <Route path="worklist" element={<WorkListProvider />} />
-          <Route path="workedit/:id" element={<WorkEditForm />} />
+          <Route path="workedit/:id" element={<EditWork />} />
+          <Route path="workinprogress" element={<WorkListInProgress />} />
+          <Route path="work-instance-tracking/:id" element={<WorkInstanceTraking />} />
         </Route>
 
         {/* Routess manage for volunter */}
-        <Route path="/volunteer/*" element={<Volunteer />}>
+        <Route path="/volunteer/*" element={<Volunteer isAllowed={!!profile && profile.rol === "voluntario"}/>}>
           <Route path="myworks" element={<WorkListVolunteer />} />
           <Route path="myprofile" element={<ProfileVolunteer />} />
           <Route path="editprofile/:id" element={<EditVolunteerProfile />} />

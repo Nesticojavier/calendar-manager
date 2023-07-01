@@ -1,148 +1,120 @@
-const { sq } = require("../db/db");
-const error = require("../error/error");
-const { updateUserTag } = require("../controllers/utils");
-const { Blocks, UserBlocks } = require("../Models/Blocks");
+const serverErrors = require("../error/error");
+const { all } = require("../routes/volunteer");
+const volunteerService = require("../services/volunteer.service");
 
-const getAllJobs = (req, res) => {
-  sq.query(
-    `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
-        FROM works wo 
-        LEFT JOIN "workTags" w ON wo.id = w.works_id 
-        LEFT JOIN tags t ON t.id = w.tags_id
-        GROUP BY wo.id`,
-    {
-      type: sq.QueryTypes.SELECT,
-    }
-  )
-    .then((results) => {
-      results.map((e) => {
-        e.tags = e.tags?.split(",");
-        e.blocks = JSON.parse(e.blocks);
-        return e;
-      });
-      res.json(results);
-    })
-    .catch((error) => {
-      res.status(500).json(error.error500);
-    });
+const getAllJobs = async (req, res) => {
+  try {
+    const allJobs = await volunteerService.getAllJobs();
+    res.json(allJobs);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
-const getOneJob = (req, res) => {
+const getOneJob = async (req, res) => {
   const { id } = req.params;
-  sq.query(
-    `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
-            FROM works wo 
-            LEFT JOIN "workTags" w ON wo.id = w.works_id 
-            LEFT JOIN tags t ON t.id = w.tags_id
-            WHERE wo.id = :ID
-            GROUP BY wo.id`,
-    {
-      replacements: { ID: id },
-      type: sq.QueryTypes.SELECT,
-    }
-  )
-    .then((results) => {
-      results.map((e) => {
-        e.tags = e.tags?.split(",");
-        e.blocks = JSON.parse(e.blocks);
-        return e;
-      });
-      res.json(results);
-    })
-    .catch((error) => {
-      res.status(500).json(error.error500);
-    });
+  try {
+    const job = await volunteerService.getOneJob(id);
+    res.json(job);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
-const getJobByMonth = (req, res) => {
+const getJobByMonth = async (req, res) => {
   const { month, year } = req.params;
-  sq.query(
-    `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
-                FROM works wo 
-                LEFT JOIN "workTags" w ON wo.id = w.works_id 
-                LEFT JOIN tags t ON t.id = w.tags_id
-                GROUP BY wo.id
-                HAVING ( EXTRACT(MONTH FROM wo."dateInit") <= :MONTH AND EXTRACT(MONTH FROM wo."dateEnd") >= :MONTH ) AND 
-                       ( EXTRACT(YEAR FROM wo."dateInit") <= :YEAR OR EXTRACT(YEAR FROM wo."dateEnd") >= :YEAR )`,
-    {
-      replacements: { MONTH: month, YEAR: year },
-      type: sq.QueryTypes.SELECT,
-    }
-  )
-    .then((results) => {
-      results.map((e) => {
-        e.tags = e.tags?.split(",");
-        e.blocks = JSON.parse(e.blocks);
-        return e;
-      });
-      res.json(results);
-    })
-    .catch((error) => {
-      res.status(500).json(error.error500);
-    });
+
+  try {
+    const getJobsByMonth = await volunteerService.getJobByMonth(month, year);
+    res.json(getJobsByMonth);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const editProfile = async (req, res) => {
-  const { id: users_id } = req.userData.profile;
+  const { id: users_id } = req.userData;
   const { tags, blocks } = req.body;
 
   if (!tags || !blocks) {
-    return res.status(400).json(error.errorMissingData);
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
-  await UserBlocks.destroy({
-    where: {
-      users_id,
-    },
-  });
-
-  await UserBlocks.bulkCreate(
-    blocks.map((e) => {
-      return { users_id, hour: e };
-    })
-  );
-
-  updateUserTag(users_id, tags);
-  return res.json(error.successUpdate);
+  try {
+    await volunteerService.editProfile(users_id, tags, blocks);
+    res.json(serverErrors.successUpdate);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 const showProfile = async (req, res) => {
-  const { id } = req.userData.profile;
-  await sq.query(
-    `SELECT t.title
-    FROM tags t, "userTags" u
-    WHERE t.id = u.tags_id AND u.users_id = :id `,
-    {
-      replacements: { id },
-      type: sq.QueryTypes.SELECT,
-    }
-  )
-    .then((results) => {
-      console.log(results);
-      req.userData.profile.tags = results.map((e) => e.title);
-    })
-    .catch(() => {
-      res.status(500).json(error.error500);
-    });
+  const user = req.userData;
+  try {
+    const profile = await volunteerService.showProfile(user);
+    res.json(profile);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
 
-   await sq.query(
-      `SELECT b.hour
-      FROM userblocks b
-      WHERE b.users_id = :id `,
-      {
-        replacements: { id },
-        type: sq.QueryTypes.SELECT,
-      }
-    )
-      .then((results) => {
-        console.log(results);
-        req.userData.profile.blocks = results.map((e) => e.hour);
-      })
-      .catch(() => {
-        res.status(500).json(error.error500);
-      });
+const postulate = async (req, res) => {
+  const { workId } = req.body;
 
-      res.json(req.userData)
+  if (!workId) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  try {
+    const postulation = await volunteerService.postulate(req.userData, workId);
+    res.json(postulation);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
+const jobsInProgress = async (req, res) => {
+  const user = req.userData
+  let { start, limit, confirmed } = req.query;
+
+  if (!start || !limit || !confirmed) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  try {
+    const allJobs = await volunteerService.jobsInProgress(
+      user,
+      start,
+      limit,
+      confirmed
+    );
+    return res.json(allJobs);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 module.exports = {
@@ -151,4 +123,6 @@ module.exports = {
   getJobByMonth,
   editProfile,
   showProfile,
+  postulate,
+  jobsInProgress,
 };

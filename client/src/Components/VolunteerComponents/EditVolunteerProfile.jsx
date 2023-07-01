@@ -1,15 +1,24 @@
 import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Box, Button } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Cookies from "js-cookie";
-import { useNavigate } from "react-router-dom";
 
 export default function ProfileVolunteer() {
   // this obtein the data from the user
   // const handleProfile = () => {
   //   axios.get("http://localhost:3001/volunteer/profile")
   // }
+
+  const navigate = useNavigate()
+
+  // Get data necesary from state location
+  const location = useLocation();
+  const { blocks, tags } = location.state.user
+
+  // State for storage blocks
+  const [selectedValues, setSelectedValues] = useState(blocks);
 
   // A state is created for the values of the form inputs
   // Saved to an object with the data of the user as initial values
@@ -20,6 +29,7 @@ export default function ProfileVolunteer() {
     birthDate: "",
     institutionalId: "",
     rol: "Voluntario",
+    time: selectedValues
   });
 
   // A state is created to know if the input is focused or not
@@ -57,28 +67,36 @@ export default function ProfileVolunteer() {
     },
   ];
 
-  const [selectedValues, setSelectedValues] = useState([]);
 
+
+  // const handleCheckboxChange = (e) => {
+  //   const { value, checked } = e.target;
+  //   if (checked && selectedValues.length < 3) {
+  //     setSelectedValues((prevSelectedValues) => [...prevSelectedValues, value]);
+  //   } else {
+  //     setSelectedValues((prevSelectedValues) =>
+  //       prevSelectedValues.filter((val) => val !== value)
+  //     );
+  //   }
+  // };
 
   const handleCheckboxChange = (e) => {
     const { value, checked } = e.target;
     if (checked && selectedValues.length < 3) {
       setSelectedValues((prevSelectedValues) => [...prevSelectedValues, value]);
-    } else {
+    } else if (!checked) {
       setSelectedValues((prevSelectedValues) =>
         prevSelectedValues.filter((val) => val !== value)
       );
     }
   };
 
-  const navigate = useNavigate();
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
     const valuesEnd = {
-      tags : workTags,
-      blocks : selectedValues
+      tags: workTags,
+      blocks: selectedValues
     };
     console.log(valuesEnd);
     // get token from cookies
@@ -109,7 +127,7 @@ export default function ProfileVolunteer() {
 
   const [showErrorTags, setShowErrorTags] = useState(false);
   const [tagValue, setTagValue] = useState("");
-  const [workTags, setTags] = useState([]);
+  const [workTags, setTags] = useState(tags);
 
   const addTags = (e) => {
     if (e.keyCode === 13 && tagValue) {
@@ -140,6 +158,7 @@ export default function ProfileVolunteer() {
 
     }
   };
+
 
   // When the tag is deleted
   const deleteTag = (val) => {
@@ -234,6 +253,7 @@ export default function ProfileVolunteer() {
                           name={input.name}
                           value={option.value}
                           onChange={handleCheckboxChange}
+                          checked={selectedValues.includes(option.value)}
                           style={{
                             margin: "-85px",
                           }}
@@ -273,7 +293,7 @@ export default function ProfileVolunteer() {
           <label className="labelTag" htmlFor="workTags-input">Etiquetas</label>
           <div className="tagInput ">
             {workTags.map((item, index) => {
-              return <button key={index}>
+              return <button type="button" key={index}>
                 {item}
                 <p className="delete-tag"
                   onClick={() => deleteTag(item)}>

@@ -1,12 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { UserContext } from "../../Context/UserContext";
 
-export default function Login({ setIsLoggedIn }) {
-  if (Cookies.get("token")) {
-    return <Navigate to={"/dashboard"} replace />;
-  }
+export default function Login() {
+  const { changeLoggedIn } = useContext(UserContext);
 
   // A state is created for the values of the form inputs
   // Saved to an object with empty initial values
@@ -37,7 +36,7 @@ export default function Login({ setIsLoggedIn }) {
     e.preventDefault();
 
     axios
-      .post("http://localhost:3000/login", values)
+      .post(`${import.meta.env.VITE_API_URL}/login`, values)
       .then((response) => {
         // Handle request response successful
         const token = response.data.token;
@@ -45,13 +44,14 @@ export default function Login({ setIsLoggedIn }) {
         // localStorage.setItem('token', token);
         Cookies.set("token", token, { expires: 1 });
 
-        // Redirect to dashboard
-        setIsLoggedIn(true);
+        changeLoggedIn(true);
+
+        // Redirect to home
         navigate("/");
       })
       .catch((error) => {
         // Handle request error
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data.data.error);
       });
   };
 
@@ -108,10 +108,14 @@ export default function Login({ setIsLoggedIn }) {
                 // Shows the error message if the input is focused and the value does not match the pattern
                 //focused = {focused.toString()}
               />
-              {focused[input.name] && <span>{input.errormessage}</span>}
+              {focused[input.name] && (
+                <span className="error-message">{input.errormessage}</span>
+              )}
             </div>
           ))}
-          <button type="submit">Iniciar sesión</button>
+          <button className="button-form" type="submit">
+            Iniciar sesión
+          </button>
         </form>
         <p className="error">{errorMessage}</p>
         <button

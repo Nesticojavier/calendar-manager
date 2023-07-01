@@ -5,10 +5,6 @@ import Cookies from "js-cookie";
 import { useNavigate, Navigate } from "react-router-dom";
 
 const Signup = () => {
-  if (Cookies.get("token")) {
-    return <Navigate to={"/dashboard"} replace />;
-  }
-
   const navigate = useNavigate();
 
   // A state is created for the values of the form inputs
@@ -47,7 +43,7 @@ const Signup = () => {
 
     // Used to submit the form via the post method
     axios
-      .post("http://localhost:3000/signup", values)
+      .post(`${import.meta.env.VITE_API_URL}/signup`, values)
       .then((response) => {
         // Handle request response successful
         swal({
@@ -59,8 +55,7 @@ const Signup = () => {
       })
       .catch((error) => {
         // Handle request error
-        console.error(error.response.data.message);
-        setErrorMessage(error.response.data.message);
+        setErrorMessage(error.response.data.data.error);
       });
   };
 
@@ -182,10 +177,14 @@ const Signup = () => {
                   //focused = {focused.toString()}
                 />
               )}
-              {focused[input.name] && <span>{input.errormessage}</span>}
+              {focused[input.name] && (
+                <span className="error-message">{input.errormessage}</span>
+              )}
             </div>
           ))}
-          <button type="submit">Registrarse</button>
+          <button className="button-form" type="submit">
+            Registrarse
+          </button>
         </form>
         <p className="error">{errorMessage}</p>
         <button className="button-switch" onClick={() => navigate("/login")}>
