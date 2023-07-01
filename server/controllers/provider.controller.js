@@ -71,7 +71,7 @@ const showJob = async (req, res) => {
 // Controller to display jobs from a user
 const showJobs = async (req, res) => {
   const { id: users_id } = req.userData;
-  let { start, limit } = req.query;
+  const { start, limit } = req.query;
 
   if (!start || !limit) {
     const error = serverErrors.errorMissingData;
