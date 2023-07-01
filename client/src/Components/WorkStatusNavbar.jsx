@@ -1,4 +1,5 @@
 import React from "react";
+import { Tabs, Tab, Box } from "@mui/material";
 
 export default function WorkStatusNavbar({
   statusConfirmed,
@@ -6,27 +7,20 @@ export default function WorkStatusNavbar({
 }) {
 
   return (
-    <div className="navStatus">
-      <nav>
-        <ul>
-          <li
-            className={statusConfirmed ? "active" : ""}
-            onClick={() => {
-              handleChangeStatus(true);
-            }}
-          >
-            Confirmados
-          </li>
-          <li
-            className={!statusConfirmed ? "active" : ""}
-            onClick={() => {
-              handleChangeStatus(false);
-            }}
-          >
-            Por confirmar
-          </li>
-        </ul>
-      </nav>
-    </div>
+    <Box sx={{ display: "flex", justifyContent: "flex-end", mb: 2 }}>
+      <Tabs
+        value={statusConfirmed ? "one" : "two"}
+        onChange={(event, newValue) => {
+          newValue === "one"
+            ? handleChangeStatus(true)
+            : handleChangeStatus(false);
+        }}
+        aria-label="secondary tabs example"
+        sx={{ textTransform: "none" }}
+      >
+        <Tab value="one" label="Confirmados " />
+        <Tab value="two" label="Por confirmar" />
+      </Tabs>
+    </Box>
   );
 }
