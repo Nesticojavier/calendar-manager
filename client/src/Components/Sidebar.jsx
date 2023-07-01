@@ -43,7 +43,7 @@ export default function Sidebar() {
         <ListItem disablePadding>
           <ListItemButton
             component={NavLink}
-            // to="workcreation"
+            to="calendar"
             selected={selectedIndex === 0}
             onClick={(event) => handleListItemClick(event, 0)}
             sx={{
