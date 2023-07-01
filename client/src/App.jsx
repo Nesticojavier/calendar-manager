@@ -9,7 +9,7 @@ import Home from "./Components/Pages/Home";
 
 import Provider from "./Components/Pages/Provider";
 import WorkCreationForm from "./Components/ProviderComponents/WorkCreationForm";
-import Calendar from "./Components/Calendar";
+import CalendarProvider from "./Components/ProviderComponents/CalendarProvider";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
 import WorkEditForm from "./Components/ProviderComponents/WorkEditForm";
 
@@ -18,7 +18,7 @@ import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVoluntee
 import WorkListVolunteer from "./Components/VolunteerComponents/WorkListVolunteer";
 import ProfileVolunteer from "./Components/VolunteerComponents/ProfileVolunteer";
 import EditVolunteerProfile from "./Components/VolunteerComponents/EditVolunteerProfile";
-import CalendarVolunteer from "./Components/CalendarVolunteer";
+import CalendarVolunteer from "./Components/VolunteerComponents/CalendarVolunteer";
 
 import Admin from "./Components/Pages/Admin";
 import AdminLogin from "./Components/Pages/AdminLogin";
@@ -56,7 +56,7 @@ function App() {
         {/* Routes manage for provider */}
         <Route path="/provider/*" element={<Provider />}>
           <Route path="workcreation" element={<WorkCreationForm />} />
-          <Route path="calendar" element={<Calendar />} />
+          <Route path="calendar" element={<CalendarProvider />} />
           <Route path="worklist" element={<WorkListProvider />} />
           <Route path="workedit/:id" element={<WorkEditForm />} />
         </Route>
