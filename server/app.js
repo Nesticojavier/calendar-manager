@@ -78,9 +78,11 @@ var authRouter = require("./routes/auth");
 var providerRouter = require("./routes/provider");
 var adminRouter = require("./routes/admin");
 var volunteerRouter = require("./routes/volunteer");
+var utilsRouter = require("./routes/utils");
 
 app.use(indexRouter);
 app.use(authRouter);
+app.use(utilsRouter);
 app.use("/provider", providerRouter);
 app.use("/admin", adminRouter);
 app.use("/volunteer", volunteerRouter);
