@@ -20,7 +20,7 @@ const providerService = {
       const dayOfWeek = [
         "Lunes",
         "Martes",
-        "Miercoles",
+        "Miércoles",
         "Jueves",
         "Viernes",
         "Sabado",
@@ -29,6 +29,8 @@ const providerService = {
       const date = new Date(work.blocks[0].day);
       work.blocks[0].day = dayOfWeek[date.getDay()];
     }
+
+    console.log(work)
 
     const existWork = await Work.findOne({
       where: {
@@ -184,7 +186,7 @@ const providerService = {
       const dayOfWeek = [
         "Lunes",
         "Martes",
-        "Miercoles",
+        "Miércoles",
         "Jueves",
         "Viernes",
         "Sabado",
