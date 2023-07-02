@@ -3,10 +3,21 @@ const { all } = require("../routes/volunteer");
 const volunteerService = require("../services/volunteer.service");
 
 const getAllJobs = async (req, res) => {
+  try {
+    const allJobs = await volunteerService.getAllJobs();
+    res.json(allJobs);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
+const getAllJobsPaginated = async (req, res) => {
   const { start, limit } = req.query;
 
   try {
-    const allJobs = await volunteerService.getAllJobs( start, limit);
+    const allJobs = await volunteerService.getAllJobsPaginated(start, limit);
     res.json(allJobs);
   } catch (error) {
     return res
@@ -94,7 +105,7 @@ const postulate = async (req, res) => {
 };
 
 const jobsInProgress = async (req, res) => {
-  const user = req.userData
+  const user = req.userData;
   let { start, limit, confirmed } = req.query;
 
   if (!start || !limit || !confirmed) {
@@ -127,4 +138,5 @@ module.exports = {
   showProfile,
   postulate,
   jobsInProgress,
+  getAllJobsPaginated,
 };
