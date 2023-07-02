@@ -38,6 +38,7 @@ export default function WorkInstanceTraking() {
   const WORK_DESCRIPTION = workInstance.work.description;
   const VOLUNTEER_FULLNAME = workInstance.user.fullName;
   const VOLUNTEER_USERNAME = workInstance.user.credential.username;
+  const POSTULATION_ID = workInstance.id
 
   // to get current day
   const CURRENT_DATE = format(new Date(), "yyyy-MM-dd");
@@ -85,8 +86,8 @@ export default function WorkInstanceTraking() {
   // to know the first day of the month
   const firstDay = new Date(currentYear, currentMonth).getDay();
 
-  // to store the work data
-  const [workData, setWorkData] = useState([]);
+  // to store the from backend
+  const [data, setData] = useState([]);
 
   // to change to the previuos month
   const handlePrevMonthClick = () => {
@@ -108,20 +109,21 @@ export default function WorkInstanceTraking() {
     }
   };
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3000/provider/myjobs/`, { headers })
-  //     .then((response) => {
-  //       setWorkData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.error(error.response.data.message);
-  //       } else {
-  //         console.error(error.message);
-  //       }
-  //     });
-  // }, []);
+  useEffect(() => {
+    axios
+      .get(`${import.meta.env.VITE_API_URL}/provider/tracking/${POSTULATION_ID}`, { headers })
+      .then((response) => {
+        console.log(response.data)
+        setData(response.data)
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error(error.response.data.message);
+        } else {
+          console.error(error.message);
+        }
+      });
+  }, []);
 
   // return job blocks in a day
   const isBlocksOnDay = (work, day) => {
@@ -461,11 +463,11 @@ function PaintBlock({ block, color, handleAttendanceSet }) {
   );
 }
 
-const data = [
-  { date: "2023-06-05", hour: "7:00 AM", attendance: true },
-  { date: "2023-06-07", hour: "8:00 AM", attendance: true },
-  { date: "2023-06-12", hour: "7:00 AM", attendance: true },
-  { date: "2023-06-14", hour: "8:00 AM", attendance: false },
-  { date: "2023-06-19", hour: "7:00 AM", attendance: false },
-  { date: "2023-06-21", hour: "8:00 AM", attendance: true },
-];
+// const data = [
+//   { date: "2023-06-05", hour: "7:00 AM", attendance: true },
+//   { date: "2023-06-07", hour: "8:00 AM", attendance: true },
+//   { date: "2023-06-12", hour: "7:00 AM", attendance: true },
+//   { date: "2023-06-14", hour: "8:00 AM", attendance: false },
+//   { date: "2023-06-19", hour: "7:00 AM", attendance: false },
+//   { date: "2023-06-21", hour: "8:00 AM", attendance: true },
+// ];
