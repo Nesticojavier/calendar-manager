@@ -245,6 +245,50 @@ const declinePostulation = async (req, res) => {
   }
 };
 
+const insertTrackingRecord = async (req, res) => {
+  const { postulationID } = req.params;
+  const { date, hour, attendance } = req.body;
+
+  if (!postulationID) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  const register = { date, hour, attendance };
+  register["postulation_id"] = postulationID;
+
+  try {
+    const insert = await providerService.insertTrackingRecord(register);
+    return res.json(insert);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
+const getTracking = async (req, res) => {
+  const { postulationID } = req.params;
+
+  if (!postulationID) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  try {
+    const result = await providerService.getTracking(postulationID);
+    return res.json(result);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
 module.exports = {
   createJob,
   deleteJob,
@@ -256,5 +300,7 @@ module.exports = {
   getJobByMonth,
   jobsInProgress,
   acceptPostulation,
-  declinePostulation
+  declinePostulation,
+  insertTrackingRecord,
+  getTracking,
 };

@@ -14,6 +14,8 @@ const {
   jobsInProgress,
   acceptPostulation,
   declinePostulation,
+  insertTrackingRecord,
+  getTracking,
 } = require("../controllers/provider.controller");
 
 router.use(verifyToken(process.env.USERS_ENCRYPT));
@@ -38,5 +40,9 @@ router.get("/jobs-in-progress", jobsInProgress);
 router.put("/postulation/:postulationID", acceptPostulation);
 //Decline application
 router.delete("/postulation/:postulationID", declinePostulation);
+// insert register for tracking from a postulation
+router.post("/tracking/:postulationID", insertTrackingRecord);
+// get tracking from a postulation
+router.get("/tracking/:postulationID", getTracking);
 
 module.exports = router;

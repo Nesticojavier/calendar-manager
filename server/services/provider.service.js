@@ -4,9 +4,10 @@ const { Work } = require("../Models/Work");
 const { Tags, WorkTags } = require("../Models/Tags");
 const { Users } = require("../Models/Users");
 const { Credential } = require("../Models/Users");
+const { Postulation } = require("../Models/Postulation");
+const { Tracking } = require("../Models/Tracking");
 
 const serverErrors = require("../error/error");
-const { Postulation } = require("../Models/Postulation");
 
 const providerService = {
   createJob: async (work, user) => {
@@ -30,7 +31,7 @@ const providerService = {
       work.blocks[0].day = dayOfWeek[date.getDay()];
     }
 
-    console.log(work)
+    console.log(work);
 
     const existWork = await Work.findOne({
       where: {
@@ -341,7 +342,6 @@ const providerService = {
     }
   },
   acceptPostulation: async (users_id, id) => {
-    
     try {
       // Update Work table
       const rowsUpdated = await Postulation.update(
@@ -366,24 +366,45 @@ const providerService = {
     }
   },
   declinePostulation: async (users_id, id) => {
-    
     try {
       // Update Work table
-      const rowsUpdated = await Postulation.destroy(
-        {
-          where: {
-            id,
-            confirmed: false
-          },
-          include: [{ model: Work, where: users_id }],
-        }
-      );
+      const rowsUpdated = await Postulation.destroy({
+        where: {
+          id,
+          confirmed: false,
+        },
+        include: [{ model: Work, where: users_id }],
+      });
       console.log(rowsUpdated);
       if (rowsUpdated === 0) {
         throw serverErrors.error404;
       }
 
       return serverErrors.succesDelete;
+    } catch (error) {
+      throw error;
+    }
+  },
+  insertTrackingRecord: async (register) => {
+    const t = await sq.transaction();
+
+    try {
+      const createdRegister = await Tracking.create(register, {
+        transaction: t,
+      });
+
+      // If everything is ok , then commit the transaction
+      await t.commit();
+
+      return register;
+    } catch (error) {
+      throw error;
+    }
+  },
+  getTracking: async (postulation_id) => {
+    try {
+      const result = await Tracking.findAll({postulation_id})
+      return result;
     } catch (error) {
       throw error;
     }
