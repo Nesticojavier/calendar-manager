@@ -89,9 +89,10 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   };
 
   //  handle for make follow up by provider
-  const handleWorkTracking = (work) => {
-    navigate(`/provider/work-instance-tracking/${work.id}`, {
-      state: { work },
+  const handleWorkTracking = (workInstance) => {
+    workInstance.work.blocks = JSON.parse(workInstance.work.blocks)
+    navigate(`/provider/work-instance-tracking/${workInstance.id}`, {
+      state: { workInstance },
     });
   };
 
@@ -203,7 +204,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           <CardActions disableSpacing>
             {statusConfirmed ? (
               <Button
-                onClick={() => handleWorkTracking(row.work)}
+                onClick={() => handleWorkTracking(row)}
                 type="button"
                 variant="contained"
                 color="primary"
