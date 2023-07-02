@@ -181,10 +181,15 @@ export default function WorkInstanceTraking() {
 
   const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleWorkClick = (work) => {
-    setDialogOpen(true);
-    setSelectedWork(work);
+  const handleAttendanceSet = () => {
+    // setDialogOpen(true);
+    // setSelectedWork(work);
+    console.log("hola");
   };
+
+  const handleAttendanceNotAllow  = () => {
+    console.log("No puede editar asistencia")
+  }
 
   return (
     <Stack
@@ -298,12 +303,24 @@ export default function WorkInstanceTraking() {
                     ? blocksInDay.map((block) =>
                         existRegister(block.hour, index + 1) ? (
                           existRegister(block.hour, index + 1).attendance ? (
-                            <PaintBlock block={block} color="lightgreen" />
+                            <PaintBlock
+                              block={block}
+                              color="lightgreen"
+                              handleAttendanceSet={handleAttendanceNotAllow}
+                            />
                           ) : (
-                            <PaintBlock block={block} color="pink" />
+                            <PaintBlock
+                              block={block}
+                              color="pink"
+                              handleAttendanceSet={handleAttendanceNotAllow}
+                            />
                           )
                         ) : (
-                          <PaintBlock block={block} color="lightgray" />
+                          <PaintBlock
+                            block={block}
+                            color="lightgray"
+                            handleAttendanceSet={handleAttendanceSet}
+                          />
                         )
                       )
                     : null}
@@ -390,7 +407,7 @@ export default function WorkInstanceTraking() {
 }
 
 // component to paint block into calendar
-function PaintBlock({ block, color }) {
+function PaintBlock({ block, color, handleAttendanceSet }) {
   return (
     <span
       style={{
@@ -402,7 +419,7 @@ function PaintBlock({ block, color }) {
         margin: "2px",
         cursor: "pointer",
       }}
-      onClick={() => handleWorkClick(work)}
+      onClick={() => handleAttendanceSet()}
     >
       {block.hour}
     </span>
