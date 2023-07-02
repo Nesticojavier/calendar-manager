@@ -16,7 +16,7 @@ import Calendar from "../Calendar";
 import CalendarLegend from "../CalendarLegend";
 import { sortWorksByTag } from "../Utils/sortWorksByTag";
 import { days, monthNames } from "../Utils/calendarConstants";
-import WorkInfoDialogVolunteer from "../WorkInfoDialogVolunteer";
+// import WorkInfoDialogVolunteer from "../WorkInfoDialogVolunteer";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
   // to know the current month

@@ -3,6 +3,8 @@ import { Avatar, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { useContext } from "react";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -26,10 +28,34 @@ export default function ProfileVolunteer() {
   // To navigate to the edit profile page
   const navigate = useNavigate();
   const handleEdit = (user) => {
-    navigate(`/volunteer/editprofile/${user.id}`, { state: { user } });
+    navigate(`/volunteer/editprofile/${values.id}`, { state: { user } });
   };
 
-  console.log(values);
+  // to get the tags and hours preferences of the volunteer
+  const [tagsPref, setTagsPref] = useState([]);
+  const [hoursPref, setHoursPref] = useState([]);
+
+  // get token from cookies
+  const token = Cookies.get("token");
+  // construct object representing an HTTP authorization header with the Bearer scheme.
+  const headers = { Authorization: `Bearer ${token}` };
+
+  useEffect(() => {
+    axios
+      .get(`http://localhost:3000/volunteer/profile`, { headers })
+      .then((response) => {
+        setTagsPref(response.data.tags);
+        setHoursPref(response.data.blocks);
+      })
+      .catch((error) => {
+        if (error.response) {
+          console.error(error.response.data.message);
+        } else {
+          console.error(error.message);
+        }
+      });
+  }, []);
+
   return (
     <Box
       flex={7}
@@ -130,10 +156,9 @@ export default function ProfileVolunteer() {
                 Etiquetas:
               </Typography>
               <Stack direction="row" spacing={1}>
-                <Chip color="primary" label="programacion" />
-                <Chip color="primary" label="python" />
-                <Chip color="primary" label="educacion" />
-                <Chip color="primary" label="escuela" />
+                {tagsPref.map((tag) => (
+                  <Chip key={tag} color="primary" label={tag} />
+                ))}
               </Stack>
             </Box>
             <Box sx={{ mt: 2 }} name="blocks">
@@ -141,18 +166,17 @@ export default function ProfileVolunteer() {
                 Bloques de horario:
               </Typography>
               <Stack direction="row" spacing={1}>
-                <Chip label="7:00 AM" />
-                <Chip label="8:00 AM" />
-                <Chip label="9:00 AM" />
+                {hoursPref.map((hour) => (
+                  <Chip key={hour} label={hour} />
+                ))}
               </Stack>
             </Box>
           </Box>
           <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
-            <Button>Editar preferencias</Button>
+            <Button onClick={() => handleEdit(values)}>Editar preferencias</Button>
           </Box>
         </Box>
       </>
-      {/* ))} */}
     </Box>
   );
 }
