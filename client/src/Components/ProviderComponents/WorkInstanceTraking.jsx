@@ -1,10 +1,24 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Box, Grid, Stack, Typography, backdropClasses } from "@mui/material";
+import {
+  Avatar,
+  Box,
+  Divider,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Stack,
+  Typography,
+  backdropClasses,
+} from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays, format } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import PersonIcon from '@mui/icons-material/Person';
+import WorkIcon from '@mui/icons-material/Work';
 import axios from "axios";
 import Cookies from "js-cookie";
 import { alpha } from "@mui/system";
@@ -15,6 +29,12 @@ export default function WorkInstanceTraking() {
   const { id: workId } = useParams();
   const workInstance = location.state.workInstance;
   const work = workInstance.work;
+
+  // Define work instance data
+  const WORK_TITLE = workInstance.work.title;
+  const WORK_DESCRIPTION = workInstance.work.description;
+  const VOLUNTEER_FULLNAME = workInstance.user.fullName;
+  const VOLUNTEER_USERNAME = workInstance.user.credential.username;
 
   // to get token for api authentication
   const token = Cookies.get("token");
@@ -156,12 +176,12 @@ export default function WorkInstanceTraking() {
       p={4}
       px={10}
       direction="row"
-      spacing={2}
+      spacing={10}
       justifyContent="space-between"
     >
       <Box
         flex={8}
-        p={2}
+        // p={2}
         // px={10}
         sx={{
           display: "flex",
@@ -216,7 +236,7 @@ export default function WorkInstanceTraking() {
               sx={{
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center", 
+                justifyContent: "center",
                 bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
                 display: "flex",
                 borderTop: "var(--Grid-borderWidth) solid",
@@ -276,28 +296,63 @@ export default function WorkInstanceTraking() {
         </Grid>
       </Box>
 
-      <Box p={0} flex={2}>
-        <Grid container alignItems="center" rowSpacing={1}>
-          <Grid item md={1}>
-            <Box width={16} height={16} bgcolor="lightgreen" />
+      <Stack
+        direction="column"
+        justifyContent="flex-start"
+        alignItems="flex-start"
+        flex={2}
+        spacing={5}
+        // bgcolor='red'
+        divider={<Divider orientation="horizontal" flexItem />}
+      >
+        <Box alignSelf="flex-start">
+          <Typography variant="h6" align="center">
+            Datos del trabajo:
+          </Typography>
+          <List
+            sx={{ width: "100%", maxWidth: 360}}
+          >
+            <ListItem disablePadding>
+              <ListItemAvatar>
+                <Avatar>
+                  <PersonIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Voluntario" secondary={`${VOLUNTEER_FULLNAME} - @${VOLUNTEER_USERNAME}`} />
+            </ListItem>
+            <ListItem disablePadding>
+              <ListItemAvatar>
+                <Avatar>
+                  <WorkIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary="Trabajo" secondary={`${WORK_TITLE} - ${WORK_DESCRIPTION}`} />
+            </ListItem>
+          </List>
+        </Box>
+        <Box>
+          <Grid container alignItems="center" rowSpacing={1}>
+            <Grid item md={1}>
+              <Box borderRadius='100%' width={16} height={16} bgcolor="lightgreen" />
+            </Grid>
+            <Grid item md={11}>
+              <Typography variant="body1">Asistente</Typography>
+            </Grid>
+            <Grid item md={1}>
+              <Box borderRadius='100%' width={16} height={16} bgcolor="pink" />
+            </Grid>
+            <Grid item md={11}>
+              <Typography variant="body1">Inasistente</Typography>
+            </Grid>
+            <Grid item md={1}>
+              <Box borderRadius='100%' width={16} height={16} bgcolor="lightgray" />
+            </Grid>
+            <Grid item md={11}>
+              <Typography variant="body1">En espera</Typography>
+            </Grid>
           </Grid>
-          <Grid item md={11}>
-            <Typography variant="body1">Asistente</Typography>
-          </Grid>
-          <Grid item md={1}>
-            <Box width={16} height={16} bgcolor="pink" />
-          </Grid>
-          <Grid item md={11}>
-            <Typography variant="body1">Inasistente</Typography>
-          </Grid>
-          <Grid item md={1}>
-            <Box width={16} height={16} bgcolor="lightgray" />
-          </Grid>
-          <Grid item md={11}>
-            <Typography variant="body1">En espera</Typography>
-          </Grid>
-        </Grid>
-      </Box>
+        </Box>
+      </Stack>
     </Stack>
   );
 }
@@ -323,10 +378,10 @@ function PaintBlock({ block, color }) {
 }
 
 const data = [
-  { date: "2023-07-03", hour: "7:00 AM", attendance: true },
-  { date: "2023-07-05", hour: "8:00 AM", attendance: true },
-  { date: "2023-07-10", hour: "7:00 AM", attendance: true },
-  { date: "2023-07-12", hour: "8:00 AM", attendance: false },
-  { date: "2023-07-17", hour: "7:00 AM", attendance: false },
-  { date: "2023-07-19", hour: "8:00 AM", attendance: true },
+  { date: "2023-06-05", hour: "7:00 AM", attendance: true },
+  { date: "2023-06-07", hour: "8:00 AM", attendance: true },
+  { date: "2023-06-12", hour: "7:00 AM", attendance: true },
+  { date: "2023-06-14", hour: "8:00 AM", attendance: false },
+  { date: "2023-06-19", hour: "7:00 AM", attendance: false },
+  { date: "2023-06-21", hour: "8:00 AM", attendance: true },
 ];
