@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Box, Grid, Stack, Typography } from "@mui/material";
+import { Box, Grid, Stack, Typography, backdropClasses } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays, format } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -152,7 +152,13 @@ export default function WorkInstanceTraking() {
   };
 
   return (
-    <Stack p={4} px={10} direction="row" spacing={2} justifyContent="space-between">
+    <Stack
+      p={4}
+      px={10}
+      direction="row"
+      spacing={2}
+      justifyContent="space-between"
+    >
       <Box
         flex={8}
         p={2}
@@ -169,6 +175,7 @@ export default function WorkInstanceTraking() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
+            // width: '100%',
           }}
         >
           <ArrowBackIosNewIcon
@@ -185,7 +192,7 @@ export default function WorkInstanceTraking() {
         </div>
         <Grid
           container
-          spacing={2}
+          // spacing={2}
           sx={{
             margin: "0px",
             minWidth: "100%",
@@ -204,9 +211,12 @@ export default function WorkInstanceTraking() {
             <Grid
               key={day}
               item
-              xs={1.6}
+              xs={12 / 7}
               minHeight={70}
               sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center", 
                 bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
                 display: "flex",
                 borderTop: "var(--Grid-borderWidth) solid",
@@ -219,16 +229,18 @@ export default function WorkInstanceTraking() {
 
           {/* To display the first day of the month on the corresponding day of the week */}
           {[...Array(firstDay)].map((_, index) => (
-            <Grid key={index} item xs={1.6} minHeight={100} />
+            <Grid key={index} item xs={12 / 7} minHeight={100} />
           ))}
 
           {/* To display the days of the month */}
           {[...Array(daysInMonth)].map((_, index) => {
             return (
               <Grid
+                pt={1}
+                pl={1}
                 key={index}
                 item
-                xs={1.6}
+                xs={12 / 7}
                 minHeight={100}
                 sx={{
                   display: "flex",
@@ -264,27 +276,27 @@ export default function WorkInstanceTraking() {
         </Grid>
       </Box>
 
-      <Box pt={10} flex={2}  width="100%">
-          <Grid container alignItems="center" spacing={1}>
-            <Grid item md={1}>
-              <Box width={16} height={16} bgcolor="lightgreen" />
-            </Grid>
-            <Grid item md={11}>
-              <Typography variant="body1">Asistente</Typography>
-            </Grid>
-            <Grid item md={1}>
-              <Box width={16} height={16} bgcolor="pink" />
-            </Grid>
-            <Grid item md={11}>
-              <Typography variant="body1">Inasistente</Typography>
-            </Grid>
-            <Grid item md={1}>
-              <Box width={16} height={16} bgcolor="lightgray" />
-            </Grid>
-            <Grid item md={11}>
-              <Typography variant="body1">En espera</Typography>
-            </Grid>
+      <Box p={0} flex={2}>
+        <Grid container alignItems="center" rowSpacing={1}>
+          <Grid item md={1}>
+            <Box width={16} height={16} bgcolor="lightgreen" />
           </Grid>
+          <Grid item md={11}>
+            <Typography variant="body1">Asistente</Typography>
+          </Grid>
+          <Grid item md={1}>
+            <Box width={16} height={16} bgcolor="pink" />
+          </Grid>
+          <Grid item md={11}>
+            <Typography variant="body1">Inasistente</Typography>
+          </Grid>
+          <Grid item md={1}>
+            <Box width={16} height={16} bgcolor="lightgray" />
+          </Grid>
+          <Grid item md={11}>
+            <Typography variant="body1">En espera</Typography>
+          </Grid>
+        </Grid>
       </Box>
     </Stack>
   );
