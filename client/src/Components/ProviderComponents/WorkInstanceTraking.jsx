@@ -14,11 +14,11 @@ import {
   Typography,
   backdropClasses,
 } from "@mui/material";
-import { getDaysInMonth, isSameDay, addDays, format } from "date-fns";
+import { getDaysInMonth, isSameDay, addDays, format, isBefore } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import PersonIcon from '@mui/icons-material/Person';
-import WorkIcon from '@mui/icons-material/Work';
+import PersonIcon from "@mui/icons-material/Person";
+import WorkIcon from "@mui/icons-material/Work";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { alpha } from "@mui/system";
@@ -35,6 +35,9 @@ export default function WorkInstanceTraking() {
   const WORK_DESCRIPTION = workInstance.work.description;
   const VOLUNTEER_FULLNAME = workInstance.user.fullName;
   const VOLUNTEER_USERNAME = workInstance.user.credential.username;
+
+  // to get current day
+  const CURRENT_DATE = format(new Date(), "yyyy-MM-dd");
 
   // to get token for api authentication
   const token = Cookies.get("token");
@@ -161,6 +164,18 @@ export default function WorkInstanceTraking() {
     return foundRegister;
   };
 
+  //verify is that day is less or equal than the current day
+  const dayLessThanCurrentDay = (day) => {
+    // Convert the day number to a Date object
+    const date = new Date(currentYear, currentMonth, day);
+    const formattedDate = format(date, "yyyy-MM-dd");
+
+    return (
+      isBefore(new Date(formattedDate), new Date(CURRENT_DATE)) ||
+      isSameDay(new Date(formattedDate), new Date(CURRENT_DATE))
+    );
+  };
+
   // to show a dialog with the work information
   const [selectedWork, setSelectedWork] = useState(null);
 
@@ -254,6 +269,7 @@ export default function WorkInstanceTraking() {
 
           {/* To display the days of the month */}
           {[...Array(daysInMonth)].map((_, index) => {
+            const blocksInDay = isBlocksOnDay(work, index + 1);
             return (
               <Grid
                 pt={1}
@@ -278,17 +294,19 @@ export default function WorkInstanceTraking() {
                     width: "100%",
                   }}
                 >
-                  {isBlocksOnDay(work, index + 1).map((block) =>
-                    existRegister(block.hour, index + 1) ? (
-                      existRegister(block.hour, index + 1).attendance ? (
-                        <PaintBlock block={block} color="lightgreen" />
-                      ) : (
-                        <PaintBlock block={block} color="pink" />
+                  {dayLessThanCurrentDay(index + 1)
+                    ? blocksInDay.map((block) =>
+                        existRegister(block.hour, index + 1) ? (
+                          existRegister(block.hour, index + 1).attendance ? (
+                            <PaintBlock block={block} color="lightgreen" />
+                          ) : (
+                            <PaintBlock block={block} color="pink" />
+                          )
+                        ) : (
+                          <PaintBlock block={block} color="lightgray" />
+                        )
                       )
-                    ) : (
-                      <PaintBlock block={block} color="lightgray" />
-                    )
-                  )}
+                    : null}
                 </div>
               </Grid>
             );
@@ -309,16 +327,17 @@ export default function WorkInstanceTraking() {
           <Typography variant="h6" align="center">
             Datos del trabajo:
           </Typography>
-          <List
-            sx={{ width: "100%", maxWidth: 360}}
-          >
+          <List sx={{ width: "100%", maxWidth: 360 }}>
             <ListItem disablePadding>
               <ListItemAvatar>
                 <Avatar>
                   <PersonIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Voluntario" secondary={`${VOLUNTEER_FULLNAME} - @${VOLUNTEER_USERNAME}`} />
+              <ListItemText
+                primary="Voluntario"
+                secondary={`${VOLUNTEER_FULLNAME} - @${VOLUNTEER_USERNAME}`}
+              />
             </ListItem>
             <ListItem disablePadding>
               <ListItemAvatar>
@@ -326,26 +345,39 @@ export default function WorkInstanceTraking() {
                   <WorkIcon />
                 </Avatar>
               </ListItemAvatar>
-              <ListItemText primary="Trabajo" secondary={`${WORK_TITLE} - ${WORK_DESCRIPTION}`} />
+              <ListItemText
+                primary="Trabajo"
+                secondary={`${WORK_TITLE} - ${WORK_DESCRIPTION}`}
+              />
             </ListItem>
           </List>
         </Box>
         <Box>
           <Grid container alignItems="center" rowSpacing={1}>
             <Grid item md={1}>
-              <Box borderRadius='100%' width={16} height={16} bgcolor="lightgreen" />
+              <Box
+                borderRadius="100%"
+                width={16}
+                height={16}
+                bgcolor="lightgreen"
+              />
             </Grid>
             <Grid item md={11}>
               <Typography variant="body1">Asistente</Typography>
             </Grid>
             <Grid item md={1}>
-              <Box borderRadius='100%' width={16} height={16} bgcolor="pink" />
+              <Box borderRadius="100%" width={16} height={16} bgcolor="pink" />
             </Grid>
             <Grid item md={11}>
               <Typography variant="body1">Inasistente</Typography>
             </Grid>
             <Grid item md={1}>
-              <Box borderRadius='100%' width={16} height={16} bgcolor="lightgray" />
+              <Box
+                borderRadius="100%"
+                width={16}
+                height={16}
+                bgcolor="lightgray"
+              />
             </Grid>
             <Grid item md={11}>
               <Typography variant="body1">En espera</Typography>
