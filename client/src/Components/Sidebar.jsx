@@ -32,7 +32,7 @@ export default function Sidebar() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
+        // minHeight: "100vh",
         minWidth: "30vh",
       }}
       borderRight={1}

@@ -1,7 +1,7 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Stack, Typography } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays, format } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -152,119 +152,145 @@ export default function WorkInstanceTraking() {
   };
 
   return (
-    <Box
-      flex={7}
-      p={2}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "auto",
-        minWidth: "auto",
-        overflow: "auto",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <ArrowBackIosNewIcon
-          sx={{ cursor: "pointer" }}
-          onClick={handlePrevMonthClick}
-        />
-        <h1 style={{ color: "rgb(127, 145, 248)" }}>
-          {monthNames[currentMonth]} {currentYear}
-        </h1>
-        <ArrowForwardIosIcon
-          sx={{ cursor: "pointer" }}
-          onClick={handleNextMonthClick}
-        />
-      </div>
-      <Grid
-        container
-        spacing={2}
+    <Stack p={4} px={10} direction="row" spacing={2} justifyContent="space-between">
+      <Box
+        flex={8}
+        p={2}
+        // px={10}
         sx={{
-          margin: "0px",
-          minWidth: "100%",
-          "--Grid-borderWidth": "1px",
-          borderLeft: "var(--Grid-borderWidth) solid",
-          borderColor: "black",
-          "& > div": {
-            borderRight: "var(--Grid-borderWidth) solid",
-            borderBottom: "var(--Grid-borderWidth) solid",
-            borderColor: "black",
-          },
+          display: "flex",
+          flexDirection: "column",
+          minHeight: "auto",
+          minWidth: "auto",
         }}
       >
-        {/* To display the days of the week */}
-        {days.map((day) => (
-          <Grid
-            key={day}
-            item
-            xs={1.6}
-            minHeight={70}
-            sx={{
-              bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
-              display: "flex",
-              borderTop: "var(--Grid-borderWidth) solid",
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <ArrowBackIosNewIcon
+            sx={{ cursor: "pointer" }}
+            onClick={handlePrevMonthClick}
+          />
+          <h1 style={{ color: "rgb(127, 145, 248)" }}>
+            {monthNames[currentMonth]} {currentYear}
+          </h1>
+          <ArrowForwardIosIcon
+            sx={{ cursor: "pointer" }}
+            onClick={handleNextMonthClick}
+          />
+        </div>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            margin: "0px",
+            minWidth: "100%",
+            "--Grid-borderWidth": "1px",
+            borderLeft: "var(--Grid-borderWidth) solid",
+            borderColor: "black",
+            "& > div": {
+              borderRight: "var(--Grid-borderWidth) solid",
+              borderBottom: "var(--Grid-borderWidth) solid",
               borderColor: "black",
-            }}
-          >
-            <h3 style={{ margin: 0 }}>{day}</h3>
-          </Grid>
-        ))}
-
-        {/* To display the first day of the month on the corresponding day of the week */}
-        {[...Array(firstDay)].map((_, index) => (
-          <Grid key={index} item xs={1.6} minHeight={100} />
-        ))}
-
-        {/* To display the days of the month */}
-        {[...Array(daysInMonth)].map((_, index) => {
-          return (
+            },
+          }}
+        >
+          {/* To display the days of the week */}
+          {days.map((day) => (
             <Grid
-              key={index}
+              key={day}
               item
               xs={1.6}
-              minHeight={100}
+              minHeight={70}
               sx={{
+                bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
                 display: "flex",
-                justifyContent: "flex-start",
-                alignItems: "flex-start",
+                borderTop: "var(--Grid-borderWidth) solid",
+                borderColor: "black",
               }}
             >
-              <div> {index + 1} </div>
-              <div
-                style={{
+              <h3 style={{ margin: 0 }}>{day}</h3>
+            </Grid>
+          ))}
+
+          {/* To display the first day of the month on the corresponding day of the week */}
+          {[...Array(firstDay)].map((_, index) => (
+            <Grid key={index} item xs={1.6} minHeight={100} />
+          ))}
+
+          {/* To display the days of the month */}
+          {[...Array(daysInMonth)].map((_, index) => {
+            return (
+              <Grid
+                key={index}
+                item
+                xs={1.6}
+                minHeight={100}
+                sx={{
                   display: "flex",
-                  flexWrap: "wrap",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  width: "100%",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
                 }}
               >
-                {isBlocksOnDay(work, index + 1).map((block) =>
-                  existRegister(block.hour, index + 1) ? (
-                    existRegister(block.hour, index + 1).attendance ? (
-                      <PaintBlock block={block} color="lightgreen" />
+                <div> {index + 1} </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                  }}
+                >
+                  {isBlocksOnDay(work, index + 1).map((block) =>
+                    existRegister(block.hour, index + 1) ? (
+                      existRegister(block.hour, index + 1).attendance ? (
+                        <PaintBlock block={block} color="lightgreen" />
+                      ) : (
+                        <PaintBlock block={block} color="pink" />
+                      )
                     ) : (
-                      <PaintBlock block={block} color="pink" />
+                      <PaintBlock block={block} color="lightgray" />
                     )
-                  ) : (
-                    <PaintBlock block={block} color="lightgray" />
-                  )
-                )}
-              </div>
+                  )}
+                </div>
+              </Grid>
+            );
+          })}
+        </Grid>
+      </Box>
+
+      <Box pt={10} flex={2}  width="100%">
+          <Grid container alignItems="center" spacing={1}>
+            <Grid item md={1}>
+              <Box width={16} height={16} bgcolor="lightgreen" />
             </Grid>
-          );
-        })}
-      </Grid>
-    </Box>
+            <Grid item md={11}>
+              <Typography variant="body1">Asistente</Typography>
+            </Grid>
+            <Grid item md={1}>
+              <Box width={16} height={16} bgcolor="pink" />
+            </Grid>
+            <Grid item md={11}>
+              <Typography variant="body1">Inasistente</Typography>
+            </Grid>
+            <Grid item md={1}>
+              <Box width={16} height={16} bgcolor="lightgray" />
+            </Grid>
+            <Grid item md={11}>
+              <Typography variant="body1">En espera</Typography>
+            </Grid>
+          </Grid>
+      </Box>
+    </Stack>
   );
 }
 
+// component to paint block into calendar
 function PaintBlock({ block, color }) {
   return (
     <span
@@ -290,4 +316,5 @@ const data = [
   { date: "2023-07-10", hour: "7:00 AM", attendance: true },
   { date: "2023-07-12", hour: "8:00 AM", attendance: false },
   { date: "2023-07-17", hour: "7:00 AM", attendance: false },
+  { date: "2023-07-19", hour: "8:00 AM", attendance: true },
 ];
