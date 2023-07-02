@@ -249,9 +249,28 @@ const insertTrackingRecord = async (req, res) => {
   const { postulationID } = req.params;
   const { date, hour, attendance } = req.body;
 
-  console.log("####################")
-  console.log("####################")
-  console.log("####################")
+  if (!postulationID) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  const register = { date, hour, attendance };
+  register["postulation_id"] = postulationID;
+
+  try {
+    const insert = await providerService.insertTrackingRecord(register);
+    return res.json(insert);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};
+
+const getTracking = async (req, res) => {
+  const { postulationID } = req.params;
 
   if (!postulationID) {
     const error = serverErrors.errorMissingData;
@@ -260,12 +279,9 @@ const insertTrackingRecord = async (req, res) => {
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
 
-  const register = { date, hour, attendance }
-  register['postulation_id'] = postulationID;
-
   try {
-    const insert = await providerService.insertTrackingRecord(register);
-    return res.json(insert);
+    const result = await providerService.getTracking(postulationID);
+    return res.json(result);
   } catch (error) {
     return res
       .status(error?.status || 500)
@@ -286,4 +302,5 @@ module.exports = {
   acceptPostulation,
   declinePostulation,
   insertTrackingRecord,
+  getTracking,
 };

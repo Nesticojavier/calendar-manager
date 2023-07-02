@@ -401,6 +401,14 @@ const providerService = {
       throw error;
     }
   },
+  getTracking: async (postulation_id) => {
+    try {
+      const result = await Tracking.findAll({postulation_id})
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = providerService;
