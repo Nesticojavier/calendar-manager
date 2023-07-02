@@ -80,7 +80,7 @@ export default function ProfileVolunteer() {
         >
           <Avatar
             sx={{
-              bgcolor: "#1a76d2",
+              bgcolor: "rgb(1, 20, 128)",
               width: "80px",
               height: "80px",
               fontSize: "40px",
@@ -92,8 +92,7 @@ export default function ProfileVolunteer() {
             style={{
               display: "flex",
               flexDirection: "column",
-              marginLeft: "5px",
-              // alignItems: "center",
+              marginLeft: "10px",
             }}
           >
             <h1>{values.fullName}</h1>

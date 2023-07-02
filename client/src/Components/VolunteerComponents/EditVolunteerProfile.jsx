@@ -9,10 +9,10 @@ import {
   FormControl,
   Select,
   TextField,
-  Divider,
+  Avatar,
 } from "@mui/material";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import Cookies from "js-cookie";
 
 export default function ProfileVolunteer() {
@@ -21,6 +21,8 @@ export default function ProfileVolunteer() {
   // Get data necesary from state location
   const location = useLocation();
   const { blocks, tags } = location.state.user;
+
+  console.log(location.state.user);
 
   const hours = [
     "7:00 AM",
@@ -149,19 +151,63 @@ export default function ProfileVolunteer() {
         textAlign: "center",
       }}
     >
-      <div>
-        <AccountCircleIcon sx={{ fontSize: 100 }} />
-        <h1>Editar preferencias</h1>
-      </div>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "flex-start",
+        }}
+      >
+        <Button onClick={() => window.history.back()}>
+          <ArrowBackIcon />
+        </Button>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <Avatar
+            sx={{
+              bgcolor: "rgb(1, 20, 128)",
+              width: "80px",
+              height: "80px",
+              fontSize: "40px",
+            }}
+          >
+            {location.state.user.fullName[0]}
+          </Avatar>
+          <Box
+            sx={{
+              textAlign: "left",
+              justifyContent: "center",
+              display: "flex",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                marginLeft: "10px",
+              }}
+            >
+              <h1>{location.state.user.fullName}</h1>
+              <p>@{location.state.user.username}</p>
+            </div>
+          </Box>
+        </div>
+      </Box>
+
       <Box
         sx={{
           textAlign: "left",
-
           justifyContent: "center",
           display: "flex",
         }}
       >
-        <Box sx={{ mr: 15 }}>
+        <Box sx={{ mr: 15, mt: 5 }}>
           <h3 style={{ marginTop: 10 }}>Agrega tus horas de preferencia</h3>
           {selectedHours.map((block, blockIndex) => (
             <FormControl fullWidth key={blockIndex} sx={{ mb: 2, mt: 2 }}>
@@ -216,13 +262,15 @@ export default function ProfileVolunteer() {
           </Box>
         </Box>
 
-        <Box sx={{ ml: 15 }}>
+        <Box sx={{ ml: 15, mt: 5 }}>
           {/*Part of workTags*/}
-          <h3 style={{ marginTop: 10, marginBottom: 10 }}>Agrega tus tags de preferencia</h3>
+          <h3 style={{ marginTop: 10, marginBottom: 10 }}>
+            Agrega tus tags de preferencia
+          </h3>
           <label
             className="labelTag"
             htmlFor="workTags-input"
-            style={{ marginLeft: "-5px"}}
+            style={{ marginLeft: "-5px" }}
           >
             Ingrese las etiquetas
           </label>
@@ -243,7 +291,7 @@ export default function ProfileVolunteer() {
                 variant="standard"
                 // label="Multiple values"
                 placeholder="Escriba la etiqueta y presione enter"
-                sx = {{width: "100%"}}
+                sx={{ width: 400 }}
               />
             )}
           />
@@ -260,7 +308,7 @@ export default function ProfileVolunteer() {
         type="submit"
         variant="contained"
         sx={{
-          marginTop: "20px",
+          marginTop: "30px",
           alignSelf: "center",
           background: "rgb(1, 20, 128)",
           borderRadius: "5px",
