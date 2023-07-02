@@ -1,9 +1,11 @@
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Attendance from "./Attendance";
 
 import {
   Avatar,
   Box,
+  Button,
   Divider,
   Grid,
   List,
@@ -17,6 +19,7 @@ import {
 import { getDaysInMonth, isSameDay, addDays, format, isBefore } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PersonIcon from "@mui/icons-material/Person";
 import WorkIcon from "@mui/icons-material/Work";
 import axios from "axios";
@@ -176,25 +179,38 @@ export default function WorkInstanceTraking() {
     );
   };
 
+  const dayFormat = (day) => {
+    // Convert the day number to a Date object
+    const date = new Date(currentYear, currentMonth, day);
+    const formattedDate = format(date, "dd-MM-yyyy");
+
+    return formattedDate;
+  };
+
   // to show a dialog with the work information
-  const [selectedWork, setSelectedWork] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedTime, setSelectedTime] = useState(null);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleAttendanceSet = () => {
-    // setDialogOpen(true);
-    // setSelectedWork(work);
+  const handleAttendanceSet = (date, time) => {
+    setSelectedDate(date);
+    setSelectedTime(time);
+    setModalOpen(true);
     console.log("hola");
   };
 
-  const handleAttendanceNotAllow  = () => {
-    console.log("No puede editar asistencia")
-  }
+  const handleModalClose = () => {
+    setModalOpen(false);
+  };
+
+  const handleAttendanceNotAllow = () => {
+    console.log("No puede editar asistencia");
+  };
 
   return (
     <Stack
-      p={4}
-      px={10}
+      p={2}
+      px={5}
       direction="row"
       spacing={10}
       justifyContent="space-between"
@@ -210,6 +226,19 @@ export default function WorkInstanceTraking() {
           minWidth: "auto",
         }}
       >
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            minHeight: "auto",
+            minWidth: "auto",
+            marginRight: "50px",
+          }}
+        >
+          <Button onClick={() => window.history.back()}>
+            <ArrowBackIcon />
+          </Button>
+        </Box>
         <div
           style={{
             display: "flex",
@@ -258,7 +287,6 @@ export default function WorkInstanceTraking() {
                 alignItems: "center",
                 justifyContent: "center",
                 bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
-                display: "flex",
                 borderTop: "var(--Grid-borderWidth) solid",
                 borderColor: "black",
               }}
@@ -319,7 +347,9 @@ export default function WorkInstanceTraking() {
                           <PaintBlock
                             block={block}
                             color="lightgray"
-                            handleAttendanceSet={handleAttendanceSet}
+                            handleAttendanceSet={() => {
+                              handleAttendanceSet(dayFormat(index + 1), block.hour);
+                            }}
                           />
                         )
                       )
@@ -329,6 +359,12 @@ export default function WorkInstanceTraking() {
             );
           })}
         </Grid>
+        <Attendance
+          open={modalOpen}
+          handleClose={handleModalClose}
+          date={selectedDate}
+          time={selectedTime}
+        />
       </Box>
 
       <Stack
@@ -337,7 +373,6 @@ export default function WorkInstanceTraking() {
         alignItems="flex-start"
         flex={2}
         spacing={5}
-        // bgcolor='red'
         divider={<Divider orientation="horizontal" flexItem />}
       >
         <Box alignSelf="flex-start">

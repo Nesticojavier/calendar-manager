@@ -1,12 +1,3 @@
-/**
- * Component to display volunteer information
- * This component displays the information of a volunteer applying
- * for a job in a modal window.
- *
- * This information is shown to the provider to whom the application
- * request is being made.
- */
-
 import React from "react";
 import {
   Modal,
@@ -18,21 +9,26 @@ import {
   Divider,
   Avatar,
   Typography,
+  Button,
 } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import SchoolIcon from "@mui/icons-material/School";
 
-export default function ShowVolunteerInfo({ user, handleClose }) {
+export default function Attendance({ open, handleClose, date, time }) {
+  const handleAttendance = (attended) => {
+    // handle attendance logic here
+    handleClose();
+  };
+
   return (
     <Modal
-      open={true}
+      open={open}
       onClose={handleClose}
       aria-labelledby="modal-modal-title"
     >
       <Box sx={style}>
         <Typography id="modal-modal-title" variant="h6" component="h2">
-          Información del voluntario postulado
+          Control de asistencia
         </Typography>
         <List
           sx={{
@@ -44,36 +40,29 @@ export default function ShowVolunteerInfo({ user, handleClose }) {
           <ListItem>
             <ListItemAvatar>
               <Avatar>
-                <PersonIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Nombre completo" secondary={user.fullName} />
-          </ListItem>
-          <Divider variant="inset" component="li" />
-          <ListItem>
-            <ListItemAvatar>
-              <Avatar>
                 <CalendarTodayIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary="Fecha de nacimiento"
-              secondary={user.birthDate}
-            />
+            <ListItemText primary="Fecha" secondary={date} />
           </ListItem>
           <Divider variant="inset" component="li" />
           <ListItem>
             <ListItemAvatar>
               <Avatar>
-                <SchoolIcon />
+                <AccessTimeIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText
-              primary="Id instucional"
-              secondary={user.institucinalId}
-            />
+            <ListItemText primary="Hora" secondary={time} />
           </ListItem>
         </List>
+        <Box sx={{ display: "flex" }}>
+          <Button color="success" onClick={() => handleAttendance(true)}>
+            Asistió
+          </Button>
+          <Button color="error" onClick={() => handleAttendance(false)}>
+            No asistió
+          </Button>
+        </Box>
       </Box>
     </Modal>
   );

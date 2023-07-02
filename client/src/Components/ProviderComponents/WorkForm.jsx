@@ -472,7 +472,7 @@ export default function WorkForm({ work, onSubmit }) {
 
       <div>
         <Autocomplete
-          sx={{ maxWidth: 700 }}
+          sx={{ maxWidth: 700, marginLeft: "15px"}}
           filterOptions={filterOptions}
           freeSolo
           multiple
@@ -486,7 +486,7 @@ export default function WorkForm({ work, onSubmit }) {
               {...params}
               variant="standard"
               // label="Multiple values"
-              placeholder="ingrese etiqueta y presione enter"
+              placeholder="Ingrese etiqueta y presione enter"
             />
           )}
         />
