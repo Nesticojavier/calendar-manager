@@ -16,6 +16,7 @@ const { Tags, WorkTags, UserTags } = require("./Models/Tags");
 const { UserBlocks } = require("./Models/Blocks");
 const { Admin, createOrFindAdmin } = require("./Models/Admin");
 const { Postulation } = require("./Models/Postulation");
+const { Tracking } = require("./Models/Tracking");
 
 // Synchronize model
 (async () => {
@@ -51,10 +52,13 @@ const { Postulation } = require("./Models/Postulation");
     // Create admin
     createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
   });
+
   await Postulation.sync({ force: false }).then(() => {
     console.log("Postulation Model synced 2");
-    // Create admin
-    createOrFindAdmin(process.env.ADMIN_USER, process.env.ADMIN_PWD);
+  });
+  
+  await Tracking.sync({ force: false }).then(() => {
+    console.log("Tracking Model synced 2");
   });
 })();
 
