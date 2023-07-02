@@ -69,7 +69,7 @@ const showJob = async (req, res) => {
 };
 
 // Controller to display jobs from a user
-const showJobs = async (req, res) => {
+const showJobsPaginated = async (req, res) => {
   const { id: users_id } = req.userData;
   const { start, limit } = req.query;
 
@@ -80,7 +80,7 @@ const showJobs = async (req, res) => {
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
   try {
-    const allJobsByProv = await providerService.showJobs(users_id, start, limit);
+    const allJobsByProv = await providerService.showJobsPaginated(users_id, start, limit);
     res.json(allJobsByProv);
   } catch (error) {
     return res
@@ -252,13 +252,28 @@ const declinePostulation = async (req, res) => {
   }
 };
 
+// Controller to display jobs from a user
+const showJobs = async (req, res) => {
+  const { id: users_id } = req.userData;
+
+  try {
+    const allJobsByProv = await providerService.showJobs(users_id);
+    res.json(allJobsByProv);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+};  
+
 module.exports = {
   createJob,
   deleteJob,
   updateJob,
-  showJobs,
+  showJobsPaginated,
   changeStatus,
   showJob,
+  showJobs,
   showTags,
   getJobByMonth,
   jobsInProgress,

@@ -112,7 +112,7 @@ const providerService = {
       throw error;
     }
   },
-  showJobs: async (provider_id, start, limit) => {
+  showJobsPaginated: async (provider_id, start, limit) => {
     try {
 
       const countRows =  await Work.count({
@@ -143,6 +143,32 @@ const providerService = {
 
       const result = {count: countRows, rows : promise}
       return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  showJobs: async (provider_id) => {
+    try {
+      const jobs = await sq.query(
+        `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+        FROM works wo 
+        LEFT JOIN "workTags" w ON wo.id = w.works_id 
+        LEFT JOIN tags t ON t.id = w.tags_id
+        WHERE wo.users_id = :USERID
+        GROUP BY wo.id`,
+        {
+          replacements: { USERID: provider_id },
+          type: sq.QueryTypes.SELECT,
+        }
+      );
+      const promise = jobs.map((e) => {
+        e.tags = e.tags?.split(",");
+        e.blocks = JSON.parse(e.blocks);
+        return e;
+      });
+      await Promise.all(promise);
+      return promise;
     } catch (error) {
       throw error;
     }
