@@ -149,20 +149,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     setDialogOpen(false);
   };
 
-  // handle for maange postulation for work
-  const handlePostulation = (workId) => {
-    axios
-    .post(`${import.meta.env.VITE_API_URL}/volunteer/postulation`, {workId}, {
-      headers,
-    })
-      .then((response) => {
-        console.log(response.data)
-      })
-      .catch((error) => {
-        console.error(error.response.data.data.error);
-      });
-  }
-
   return (
     <Box
       flex={7}
@@ -306,14 +292,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                     <li key={tag}>{tag}</li>
                   ))}
                 </ul>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => handlePostulation(selectedWork.id)}
-                  >
-                    postularse
-                  </button>
-                </div>
               </div>
             )}
           </DialogContent>
