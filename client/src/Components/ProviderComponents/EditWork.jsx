@@ -62,7 +62,7 @@ export default function EditWork() {
       });
   };
   return (
-    <Box flex={8} p={1}>
+    <Box flex={8} pt={5}>
       <h1>Editar Trabajo: {work.workTitle}</h1>
       <WorkForm onSubmit={onSubmit} work={work} />
     </Box>

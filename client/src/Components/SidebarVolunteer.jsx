@@ -31,7 +31,6 @@ export default function SidebarVolunteer() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
         minWidth: "20vh",
       }}
       borderRight={1}

@@ -105,6 +105,7 @@ export default function CalendarProvider({ setIsLoggedIn }) {
     <Box
       flex={7}
       p={2}
+      px={20}
       sx={{
         display: "flex",
         flexDirection: "column",

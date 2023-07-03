@@ -268,6 +268,7 @@ export default function WorkForm({ work, onSubmit }) {
 
   return (
     <Box
+      px={40}
       component="form"
       onSubmit={handleSubmit}
       className="workForm"

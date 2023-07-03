@@ -15,11 +15,10 @@ export default function WorkListVolunteer() {
   return (
     <Box
       flex={7}
-      p={2}
+      px={40}
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
         overflow: "auto",
       }}
     >

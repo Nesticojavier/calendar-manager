@@ -19,6 +19,9 @@ import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ImageIcon from "@mui/icons-material/Image";
 import WorkIcon from "@mui/icons-material/Work";
 import BeachAccessIcon from "@mui/icons-material/BeachAccess";
+import BadgeIcon from '@mui/icons-material/Badge';
+import SchoolIcon from '@mui/icons-material/School';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
 export default function ProfileVolunteer() {
   // extract user from context
@@ -63,7 +66,6 @@ export default function ProfileVolunteer() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minHeight: "100vh",
         minWidth: "100vh",
         overflow: "auto",
         alignItems: "center",
@@ -111,7 +113,7 @@ export default function ProfileVolunteer() {
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
-                  <ImageIcon />
+                  <BadgeIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -123,7 +125,7 @@ export default function ProfileVolunteer() {
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
-                  <WorkIcon />
+                  <CalendarTodayIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText
@@ -135,7 +137,7 @@ export default function ProfileVolunteer() {
             <ListItem>
               <ListItemAvatar>
                 <Avatar>
-                  <BeachAccessIcon />
+                  <SchoolIcon />
                 </Avatar>
               </ListItemAvatar>
               <ListItemText

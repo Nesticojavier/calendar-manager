@@ -191,6 +191,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     <Box
       flex={7}
       p={2}
+      px={20}
       sx={{
         display: "flex",
         flexDirection: "column",

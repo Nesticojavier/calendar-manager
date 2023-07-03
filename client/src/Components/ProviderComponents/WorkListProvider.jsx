@@ -52,7 +52,8 @@ export default function WorkListProvider() {
   return (
     <Box
       flex={7}
-      p={2}
+      pt={5}
+      px={40}
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
       {workData.map((work) => (

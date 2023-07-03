@@ -46,7 +46,7 @@ export default function CreateWork() {
   };
 
   return (
-    <Box flex={8} p={1}>
+    <Box flex={8} pt={5}>
       <h1>Crear Trabajo</h1>
       <WorkForm onSubmit={onSubmit} work={work} />
     </Box>
