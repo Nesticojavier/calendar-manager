@@ -47,7 +47,7 @@ export default function CalendarProvider({ setIsLoggedIn }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/provider/myjobs/`, { headers })
+      .get(`${import.meta.env.VITE_API_URL}/provider/myjobs/`, { headers })
       .then((response) => {
         setWorkData(response.data);
       })
@@ -105,7 +105,7 @@ export default function CalendarProvider({ setIsLoggedIn }) {
     <Box
       flex={7}
       p={2}
-      px={20}
+      px={8}
       sx={{
         display: "flex",
         flexDirection: "column",

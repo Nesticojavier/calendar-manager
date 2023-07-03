@@ -14,7 +14,6 @@ import {
   ListItemText,
   Stack,
   Typography,
-  backdropClasses,
 } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays, format, isBefore } from "date-fns";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
@@ -291,7 +290,7 @@ export default function WorkInstanceTraking() {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
-                bgcolor: alpha(import.meta.env.VITE_COLOR_PRIMARY, 0.2),
+                bgcolor: alpha(import.meta.env.VITE_COLOR_SECUNDARY, 0.8),
                 borderTop: "var(--Grid-borderWidth) solid",
                 borderColor: "black",
               }}

@@ -34,7 +34,7 @@ export default function Navbar() {
 
   return (
     <>
-      <AppBar position="static">
+      <AppBar position="static" sx={{bgcolor: import.meta.env.VITE_COLOR_PRIMARY}}>
         {!isLoggedIn ? (
           <Toolbar>
             <Typography component={"div"} sx={{ flexGrow: 1 }}>

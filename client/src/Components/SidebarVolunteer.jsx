@@ -26,7 +26,7 @@ export default function SidebarVolunteer() {
 
   return (
     <Box
-      flex={1}
+      flex={1.1}
       p={1}
       sx={{
         display: "flex",

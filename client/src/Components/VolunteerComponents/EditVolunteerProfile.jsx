@@ -22,7 +22,7 @@ export default function ProfileVolunteer() {
   const location = useLocation();
   const { blocks, tags } = location.state.user;
 
-  console.log(location.state.user);
+  // console.log(location.state.user);
 
   const hours = [
     "7:00 AM",
@@ -119,7 +119,7 @@ export default function ProfileVolunteer() {
     // construct object representing an HTTP authorization header with the Bearer scheme.
     const headers = { Authorization: `Bearer ${token}` };
     axios
-      .put("http://localhost:3000/volunteer/profile", valuesEnd, { headers })
+      .put(`${import.meta.env.VITE_API_URL}/volunteer/profile`, valuesEnd, { headers })
       .then((response) => {
         // Handle request response successful
         swal({

@@ -16,9 +16,6 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import ImageIcon from "@mui/icons-material/Image";
-import WorkIcon from "@mui/icons-material/Work";
-import BeachAccessIcon from "@mui/icons-material/BeachAccess";
 import BadgeIcon from '@mui/icons-material/Badge';
 import SchoolIcon from '@mui/icons-material/School';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
@@ -45,7 +42,7 @@ export default function ProfileVolunteer() {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/volunteer/profile`, { headers })
+      .get(`${import.meta.env.VITE_API_URL}/volunteer/profile`, { headers })
       .then((response) => {
         setTagsPref(response.data.tags);
         setHoursPref(response.data.blocks);
@@ -158,7 +155,7 @@ export default function ProfileVolunteer() {
               </Typography>
               <Stack direction="row" spacing={1}>
                 {tagsPref.map((tag) => (
-                  <Chip key={tag} color="primary" label={tag} />
+                  <Chip key={tag} label={tag} sx={{ bgcolor: import.meta.env.VITE_COLOR_SECUNDARY }}/>
                 ))}
               </Stack>
             </Box>

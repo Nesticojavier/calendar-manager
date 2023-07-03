@@ -58,7 +58,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/volunteer/jobs/`, { headers })
+      .get(`${import.meta.env.VITE_API_URL}/volunteer/jobs/`, { headers })
       .then((response) => {
         setWorkData(response.data);
       })
@@ -154,14 +154,14 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   };
 
   // To select one hour preference of the volunteer and show the works that match with the preference
-  const [hours, setHours] = useState([]);
+  const [hours, setHours] = useState([""]);
   const [userPrefHour, setUserPrefHour] = useState(null);
   const handleHourChange = (e) => {
     setUserPrefHour(e.target.value === "" ? null : e.target.value);
   };
 
   // To select one tag of the volunteer and show the works that match with it
-  const [userTags, setUserTags] = useState([]);
+  const [userTags, setUserTags] = useState([""]);
   const [userPrefTag, setUserPrefTag] = useState([]);
   const handleTagChange = (e) => {
     const {
@@ -175,10 +175,10 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
   useEffect(() => {
     axios
-      .get(`http://localhost:3000/volunteer/profile`, { headers })
+      .get(`${import.meta.env.VITE_API_URL}/volunteer/profile`, { headers })
       .then((response) => {
-        const block = response.data.profile.blocks;
-        const userTag = response.data.profile.tags;
+        const block = response.data.blocks;
+        const userTag = response.data.tags;
         setHours(block);
         setUserTags(userTag);
       })
@@ -191,7 +191,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     <Box
       flex={7}
       p={2}
-      px={20}
+      px={15}
       sx={{
         display: "flex",
         flexDirection: "column",

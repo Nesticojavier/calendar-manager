@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Grid} from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import { alpha } from "@mui/system";
 
 export default function Calendar({
   days,
@@ -32,7 +33,7 @@ export default function Calendar({
           sx={{ cursor: "pointer" }}
           onClick={handlePrevMonthClick}
         />
-        <h1 style={{ color: "rgb(127, 145, 248)" }}>
+        <h1 style={{ color: import.meta.env.VITE_COLOR_SECUNDARY }}>
           {monthNames[currentMonth]} {currentYear}
         </h1>
         <ArrowForwardIosIcon
@@ -60,7 +61,7 @@ export default function Calendar({
       >
         {/* To display the days of the week */}
         {days.map((day) => (
-          <Grid key={day} item xs={1.6} minHeight={70} sx={{ display: "flex" }}>
+          <Grid key={day} item xs={1.6} minHeight={70} sx={{ display: "flex", bgcolor: alpha(import.meta.env.VITE_COLOR_SECUNDARY, 0.8)}}>
             <h3 style={{ margin: 0 }}>{day}</h3>
           </Grid>
         ))}
