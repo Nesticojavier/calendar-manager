@@ -89,6 +89,9 @@ export default function WorkInstanceTraking() {
   // to store the from backend
   const [data, setData] = useState([]);
 
+  // to refresh page when change a attendance value
+  const [refresh, setRefresh] = useState(null)
+
   // to change to the previuos month
   const handlePrevMonthClick = () => {
     if (currentMonth === 0) {
@@ -110,6 +113,7 @@ export default function WorkInstanceTraking() {
   };
 
   useEffect(() => {
+    setRefresh(null)
     axios
       .get(`${import.meta.env.VITE_API_URL}/provider/tracking/${POSTULATION_ID}`, { headers })
       .then((response) => {
@@ -123,7 +127,7 @@ export default function WorkInstanceTraking() {
           console.error(error.message);
         }
       });
-  }, []);
+  }, [refresh]);
 
   // return job blocks in a day
   const isBlocksOnDay = (work, day) => {
@@ -184,7 +188,7 @@ export default function WorkInstanceTraking() {
   const dayFormat = (day) => {
     // Convert the day number to a Date object
     const date = new Date(currentYear, currentMonth, day);
-    const formattedDate = format(date, "dd-MM-yyyy");
+    const formattedDate = format(date, "yyyy-MM-dd");
 
     return formattedDate;
   };
@@ -198,7 +202,6 @@ export default function WorkInstanceTraking() {
     setSelectedDate(date);
     setSelectedTime(time);
     setModalOpen(true);
-    console.log("hola");
   };
 
   const handleModalClose = () => {
@@ -206,7 +209,7 @@ export default function WorkInstanceTraking() {
   };
 
   const handleAttendanceNotAllow = () => {
-    console.log("No puede editar asistencia");
+    console.log("Aún no puede editar asistencia");
   };
 
   return (
@@ -365,7 +368,9 @@ export default function WorkInstanceTraking() {
           open={modalOpen}
           handleClose={handleModalClose}
           date={selectedDate}
-          time={selectedTime}
+          hour={selectedTime}
+          postulation_id = {POSTULATION_ID}
+          setRefresh = {setRefresh}
         />
       </Box>
 
@@ -462,12 +467,3 @@ function PaintBlock({ block, color, handleAttendanceSet }) {
     </span>
   );
 }
-
-// const data = [
-//   { date: "2023-06-05", hour: "7:00 AM", attendance: true },
-//   { date: "2023-06-07", hour: "8:00 AM", attendance: true },
-//   { date: "2023-06-12", hour: "7:00 AM", attendance: true },
-//   { date: "2023-06-14", hour: "8:00 AM", attendance: false },
-//   { date: "2023-06-19", hour: "7:00 AM", attendance: false },
-//   { date: "2023-06-21", hour: "8:00 AM", attendance: true },
-// ];

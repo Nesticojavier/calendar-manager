@@ -13,11 +13,49 @@ import {
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import axios from "axios";
+import Cookies from "js-cookie";
 
-export default function Attendance({ open, handleClose, date, time }) {
+export default function Attendance({
+  open,
+  handleClose,
+  date,
+  hour,
+  postulation_id,
+  setRefresh
+}) {
+  // to get token for api authentication
+  const token = Cookies.get("token");
+  const headers = { Authorization: `Bearer ${token}` };
   const handleAttendance = (attended) => {
-    // handle attendance logic here
-    handleClose();
+    const register = {
+      date,
+      hour,
+      attendance: attended,
+    };
+    console.log(register)
+    axios
+      .post(
+        `${import.meta.env.VITE_API_URL}/provider/tracking/${postulation_id}`,
+        register,
+        {
+          headers,
+        }
+      )
+      .then((response) => {
+        // Handle request response successful
+        swal({
+          title: "Asistencia asignada",
+          icon: "success",
+        }).then(() => {
+          handleClose();
+          setRefresh(true)
+        });
+      })
+      .catch((error) => {
+        // Handle request error
+        console.error(error.response.data.data.error);
+      });
   };
 
   return (
@@ -52,7 +90,7 @@ export default function Attendance({ open, handleClose, date, time }) {
                 <AccessTimeIcon />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Hora" secondary={time} />
+            <ListItemText primary="Hora" secondary={hour} />
           </ListItem>
         </List>
         <Box sx={{ display: "flex" }}>
