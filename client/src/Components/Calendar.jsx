@@ -1,144 +1,26 @@
-import React, { useState, useEffect } from "react";
-import { Box, Grid, Dialog, DialogTitle, DialogContent } from "@mui/material";
-import { getDaysInMonth, isSameDay, addDays } from "date-fns";
+import React from "react";
+import { Box, Grid} from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import axios from "axios";
-import Cookies from "js-cookie";
 
-export default function CalendarVolunteer({ setIsLoggedIn }) {
-  // days of the week
-  const days = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ];
-
-  // months of the year
-  const monthNames = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
-
-  // to know the current month
-  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
-
-  // to know the current year
-  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
-
-  // to know the days in the current month
-  const daysInMonth = getDaysInMonth(new Date(currentYear, currentMonth));
-
-  // to know the first day of the month
-  const firstDay = new Date(currentYear, currentMonth).getDay();
-
-  // to change to the previuos month
-  const handlePrevMonthClick = () => {
-    if (currentMonth === 0) {
-      setCurrentMonth(11);
-      setCurrentYear(currentYear - 1);
-    } else {
-      setCurrentMonth(currentMonth - 1);
-    }
-  };
-
-  // to change to the next month
-  const handleNextMonthClick = () => {
-    if (currentMonth === 11) {
-      setCurrentMonth(0);
-      setCurrentYear(currentYear + 1);
-    } else {
-      setCurrentMonth(currentMonth + 1);
-    }
-  };
-
-  // to get the work data
-  const [workData, setWorkData] = useState([]);
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
-
-  useEffect(() => {
-    axios
-      .get(`http://localhost:3000/provider/myjobs/`, { headers })
-      .then((response) => {
-        setWorkData(response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.message);
-        } else {
-          console.error(error.message);
-        }
-      });
-  }, []);
-
-  // to show the works tags in the calendar
-  const isWorkOnDay = (work, day) => {
-    // Add 1 day to the end date and the start date because the date-fns library
-    const dateInit = addDays(new Date(work.dateInit), 1);
-    const dateEnd = addDays(new Date(work.dateEnd), 1);
-
-    // Convert the day number to a Date object
-    const date = new Date(currentYear, currentMonth, day);
-
-    // Get the name in Spanish of the day
-    const dayName = date.toLocaleDateString("es-ES", { weekday: "long" });
-
-    // Check if the work has a block that matches the day
-    const hasBlock = work.blocks.some(
-      (block) => block.day && block.day.toLowerCase() === dayName
-    );
-
-    // Check if the work is within the start and end range
-    const isInRange =
-      (date >= dateInit && date <= dateEnd) ||
-      isSameDay(date, dateInit) ||
-      isSameDay(date, dateEnd);
-
-    // Return true if both conditions are true, and false otherwise
-    return hasBlock && isInRange;
-  };
-
-  // to show a dialog with the work information
-  const [selectedWork, setSelectedWork] = useState(null);
-
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  const handleWorkClick = (work) => {
-    setDialogOpen(true);
-    setSelectedWork(work);
-  };
-
-  const handleDialogClose = (event) => {
-    setDialogOpen(false);
-  };
-
+export default function Calendar({
+  days,
+  monthNames,
+  currentMonth,
+  currentYear,
+  handlePrevMonthClick,
+  handleNextMonthClick,
+  firstDay,
+  daysInMonth,
+  workData,
+  isWorkOnDay,
+  sortWorksByTag = () => {},
+  userPrefHour = null,
+  userPrefTag = [],
+  handleWorkClick,
+}) {
   return (
-    <Box
-      flex={7}
-      p={2}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        minHeight: "auto",
-        minWidth: "auto",
-        overflow: "auto",
-      }}
-    >
+    <Box>
       <div
         style={{
           display: "flex",
@@ -154,10 +36,11 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           {monthNames[currentMonth]} {currentYear}
         </h1>
         <ArrowForwardIosIcon
-          sx={{ cursor: "pointer" }}
+          sx={{ cursor: "pointer", marginRight: "65px" }}
           onClick={handleNextMonthClick}
         />
       </div>
+      {/* To display the calendar */}
       <Grid
         container
         spacing={2}
@@ -190,11 +73,13 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         {/* To display the days of the month */}
         {[...Array(daysInMonth)].map((_, index) => {
           // To check if a tag should be added to this day
-          const worksOnDay = workData.filter((work) => {
-            const result = isWorkOnDay(work, index + 1);
-            // console.log(`Result: ${result}`);
+          let worksOnDay = workData.filter((work) => {
+            const result = isWorkOnDay(work, index + 1, userPrefHour);
             return result;
           });
+
+          // To order the works by the selected tag
+          sortWorksByTag(worksOnDay, userPrefTag);
 
           return (
             <Grid
@@ -224,7 +109,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                     style={{
                       display: "inline-block",
                       padding: "2px 6px",
-                      backgroundColor: "lightblue",
+                      backgroundColor:
+                        work.type === 1 ? "lightblue" : "lightgreen",
                       borderRadius: "4px",
                       fontSize: "12px",
                       margin: "2px",
@@ -239,76 +125,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
             </Grid>
           );
         })}
-
-        {/* To display the dialog with the work information */}
-        <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Información del trabajo</DialogTitle>
-          <DialogContent>
-            {selectedWork && (
-              <div>
-                <p>Título: {selectedWork.title} </p>
-                <p>Descripción: {selectedWork.description} </p>
-                <p>
-                  Tipo:{" "}
-                  {`Trabajo ${
-                    selectedWork.type === 1 ? "recurrente" : "de sesión"
-                  }`}{" "}
-                </p>
-                <p>Fecha de inicio: {selectedWork.dateInit} </p>
-                <p>Fecha de fin: {selectedWork.dateEnd} </p>
-                <p>Bloques:</p>
-                <ul>
-                  {selectedWork.blocks.map((block) => (
-                    <li key={block.id}>
-                      <p>Dia: {block.day}</p>
-                      <p>Hora: {block.hour}</p>
-                    </li>
-                  ))}
-                </ul>
-                <p>Etiquetas:</p>
-                <ul>
-                  {selectedWork.tags.map((tag) => (
-                    <li key={tag}>{tag}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-          </DialogContent>
-        </Dialog>
-
-        {/* <Dialog open={dialogOpen} onClose={handleDialogClose}>
-          <DialogTitle>Bloques de horarios</DialogTitle>
-          <DialogContent>
-            <div>
-              {selectedDay && (
-                <Grid
-                  container
-                  spacing={4}
-                  sx={{
-                    margin: "auto",
-                    maxWidth: "100%",
-                    "--Grid-borderWidth": "1px",
-                    borderTop: "var(--Grid-borderWidth) solid",
-                    borderLeft: "var(--Grid-borderWidth) solid",
-                    borderColor: "black",
-                    "& > div": {
-                      borderRight: "var(--Grid-borderWidth) solid",
-                      borderBottom: "var(--Grid-borderWidth) solid",
-                      borderColor: "black",
-                      overflow: "hidden",
-                    },
-                  }}
-                >
-                  {hours.map((hour) => (
-                    <Grid key={hour} item xs={12} minHeight={50}>
-                      <h3 style={{ fontSize: 12 }}>{hour}</h3>
-                    </Grid>
-                  ))}
-                </Grid>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog> */}
       </Grid>
     </Box>
   );

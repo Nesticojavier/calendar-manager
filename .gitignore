@@ -13,4 +13,5 @@ server/node_modules
 *.njsproj
 *.sln
 *.sw?
-.env
+server/.env
+

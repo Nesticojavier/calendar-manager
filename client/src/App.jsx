@@ -11,7 +11,7 @@ import ProtectedRoutes from "./Components/ProtectedRoutes";
 import Provider from "./Components/Pages/Provider";
 import CreateWork from "./Components/ProviderComponents/CreateWork";
 import EditWork from "./Components/ProviderComponents/EditWork";
-import Calendar from "./Components/Calendar";
+import CalendarProvider from "./Components/ProviderComponents/CalendarProvider";
 import WorkListProvider from "./Components/ProviderComponents/WorkListProvider";
 import WorkListInProgress from "./Components/ProviderComponents/WorkListInProgress";
 import WorkInstanceTraking from "./Components/ProviderComponents/WorkInstanceTraking";
@@ -21,7 +21,7 @@ import WorkViewVolunteer from "./Components/VolunteerComponents/WorkViewVoluntee
 import WorkListVolunteer from "./Components/VolunteerComponents/WorkListVolunteer";
 import ProfileVolunteer from "./Components/VolunteerComponents/ProfileVolunteer";
 import EditVolunteerProfile from "./Components/VolunteerComponents/EditVolunteerProfile";
-import CalendarVolunteer from "./Components/CalendarVolunteer";
+import CalendarVolunteer from "./Components/VolunteerComponents/CalendarVolunteer";
 
 import Admin from "./Components/Pages/Admin";
 import AdminLogin from "./Components/Pages/AdminLogin";
@@ -33,7 +33,7 @@ function App() {
 
   // Context to know if the user is logged in
   const { isLoggedIn, profile } = useContext(UserContext);
-  
+
   return (
     <BrowserRouter>
       <Navbar />
@@ -50,7 +50,7 @@ function App() {
         {/* Routes manage for provider */}
         <Route path="/provider/*" element={<Provider isAllowed={!!profile && profile.rol === "proveedor"}/>}>
           <Route path="workcreation" element={<CreateWork />} />
-          <Route path="calendar" element={<Calendar />} />
+          <Route path="calendar" element={<CalendarProvider />} />
           <Route path="worklist" element={<WorkListProvider />} />
           <Route path="workedit/:id" element={<EditWork />} />
           <Route path="workinprogress" element={<WorkListInProgress />} />
