@@ -12,7 +12,8 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useNavigate } from "react-router-dom";
+import { resolvePath, useNavigate } from "react-router-dom";
+import { providerService } from "../../Services/Api/providerService";
 
 export default function WorkListProvider() {
   const [workData, setWorkData] = useState([]);
@@ -20,34 +21,38 @@ export default function WorkListProvider() {
   const token = Cookies.get("token");
   const headers = { Authorization: `Bearer ${token}` };
 
-    const handleDelete = (workId) => {
-        axios
-            .delete(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, { headers })
-            .then((response) => {
-                setIsDeleted(true)
-                console.log(response.data.message);
-            })
-            .catch((error) => {
-                console.error("Error al eliminar el trabajo:", error.response.data.message);
-            });
-    };
+  const handleDelete = (workId) => {
+    axios
+      .delete(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, {
+        headers,
+      })
+      .then((response) => {
+        setIsDeleted(true);
+        console.log(response.data.message);
+      })
+      .catch((error) => {
+        console.error(
+          "Error al eliminar el trabajo:",
+          error.response.data.message
+        );
+      });
+  };
 
   const navigate = useNavigate();
   const handleEdit = (work) => {
     navigate(`/provider/workedit/${work.id}`, { state: { work } });
   };
 
-    useEffect(() => {
-        axios
-            .get(`${import.meta.env.VITE_API_URL}/provider/myJobs` , { headers })
-            .then((response) => {
-                setWorkData(response.data);
-                setIsDeleted(false);
-            })
-            .catch((error) => {
-                console.error(error.response.data.message);
-            });
-    }, [isDeleted]);
+  useEffect(() => {
+    providerService.getJobs()
+      .then((workList) => {
+        setWorkData(workList);
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+
+  }, [isDeleted]);
 
   return (
     <Box
@@ -78,13 +83,14 @@ export default function WorkListProvider() {
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Etiquetas:
-              {work.tags && work.tags.map((tag, index) => (
-                <span key={tag}>
-                  {" "}
-                  {tag}
-                  {index < work.tags.length - 1 && ", "}
-                </span>
-              ))}
+              {work.tags &&
+                work.tags.map((tag, index) => (
+                  <span key={tag}>
+                    {" "}
+                    {tag}
+                    {index < work.tags.length - 1 && ", "}
+                  </span>
+                ))}
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
