@@ -21,9 +21,9 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import PersonIcon from "@mui/icons-material/Person";
 import WorkIcon from "@mui/icons-material/Work";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { alpha } from "@mui/system";
+import { days, monthNames } from "../Utils/calendarConstants";
+import { providerService } from "../../Services/Api/providerService";
 
 export default function WorkInstanceTraking() {
   // define for navigate to other rute
@@ -37,41 +37,10 @@ export default function WorkInstanceTraking() {
   const WORK_DESCRIPTION = workInstance.work.description;
   const VOLUNTEER_FULLNAME = workInstance.user.fullName;
   const VOLUNTEER_USERNAME = workInstance.user.credential.username;
-  const POSTULATION_ID = workInstance.id
+  const POSTULATION_ID = workInstance.id;
 
   // to get current day
   const CURRENT_DATE = format(new Date(), "yyyy-MM-dd");
-
-  // to get token for api authentication
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
-
-  // days of the week
-  const days = [
-    "Domingo",
-    "Lunes",
-    "Martes",
-    "Miércoles",
-    "Jueves",
-    "Viernes",
-    "Sábado",
-  ];
-
-  // months of the year
-  const monthNames = [
-    "Enero",
-    "Febrero",
-    "Marzo",
-    "Abril",
-    "Mayo",
-    "Junio",
-    "Julio",
-    "Agosto",
-    "Septiembre",
-    "Octubre",
-    "Noviembre",
-    "Diciembre",
-  ];
 
   // to know the current month
   const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
@@ -89,7 +58,7 @@ export default function WorkInstanceTraking() {
   const [data, setData] = useState([]);
 
   // to refresh page when change a attendance value
-  const [refresh, setRefresh] = useState(null)
+  const [refresh, setRefresh] = useState(null);
 
   // to change to the previuos month
   const handlePrevMonthClick = () => {
@@ -112,19 +81,14 @@ export default function WorkInstanceTraking() {
   };
 
   useEffect(() => {
-    setRefresh(null)
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/provider/tracking/${POSTULATION_ID}`, { headers })
-      .then((response) => {
-        console.log(response.data)
-        setData(response.data)
+    setRefresh(null);
+    providerService
+      .postulationTracking(POSTULATION_ID)
+      .then((tracking) => {
+        setData(tracking);
       })
       .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.message);
-        } else {
-          console.error(error.message);
-        }
+        console.error(error);
       });
   }, [refresh]);
 
@@ -352,7 +316,10 @@ export default function WorkInstanceTraking() {
                             block={block}
                             color="lightgray"
                             handleAttendanceSet={() => {
-                              handleAttendanceSet(dayFormat(index + 1), block.hour);
+                              handleAttendanceSet(
+                                dayFormat(index + 1),
+                                block.hour
+                              );
                             }}
                           />
                         )
@@ -368,8 +335,8 @@ export default function WorkInstanceTraking() {
           handleClose={handleModalClose}
           date={selectedDate}
           hour={selectedTime}
-          postulation_id = {POSTULATION_ID}
-          setRefresh = {setRefresh}
+          postulation_id={POSTULATION_ID}
+          setRefresh={setRefresh}
         />
       </Box>
 
