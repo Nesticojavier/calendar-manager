@@ -1,36 +1,36 @@
 import { Box } from "@mui/material";
-import axios from "axios";
 import "./WorkCreationForm.css";
-import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import WorkForm from "./WorkForm";
+import { providerService } from "../../Services/Api/providerService";
+import Swal from "sweetalert2";
 
 export default function CreateWork() {
   const navigate = useNavigate();
 
+  // success alert
+  const alertSuccess = () => {
+    return new Promise((resolve) => {
+      Swal.fire({
+        icon: "success",
+        title: "Trabajo creado exitosamente",
+      }).then((result) => {
+        resolve(); // return promise
+      });
+    });
+  };
+
   // Function for send new work data to backend
   const onSubmit = (valuesEnd) => {
-    // get token from cookies
-    const token = Cookies.get("token");
-    // construct object representing an HTTP authorization header with the Bearer scheme.
-    const headers = { Authorization: `Bearer ${token}` };
-    console.log(valuesEnd);
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/provider/create`, valuesEnd, {
-        headers,
-      })
-      .then((response) => {
-        // Handle request response successful
-        swal({
-          title: "Trabajo creado exitosamente",
-          icon: "success",
-        }).then(() => {
+    providerService
+      .createJob(valuesEnd)
+      .then(() => {
+        alertSuccess().then(() => {
           navigate(`/provider/worklist`);
         });
       })
       .catch((error) => {
-        // Handle request error
-        console.error(error.response.data.data.error)
+        console.log(error);
       });
   };
 

@@ -1,6 +1,14 @@
 import { api } from "./config/axiosConfig";
 
 export const providerService = {
+  createJob: async (data) => {
+      const response = await api.request({
+        url: "/provider/create",
+        data,
+        method: "POST",
+      });
+      return response.data;
+  },
   getJobs: async () => {
       const response = await api.request({
         url: "/provider/myJobs",
