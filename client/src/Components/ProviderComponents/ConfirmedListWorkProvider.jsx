@@ -21,6 +21,8 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { providerService } from "../../Services/Api/providerService";
+import { af } from "date-fns/locale";
 
 export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   // Hook used for navigation to diferent pages
@@ -58,22 +60,19 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   // Fecth data when change current page and the status bar
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/provider/jobs-in-progress`, {
-        params: {
-          start: (currentPage - 1) * NUMBER_ROW,
-          limit: NUMBER_ROW,
-          confirmed: statusConfirmed,
-        },
-        headers: headers,
-      })
+    const start = (currentPage - 1) * NUMBER_ROW;
+    const limit = NUMBER_ROW;
+    const confirmed = statusConfirmed;
+
+    providerService
+      .getPostulations(start, limit, confirmed)
       .then((response) => {
-        setWorkData(response.data.rows);
-        setTotalPages(Math.ceil(response.data.count / NUMBER_ROW));
+        setWorkData(response.rows);
+        setTotalPages(Math.ceil(response.count / NUMBER_ROW));
         setIsDeletedOrAccept(false);
       })
       .catch((error) => {
-        console.error(error.response.data.data.error);
+        console.error(error);
       });
   }, [currentPage, statusConfirmed, isDeletedOrAccept]);
 
@@ -90,7 +89,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   //  handle for make follow up by provider
   const handleWorkTracking = (workInstance) => {
-    workInstance.work.blocks = JSON.parse(workInstance.work.blocks)
+    workInstance.work.blocks = JSON.parse(workInstance.work.blocks);
     navigate(`/provider/work-instance-tracking/${workInstance.id}`, {
       state: { workInstance },
     });
@@ -98,23 +97,14 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
 
   // handle for accept the volunteer work
   const handleAcceptWork = (postulationID) => {
-    axios
-      .put(
-        `${import.meta.env.VITE_API_URL}/provider/postulation/${postulationID}`,
-        {},
-        {
-          headers,
-        }
-      )
-      .then((response) => {
+    providerService
+      .acceptPostulation(postulationID)
+      .then(() => {
         setIsDeletedOrAccept(true);
         showSuccessAlert("Solicitud aceptada");
       })
       .catch((error) => {
-        console.error(
-          "Error al aceptar el trabajo:",
-          error.response.data.data.error
-        );
+        console.error(error);
       });
   };
 
