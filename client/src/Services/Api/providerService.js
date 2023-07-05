@@ -64,6 +64,14 @@ export const providerService = {
     });
     return response.data;
   },
+  insertTrackingRecord: async (data, postulationID) => {
+    const response = await api.request({
+      url: `/provider/tracking/${postulationID}`,
+      data,
+      method: "POST",
+    });
+    return response.data;
+  },
   postulationTracking: async (postulationID) => {
     const response = await api.request({
       url: `/provider/tracking/${postulationID}`,

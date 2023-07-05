@@ -13,8 +13,8 @@ import {
 } from "@mui/material";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { providerService } from "../../Services/Api/providerService";
+import Swal from "sweetalert2";
 
 export default function Attendance({
   open,
@@ -22,40 +22,31 @@ export default function Attendance({
   date,
   hour,
   postulation_id,
-  setRefresh
+  setRefresh,
 }) {
-  // to get token for api authentication
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
   const handleAttendance = (attended) => {
     const register = {
       date,
       hour,
       attendance: attended,
     };
-    console.log(register)
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/provider/tracking/${postulation_id}`,
-        register,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        // Handle request response successful
-        swal({
-          title: "Asistencia asignada",
-          icon: "success",
-        }).then(() => {
-          handleClose();
-          setRefresh(true)
-        });
+    providerService
+      .insertTrackingRecord(register, postulation_id)
+      .then(() => {
+        handleClose();
+        showSuccessAlert("Asistencia asignada");
+        setRefresh(true);
       })
       .catch((error) => {
-        // Handle request error
-        console.error(error.response.data.data.error);
+        console.error(error);
       });
+  };
+
+  const showSuccessAlert = (message) => {
+    Swal.fire({
+      icon: "success",
+      title: message,
+    });
   };
 
   return (
