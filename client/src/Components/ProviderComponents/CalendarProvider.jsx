@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Box, Dialog, DialogTitle, DialogContent, Divider } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
-import axios from "axios";
-import Cookies from "js-cookie";
 import Calendar from "../Calendar";
 import CalendarLegend from "../CalendarLegend";
 import { days, monthNames } from "../Utils/calendarConstants";
+import { providerService } from "../../Services/Api/providerService";
 
 export default function CalendarProvider({ setIsLoggedIn }) {
   // to know the current month
@@ -42,22 +41,17 @@ export default function CalendarProvider({ setIsLoggedIn }) {
 
   // to get the work data
   const [workData, setWorkData] = useState([]);
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/provider/myjobs/`, { headers })
-      .then((response) => {
-        setWorkData(response.data);
-      })
-      .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.message);
-        } else {
-          console.error(error.message);
-        }
-      });
+    providerService
+    .getJobs()
+    .then((workList) => {
+      setWorkData(workList);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    
   }, []);
 
   // to show the works tags in the calendar
