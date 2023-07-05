@@ -12,6 +12,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
+import Swal from "sweetalert2";
 
 export default function WorkListProvider() {
   // Hook for navigate
@@ -21,31 +22,68 @@ export default function WorkListProvider() {
   const [workData, setWorkData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  // handle to delete job selected
+  const deleteData = async (workId) => {
+    try {
+      const response = await providerService.deleteJob(workId);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  // alert for confirmation of work deletion
+  const alertDeleteWork = () => {
+    return new Promise((resolve, reject) => {
+      Swal.fire({
+        icon: "warning",
+        title: "¿Seguro que deseas eliminar este trabajo?",
+        html: "<p>Se perderán todas las postulaciones asociadas a este trabajo</p>",
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonText: "Si",
+        iconColor: "red",
+        confirmButtonColor: "red",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resolve(); // return promise if user select 'si'
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          reject(); // decliene promise if user select 'no'
+        }
+      });
+    });
+  };
+
+  // handle to manage delete job request
   const handleDelete = (workId) => {
-    providerService.deleteJob(workId)
-      .then((response) => {
-        setIsDeleted(true);
+    alertDeleteWork()
+      .then(() => {
+        // call provider service
+        providerService
+          .deleteJob(workId)
+          .then((response) => {
+            setIsDeleted(true);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       })
-      .catch((error) => {
-        console.error(error)
-      })
+      .catch(() => {});
   };
 
   // handle to navigate to edit form
   const handleEdit = (work) => {
     navigate(`/provider/workedit/${work.id}`, { state: { work } });
   };
-  
+
   useEffect(() => {
-    providerService.getJobs()
+    providerService
+      .getJobs()
       .then((workList) => {
         setWorkData(workList);
       })
       .catch((error) => {
-        console.error(error)
-      })
-
+        console.error(error);
+      });
   }, [isDeleted]);
 
   return (
