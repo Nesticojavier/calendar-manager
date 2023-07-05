@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
-import axios from "axios";
+import { Box, Button } from "@mui/material";
 import "./WorkCreationForm.css";
-import Cookies from "js-cookie";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import WorkForm from "./WorkForm";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { providerService } from "../../Services/Api/providerService";
+import Swal from "sweetalert2";
 
 export default function EditWork() {
   const navigate = useNavigate();
@@ -31,40 +32,38 @@ export default function EditWork() {
     tags: tags,
     blocks: workBlocks,
   };
+  // success alert
+  const alertSuccess = () => {
+    return new Promise((resolve) => {
+      Swal.fire({
+        icon: "success",
+        title: "Trabajo actualizado exitosamente",
+      }).then((result) => {
+        resolve(); // return promise
+      });
+    });
+  };
 
   // Function for send new work data to backend
-  const onSubmit = (valuesEnd) => {
-    // get token from cookies
-    const token = Cookies.get("token");
-    // construct object representing an HTTP authorization header with the Bearer scheme.
-    const headers = { Authorization: `Bearer ${token}` };
-    console.log(valuesEnd);
-    axios
-      .put(
-        `${import.meta.env.VITE_API_URL}/provider/job/${workId}`,
-        valuesEnd,
-        {
-          headers,
-        }
-      )
-      .then((response) => {
-        // Handle request response successful
-        swal({
-          title: "Trabajo actualizado exitosamente",
-          icon: "success",
-        }).then(() => {
+  const onSubmit = (data) => {
+    providerService
+      .editJob(data, workId)
+      .then(() => {
+        alertSuccess().then(() => {
           navigate(`/provider/worklist`);
         });
       })
       .catch((error) => {
-        // Handle request error
-        console.error(error.response.data.data.error)
+        console.log(error);
       });
   };
   return (
-    <Box flex={8} pt={5}>
+    <Box flex={8} pt={5} px={40}>
+      <Button onClick={() => window.history.back()}>
+        <ArrowBackIcon />
+      </Button>
       <h1>Editar Trabajo: {work.workTitle}</h1>
-      <WorkForm onSubmit={onSubmit} work={work} />
+      <WorkForm onSubmit={onSubmit} work={work} edit={true} />
     </Box>
   );
 }

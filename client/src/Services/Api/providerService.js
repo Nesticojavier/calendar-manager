@@ -9,6 +9,14 @@ export const providerService = {
       });
       return response.data;
   },
+  editJob: async (data, jobId) => {
+      const response = await api.request({
+        url: `/provider/job/${jobId}`,
+        data,
+        method: "PUT",
+      });
+      return response.data;
+  },
   getJobs: async () => {
       const response = await api.request({
         url: "/provider/myJobs",
@@ -16,9 +24,9 @@ export const providerService = {
       });
       return response.data;
   },
-  deleteJob: async (workId) => {
+  deleteJob: async (jobId) => {
       const response = await api.request({
-        url: `/provider/job/${workId}`,
+        url: `/provider/job/${jobId}`,
         method: "DELETE",
       });
       return response.data;

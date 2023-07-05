@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Box, Button } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import axios from "axios";
 import "./WorkCreationForm.css";
 
-export default function WorkForm({ work, onSubmit }) {
+export default function WorkForm({ work, onSubmit, edit }) {
   //Library for render form
   const inputs = [
     {
@@ -248,7 +247,12 @@ export default function WorkForm({ work, onSubmit }) {
         setShowErrorTags(false);
       }, 1000);
     } else {
-      const valuesEnd = { ...values, blocks, workTags: selectedTags, tags: selectedTags };
+      const valuesEnd = {
+        ...values,
+        blocks,
+        workTags: selectedTags,
+        tags: selectedTags,
+      };
       onSubmit(valuesEnd);
     }
   };
@@ -268,13 +272,11 @@ export default function WorkForm({ work, onSubmit }) {
 
   return (
     <Box
-      px={40}
       component="form"
       onSubmit={handleSubmit}
       className="workForm"
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
-
       {inputs.map((input) => {
         return (
           <div key={input.name} className="workCreationForm">
@@ -473,7 +475,7 @@ export default function WorkForm({ work, onSubmit }) {
 
       <div>
         <Autocomplete
-          sx={{ maxWidth: 700, marginLeft: "15px"}}
+          sx={{ maxWidth: 700, marginLeft: "15px" }}
           filterOptions={filterOptions}
           freeSolo
           multiple
@@ -512,7 +514,7 @@ export default function WorkForm({ work, onSubmit }) {
           fontSize: "18px",
         }}
       >
-        Crear
+        {edit ? "Actualizar" : "Crear"}
       </Button>
     </Box>
   );
