@@ -19,18 +19,11 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
 import ClearIcon from "@mui/icons-material/Clear";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import Cookies from "js-cookie";
 import { providerService } from "../../Services/Api/providerService";
-import { af } from "date-fns/locale";
 
 export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   // Hook used for navigation to diferent pages
   const navigate = useNavigate();
-
-  // needed by axios for auth
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
 
   // constant to store the number of rows to display
   const NUMBER_ROW = 4;
@@ -108,42 +101,45 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
       });
   };
 
-  // handle for decline the volunteer work
+  // handle for decline the volunteer postulation
   const handleDeclineWork = (postulationID) => {
-    Swal.fire({
-      icon: "warning",
-      title: "¿Seguro que deseas eliminar la solicitud del voluntario?",
-      showCancelButton: true,
-      confirmButtonText: "Si",
-      cancelButtonText: "No",
-      iconColor: "red",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        requestDecline(postulationID);
-        return;
-      }
-    });
+    alertDeclinePostulation()
+      .then(() => {
+        // call provider service
+        providerService
+          .declinePostulation(postulationID)
+          .then((response) => {
+            setIsDeletedOrAccept(true);
+            showSuccessAlert("solicitud eliminada");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      })
+      .catch(() => {});
   };
 
-  // this function is called by handleDeclineWork when you want to delete the request
-  const requestDecline = (postulationID) => {
-    axios
-      .delete(
-        `${import.meta.env.VITE_API_URL}/provider/postulation/${postulationID}`,
-        {
-          headers,
+  // alert for confirmation of decline postulation
+  const alertDeclinePostulation = () => {
+    return new Promise((resolve, reject) => {
+      Swal.fire({
+        icon: "warning",
+        title: "¿Seguro que deseas eliminar la solicitud del voluntario?",
+        html: "<p>El voluntario podrá volver a postularse</p>",
+        showCancelButton: true,
+        cancelButtonText: "No",
+        confirmButtonText: "Si",
+        iconColor: "red",
+        confirmButtonColor: "red",
+        reverseButtons: true,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          resolve(); // return promise if user select 'si'
+        } else if (result.dismiss === Swal.DismissReason.cancel) {
+          reject(); // decliene promise if user select 'no'
         }
-      )
-      .then((response) => {
-        setIsDeletedOrAccept(true);
-        showSuccessAlert("solicitud eliminada");
-      })
-      .catch((error) => {
-        console.error(
-          "Error al declinar solicitud el trabajo:",
-          error.response.data.data.error
-        );
       });
+    });
   };
 
   // Alert used for success operation
@@ -246,63 +242,3 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
     </div>
   );
 }
-
-const workDataConfirmed = [
-  {
-    id: 1,
-    type: 1,
-    title: "Trabajo de prueba 1",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-  {
-    id: 2,
-    type: 1,
-    title: "Trabajo de prueba 2",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-  {
-    id: 3,
-    type: 1,
-    title: "Trabajo de prueba 3",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-];
-
-const workDataUnconfirmed = [
-  {
-    id: 1,
-    type: 1,
-    title: "Trabajo de prueba 3",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-  {
-    id: 2,
-    type: 1,
-    title: "Trabajo de prueba 4",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-  {
-    id: 3,
-    type: 1,
-    title: "Trabajo de prueba 5",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-];

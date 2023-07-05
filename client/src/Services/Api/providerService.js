@@ -57,4 +57,11 @@ export const providerService = {
     });
     return response.data;
   },
+  declinePostulation: async (postulationID) => {
+    const response = await api.request({
+      url: `/provider/postulation/${postulationID}`,
+      method: "DELETE",
+    });
+    return response.data;
+  },
 };
