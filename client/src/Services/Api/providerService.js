@@ -8,13 +8,11 @@ export const providerService = {
       });
       return response.data;
   },
-  test: async function (id, cancel = false) {
-    const response = await api.request({
-      url: `/products/:id`,
-      method: "GET",
-    });
-
-    // returning the product returned by the API
-    return response.data.product;
+  deleteJob: async (workId) => {
+      const response = await api.request({
+        url: `/provider/job/${workId}`,
+        method: "DELETE",
+      });
+      return response.data;
   },
 };

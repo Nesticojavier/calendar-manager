@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 import {
   Box,
   Card,
@@ -12,37 +10,33 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { resolvePath, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
 
 export default function WorkListProvider() {
+  // Hook for navigate
+  const navigate = useNavigate();
+
+  // states necessary
   const [workData, setWorkData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
 
+  // handle to delete job selected
   const handleDelete = (workId) => {
-    axios
-      .delete(`${import.meta.env.VITE_API_URL}/provider/job/${workId}`, {
-        headers,
-      })
+    providerService.deleteJob(workId)
       .then((response) => {
         setIsDeleted(true);
-        console.log(response.data.message);
       })
       .catch((error) => {
-        console.error(
-          "Error al eliminar el trabajo:",
-          error.response.data.message
-        );
-      });
+        console.error(error)
+      })
   };
 
-  const navigate = useNavigate();
+  // handle to navigate to edit form
   const handleEdit = (work) => {
     navigate(`/provider/workedit/${work.id}`, { state: { work } });
   };
-
+  
   useEffect(() => {
     providerService.getJobs()
       .then((workList) => {
