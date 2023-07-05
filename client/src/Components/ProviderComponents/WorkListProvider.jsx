@@ -22,14 +22,6 @@ export default function WorkListProvider() {
   const [workData, setWorkData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
 
-  const deleteData = async (workId) => {
-    try {
-      const response = await providerService.deleteJob(workId);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   // alert for confirmation of work deletion
   const alertDeleteWork = () => {
     return new Promise((resolve, reject) => {
