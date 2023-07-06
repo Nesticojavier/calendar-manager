@@ -1,8 +1,8 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { UserContext } from "../../Context/UserContext";
+import { authService } from "../../Services/Api/authService";
 
 export default function Login() {
   const { changeLoggedIn } = useContext(UserContext);
@@ -34,25 +34,14 @@ export default function Login() {
   // It is executed when the form is submitted
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/login`, values)
+    authService
+      .login(values)
       .then((response) => {
-        // Handle request response successful
-        const token = response.data.token;
-
-        // localStorage.setItem('token', token);
-        Cookies.set("token", token, { expires: 1 });
-
+        Cookies.set("token", response.token, { expires: 1 });
         changeLoggedIn(true);
-
-        // Redirect to home
         navigate("/");
       })
-      .catch((error) => {
-        // Handle request error
-        setErrorMessage(error.response.data.data.error);
-      });
+      .catch((error) => setErrorMessage(error.response.data.data.error));
   };
 
   // It is used to update the state of the values of the inputs

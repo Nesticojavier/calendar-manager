@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import swal from "sweetalert";
-import Cookies from "js-cookie";
 import { useNavigate, Navigate } from "react-router-dom";
+import { authService } from "../../Services/Api/authService";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -41,11 +40,9 @@ const Signup = () => {
     // Used to prevent the page from reloading on form submission
     e.preventDefault();
 
-    // Used to submit the form via the post method
-    axios
-      .post(`${import.meta.env.VITE_API_URL}/signup`, values)
-      .then((response) => {
-        // Handle request response successful
+    authService
+      .signup(values)
+      .then(() => {
         swal({
           title: "Registrado exitosamente",
           icon: "success",
@@ -53,10 +50,7 @@ const Signup = () => {
           navigate("/login"), { replace: true };
         });
       })
-      .catch((error) => {
-        // Handle request error
-        setErrorMessage(error.response.data.data.error);
-      });
+      .catch((error) => setErrorMessage(error.response.data.data.error));
   };
 
   // It is used to update the state of the values of the inputs
