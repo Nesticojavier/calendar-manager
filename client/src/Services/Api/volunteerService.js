@@ -23,6 +23,14 @@ export const volunteerService = {
     });
     return response.data;
   },
+  editProfile: async (data) => {
+    const response = await api.request({
+      url: "/volunteer/profile",
+      method: "PUT",
+      data,
+    });
+    return response.data;
+  },
   jobsInProgress: async (start, limit, confirmed) => {
     /**
      * @PARAM

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import axios from "axios";
 import {
   Box,
   Button,
@@ -13,7 +12,7 @@ import {
 } from "@mui/material";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Cookies from "js-cookie";
+import { volunteerService } from "../../Services/Api/volunteerService";
 
 export default function ProfileVolunteer() {
   const navigate = useNavigate();
@@ -113,15 +112,10 @@ export default function ProfileVolunteer() {
       tags: selectedTags,
       blocks: selectedHours,
     };
-    console.log(valuesEnd);
-    // get token from cookies
-    const token = Cookies.get("token");
-    // construct object representing an HTTP authorization header with the Bearer scheme.
-    const headers = { Authorization: `Bearer ${token}` };
-    axios
-      .put(`${import.meta.env.VITE_API_URL}/volunteer/profile`, valuesEnd, { headers })
-      .then((response) => {
-        // Handle request response successful
+
+    volunteerService
+      .editProfile(valuesEnd)
+      .then(() => {
         swal({
           title: "Perfil actualizado exitosamente",
           icon: "success",
@@ -130,8 +124,7 @@ export default function ProfileVolunteer() {
         });
       })
       .catch((error) => {
-        // Handle request error
-        console.error(error.response.data.message);
+        console.error(error);
       });
   };
 
