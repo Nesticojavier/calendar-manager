@@ -17,6 +17,11 @@ export const authService = {
     });
     return response.data;
   },
-
+  dashboard: async () => {
+    const response = await api.request({
+      url: "/dashboard",
+      method: "GET"
+    });
+    return response.data;
+  },
 };
-
