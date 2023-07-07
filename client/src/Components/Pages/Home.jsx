@@ -7,13 +7,14 @@ export default function Home() {
   const [rol, setRol] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const { isLoggedIn, changeProfile } = useContext(UserContext);
+  const { isLoggedIn, changeProfile, profile } = useContext(UserContext);
 
   useEffect(() => {
     if (isLoggedIn) {
       authService
         .dashboard()
         .then((data) => {
+          console.log(data)
           setRol(data.rol);
           changeProfile(data);
         })

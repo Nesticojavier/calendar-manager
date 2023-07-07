@@ -24,4 +24,13 @@ export const authService = {
     });
     return response.data;
   },
+  adminLogin: async (data) => {
+    const response = await api.request({
+      url: `/admin/login`,
+      data,
+      method: "POST",
+    });
+    return response.data;
+  },
+
 };
