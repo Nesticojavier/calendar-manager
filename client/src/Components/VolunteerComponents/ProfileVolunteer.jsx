@@ -3,8 +3,6 @@ import { Avatar, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../../Context/UserContext";
 import { useContext } from "react";
-import axios from "axios";
-import Cookies from "js-cookie";
 
 import Chip from "@mui/material/Chip";
 import Button from "@mui/material/Button";
@@ -16,9 +14,10 @@ import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
-import BadgeIcon from '@mui/icons-material/Badge';
-import SchoolIcon from '@mui/icons-material/School';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import BadgeIcon from "@mui/icons-material/Badge";
+import SchoolIcon from "@mui/icons-material/School";
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
+import { volunteerService } from "../../Services/Api/volunteerService";
 
 export default function ProfileVolunteer() {
   // extract user from context
@@ -35,24 +34,15 @@ export default function ProfileVolunteer() {
   const [tagsPref, setTagsPref] = useState([]);
   const [hoursPref, setHoursPref] = useState([]);
 
-  // get token from cookies
-  const token = Cookies.get("token");
-  // construct object representing an HTTP authorization header with the Bearer scheme.
-  const headers = { Authorization: `Bearer ${token}` };
-
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/volunteer/profile`, { headers })
+    volunteerService
+      .showProfile()
       .then((response) => {
-        setTagsPref(response.data.tags);
-        setHoursPref(response.data.blocks);
+        setTagsPref(response.tags);
+        setHoursPref(response.blocks);
       })
       .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.message);
-        } else {
-          console.error(error.message);
-        }
+        console.error(error);
       });
   }, []);
 
@@ -155,7 +145,11 @@ export default function ProfileVolunteer() {
               </Typography>
               <Stack direction="row" spacing={1}>
                 {tagsPref.map((tag) => (
-                  <Chip key={tag} label={tag} sx={{ bgcolor: import.meta.env.VITE_COLOR_SECUNDARY }}/>
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    sx={{ bgcolor: import.meta.env.VITE_COLOR_SECUNDARY }}
+                  />
                 ))}
               </Stack>
             </Box>
@@ -171,7 +165,9 @@ export default function ProfileVolunteer() {
             </Box>
           </Box>
           <Box sx={{ mt: 3, ml: 1, mb: 1 }}>
-            <Button onClick={() => handleEdit(values)}>Editar preferencias</Button>
+            <Button onClick={() => handleEdit(values)}>
+              Editar preferencias
+            </Button>
           </Box>
         </Box>
       </>

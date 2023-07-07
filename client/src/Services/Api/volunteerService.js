@@ -18,7 +18,7 @@ export const volunteerService = {
   },
   showProfile: async () => {
     const response = await api.request({
-      url: "/volunteer/profie",
+      url: "/volunteer/profile",
       method: "GET",
     });
     return response.data;
