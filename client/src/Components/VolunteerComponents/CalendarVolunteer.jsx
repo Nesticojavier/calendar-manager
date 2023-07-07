@@ -15,6 +15,7 @@ import CalendarLegend from "../CalendarLegend";
 import { sortWorksByTag } from "../Utils/sortWorksByTag";
 import { days, monthNames } from "../Utils/calendarConstants";
 import { volunteerService } from "../../Services/Api/volunteerService";
+import Swal from "sweetalert2";
 // import WorkInfoDialogVolunteer from "../WorkInfoDialogVolunteer";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
@@ -114,10 +115,20 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       .postulate(workId)
       .then((response) => {
         console.log(response);
+        setDialogOpen(false)
+        showSimpleAlert("Se ha postulado", "success")
       })
       .catch((error) => {
         console.log(error.response.data.data.error);
+        showSimpleAlert(error.response.data.data.error, "warning")
       });
+  };
+
+  const showSimpleAlert = (message, icon) => {
+    Swal.fire({
+      icon,
+      title: message,
+    });
   };
 
   // To select one hour preference of the volunteer and show the works that match with the preference
