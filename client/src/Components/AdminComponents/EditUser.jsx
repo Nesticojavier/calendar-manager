@@ -1,35 +1,28 @@
-import Cookies from "js-cookie";
-import {
-  Box,
-  Modal,
-
-} from '@mui/material';
+import { Box, Modal } from "@mui/material";
 
 import React, { useState } from "react";
-import axios from 'axios';
-import { useNavigate, Navigate } from "react-router-dom";
 
-import "./editUser.css"
+import "./editUser.css";
+import { adminService } from "../../Services/Api/adminService";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  bgcolor: "background.paper",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-}
+};
 
 export default function EditUser({ user, handleClose }) {
-
   // A state is created for the values of the form inputs
   // Saved to an object with empty initial values
   const [values, setValues] = useState({
     username: user.username,
-    password: ""
+    password: "",
   });
 
   // A state is created to know if the input is focused or not
@@ -44,34 +37,25 @@ export default function EditUser({ user, handleClose }) {
   };
 
   // A state is created to show the error when submitting the form
-  const [errorMessage, setErrorMessage] = useState('');
-
-  // To redirect to another page
-  const navigate = useNavigate()
+  const [errorMessage, setErrorMessage] = useState("");
 
   // It is executed when the form is submitted
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const token = Cookies.get("token");
-    const headers = { Authorization: `Bearer ${token}` };
-    axios
-      .put("http://localhost:3000/admin/updatepwd", values, {headers})
-      .then((response) => {
-        // Handle request response successful
+    adminService
+      .editUser(values)
+      .then(() => {
         swal({
           title: "Contraseña actualizada exitosamente",
           icon: "success",
         }).then(() => {
           handleClose();
-        })
-
+        });
       })
       .catch((error) => {
-        // Handle request error
-        setErrorMessage(error.response.data.message)
+        console.log(error);
+        // setErrorMessage(error.response.data.message);
       });
-
   };
 
   // It is used to update the state of the values of the inputs
@@ -86,7 +70,8 @@ export default function EditUser({ user, handleClose }) {
       name: "username",
       type: "text",
       placeholder: "Usuario",
-      errormessage: "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
+      errormessage:
+        "El nombre de usuario no debe tener más de 16 caracteres y no debe incluir ningún carácter especial.",
       label: "Usuario",
       required: true,
       pattern: "[a-zA-Z0-9]{1,16}$",
@@ -96,12 +81,13 @@ export default function EditUser({ user, handleClose }) {
       name: "password",
       type: "password",
       placeholder: "Introduzca la nueva contraseña",
-      errormessage: "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
+      errormessage:
+        "La contraseña debe tener al menos 3 caracteres y no debe incluir ningún carácter especial.",
       label: "Contraseña",
       required: true,
       pattern: "[a-zA-Z0-9]{3,}$",
-    }
-  ]
+    },
+  ];
   return (
     <Modal
       open={true}
@@ -120,22 +106,18 @@ export default function EditUser({ user, handleClose }) {
                 <label htmlFor={input.name}>{input.label}</label>
                 <input
                   {...input}
-
                   // Ensures that the state always reflects the current value of the input
                   // and stays in sync with changes made by the user
                   onChange={handleChange}
-
                   // The value of the input is bound to the value stored in values[input.name]
                   value={values[input.name]}
-
                   // To display the error message when the input is focused
                   // set to true to keep the error message as long as the input is invalid
                   onBlur={() => handleFocus(input.name, true)}
+                  readOnly={input.name === "username"}
 
-                  readOnly={input.name === 'username'}
-
-                // Shows the error message if the input is focused and the value does not match the pattern
-                //focused = {focused.toString()}
+                  // Shows the error message if the input is focused and the value does not match the pattern
+                  //focused = {focused.toString()}
                 />
                 {focused[input.name] && <span>{input.errormessage}</span>}
               </div>
@@ -145,6 +127,6 @@ export default function EditUser({ user, handleClose }) {
           <p className="error">{errorMessage}</p>
         </div>
       </Box>
-    </Modal >
+    </Modal>
   );
-};
+}

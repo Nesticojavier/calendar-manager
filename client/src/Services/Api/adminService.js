@@ -8,4 +8,12 @@ export const adminService = {
     });
     return response.data;
   },
+  editUser: async (data) => {
+    const response = await api.request({
+      url: `/admin/updatepwd`,
+      method: "PUT",
+      data,
+    });
+    return response.data;
+  },
 };

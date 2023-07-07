@@ -1,5 +1,4 @@
 import React, { useState, useContext } from "react";
-import axios from "axios";
 import { useNavigate, Navigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import { UserContext } from "../../Context/UserContext";
@@ -35,25 +34,6 @@ export default function AdminLogin() {
   // It is executed when the form is submitted
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    // axios
-    //   .post("http://localhost:3000/admin/login", values)
-    //   .then((response) => {
-    //     // Handle request response successful
-    //     const token = response.data.token;
-
-    //     // localStorage.setItem('token', token);
-    //     Cookies.set("token", token, { expires: 1 });
-    //     changeLoggedIn(true);
-
-    //     // Redirect to
-    //     navigate("/admin/userstable");
-    //   })
-    //   .catch((error) => {
-    //     // Handle request error
-    //     console.log(error.response.data.message);
-    //     // setErrorMessage(error.response.data.message)
-    //   });
 
     authService
       .adminLogin(values)

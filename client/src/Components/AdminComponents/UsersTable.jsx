@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Table,
   TableBody,
@@ -11,9 +10,7 @@ import {
 } from "@mui/material";
 
 import EditIcon from "@mui/icons-material/Edit";
-import { useNavigate } from "react-router-dom";
 import EditUSer from "./EditUser";
-import Cookies from "js-cookie";
 import { adminService } from "../../Services/Api/adminService";
 
 export default function UsersTable() {
@@ -22,16 +19,6 @@ export default function UsersTable() {
   const [selectedUser, setSelectedUser] = useState(null); // Estado para almacenar el usuario seleccionado
 
   useEffect(() => {
-    const token = Cookies.get("token");
-    const headers = { Authorization: `Bearer ${token}` };
-    // axios
-    //   .get("http://localhost:3000/admin/userslist", {headers})
-    //   .then((response) => {
-    //     setUserData(response.data);
-    //   })
-    //   .catch((error) => {
-    //     console.error(error.response.data.message);
-    //   });
     adminService
       .getUsers()
       .then((users) => {
