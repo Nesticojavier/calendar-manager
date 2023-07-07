@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   Card,
   CardHeader,
-  IconButton,
   CardContent,
   Typography,
   CardActions,
@@ -14,14 +13,9 @@ import {
 
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import axios from "axios";
-import Cookies from "js-cookie";
+import { volunteerService } from "../../Services/Api/volunteerService";
 
 export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
-  // needed by axios for auth
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
-
   // constant to store the number of rows to display
   const NUMBER_ROW = 4;
 
@@ -41,28 +35,17 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
 
   // Fecth data when change current page and the status bar
   useEffect(() => {
-    console.log(currentPage);
-    console.log(`se debe realizar una consulta a con`);
-    console.log(`start: ${(currentPage - 1) * NUMBER_ROW}`);
-    console.log(`limit: ${NUMBER_ROW}`);
-    console.log(`confirmed: ${statusConfirmed}`);
-
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/volunteer/jobs-in-progress`, {
-        params: {
-          start: (currentPage - 1) * NUMBER_ROW,
-          limit: NUMBER_ROW,
-          confirmed: statusConfirmed,
-        },
-        headers: headers,
-      })
+    const start = (currentPage - 1) * NUMBER_ROW;
+    const limit = NUMBER_ROW;
+    const confirmed = statusConfirmed;
+    volunteerService
+      .jobsInProgress(start, limit, confirmed)
       .then((response) => {
-        console.log(response.data.rows);
-        setWorkData(response.data.rows);
-        setTotalPages(Math.ceil(response.data.count / NUMBER_ROW));
+        setWorkData(response.rows);
+        setTotalPages(Math.ceil(response.count / NUMBER_ROW));
       })
       .catch((error) => {
-        console.error(error.response.data.data.error);
+        console.error(error);
       });
   }, [currentPage, statusConfirmed]);
 
@@ -90,7 +73,6 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   };
 
   return (
-
     // show message when work data is empty
     <div>
       <div>
@@ -156,63 +138,3 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     </div>
   );
 }
-
-// test data
-const workDataConfirmed = [
-  {
-    id: 1,
-    type: 1,
-    title: "Trabajo de prueba 1",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-  {
-    id: 2,
-    type: 1,
-    title: "Trabajo de prueba 2",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-  {
-    id: 3,
-    type: 1,
-    title: "Trabajo de prueba 3",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "confirmed",
-  },
-];
-const workDataUnconfirmed = [
-  {
-    id: 1,
-    type: 1,
-    title: "Trabajo de prueba 3",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-  {
-    id: 2,
-    type: 1,
-    title: "Trabajo de prueba 4",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-  {
-    id: 3,
-    type: 1,
-    title: "Trabajo de prueba 5",
-    description:
-      "Este es un trabajo para probar la renderización de la tarjeta",
-    tags: ["tag1", "tag2", "tag3"],
-    status: "unconfirmed",
-  },
-];
