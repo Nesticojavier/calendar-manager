@@ -8,14 +8,13 @@ import {
   Divider,
 } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
-import axios from "axios";
-import Cookies from "js-cookie";
 import HourSelect from "../HourSelect";
 import TagSelect from "../TagSelect";
 import Calendar from "../Calendar";
 import CalendarLegend from "../CalendarLegend";
 import { sortWorksByTag } from "../Utils/sortWorksByTag";
 import { days, monthNames } from "../Utils/calendarConstants";
+import { volunteerService } from "../../Services/Api/volunteerService";
 // import WorkInfoDialogVolunteer from "../WorkInfoDialogVolunteer";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
@@ -53,45 +52,17 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
   // to get the work data
   const [workData, setWorkData] = useState([]);
-  const token = Cookies.get("token");
-  const headers = { Authorization: `Bearer ${token}` };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/volunteer/jobs/`, { headers })
-      .then((response) => {
-        setWorkData(response.data);
+    volunteerService
+      .getAllJobsateJob()
+      .then((works) => {
+        setWorkData(works);
       })
       .catch((error) => {
-        if (error.response) {
-          console.error(error.response.data.message);
-        } else {
-          console.error(error.message);
-        }
+        console.error(error);
       });
   }, []);
-
-  // const handleAddWorks = (currentYear, currentMonth) => {
-  //   axios
-  //     .get(
-  //       `http://localhost:3000/volunteer/jobs/${currentYear}/${currentMonth+1}`,
-  //       { headers }
-  //     )
-  //     .then((response) => {
-  //       setWorkData(response.data);
-  //     })
-  //     .catch((error) => {
-  //       if (error.response) {
-  //         console.error(error.response.data.message);
-  //       } else {
-  //         console.error(error.message);
-  //       }
-  //     });
-  // };
-
-  // useEffect(() => {
-  //   handleAddWorks(currentYear, currentMonth);
-  // }, [currentYear, currentMonth]);
 
   // Function to show the works in the calendar
   const isWorkOnDay = (work, day, selectedHour) => {
@@ -139,17 +110,13 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   };
 
   const handlePostulation = (workId) => {
-    axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/volunteer/postulation`,
-        { workId },
-        { headers }
-      )
+    volunteerService
+      .postulate(workId)
       .then((response) => {
-        console.log(response.data);
+        console.log(response);
       })
       .catch((error) => {
-        console.error(error.response.data.data.error);
+        console.log(error.response.data.data.error);
       });
   };
 
@@ -169,21 +136,19 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     } = e;
     setUserPrefTag(
       // On autofill we get a stringified value.
-      typeof value === "string" ? (value === '' ? [] : value.split(',')) : value
+      typeof value === "string" ? (value === "" ? [] : value.split(",")) : value
     );
   };
 
   useEffect(() => {
-    axios
-      .get(`${import.meta.env.VITE_API_URL}/volunteer/profile`, { headers })
+    volunteerService
+      .showProfile()
       .then((response) => {
-        const block = response.data.blocks;
-        const userTag = response.data.tags;
-        setHours(block);
-        setUserTags(userTag);
+        setHours(response.blocks);
+        setUserTags(response.tags);
       })
       .catch((error) => {
-        console.error(error.response.data.message);
+        console.error(error);
       });
   }, []);
 
