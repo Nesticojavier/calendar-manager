@@ -30,8 +30,6 @@ const providerService = {
       work.blocks[0].day = dayOfWeek[date.getDay()];
     }
 
-    console.log(work);
-
     const existWork = await Work.findOne({
       where: {
         users_id,

@@ -221,10 +221,37 @@ const volunteerService = {
       throw serverErrors.errorUnauthorizedRole;
     }
 
+    const transaction =await  sq.transaction()
     try {
-      const postulation = await Postulation.create({ users_id, works_id });
+      const work = await Work.findByPk(works_id);
+
+      if (work === null) {
+        throw serverErrors.errorJobDontExists
+      }
+
+      if (work.volunteerCount + 1 > work.volunteerCountMax) {
+        throw serverErrors.errorMaxVolunteers
+      }
+
+      await Work.update(
+        { volunteerCount: work.volunteerCount + 1 },
+        { where: { id: works_id }, transaction }
+      );
+
+      const postulation = await Postulation.create({ users_id, works_id }, transaction);
+      await transaction.commit()
       return postulation;
     } catch (error) {
+      await transaction.rollback()
+
+      if ( error.original && error.original.constraint == "postulations_users_id_fkey") {
+        throw serverErrors.errorUserDontExists;
+      }
+
+      if (error.name == "SequelizeUniqueConstraintError") {
+        throw serverErrors.errorUserAlreadyPostulated;
+      }
+
       throw error;
     }
   },

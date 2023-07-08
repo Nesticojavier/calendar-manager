@@ -1,5 +1,4 @@
 const serverErrors = require("../error/error");
-const { all } = require("../routes/volunteer");
 const volunteerService = require("../services/volunteer.service");
 
 const getAllJobs = async (req, res) => {
@@ -86,7 +85,7 @@ const showProfile = async (req, res) => {
 
 const postulate = async (req, res) => {
   const { workId } = req.body;
-
+  
   if (!workId) {
     const error = serverErrors.errorMissingData;
     return res

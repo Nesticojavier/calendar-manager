@@ -14,6 +14,10 @@ const serverErrors = {
     status: 503,
   },
 
+  errorMaxVolunteers: {
+    message: "Numero maximo de voluntarios",
+    status: 409,
+  },
   errorInvalidCredentials: {
     message: "Credenciales inválidas",
     status: 401,
@@ -24,6 +28,10 @@ const serverErrors = {
     status: 401,
   },
   errorUserExists: {
+    message: "El usuario ya existe",
+    status: 409,
+  },
+  errorUserDontExists: {
     message: "El usuario ya existe",
     status: 409,
   },
@@ -58,9 +66,19 @@ const serverErrors = {
     status: 409,
   },
 
+  errorJobDontExists: {
+    message: "El trabajo no existe",
+    status: 409,
+  },
+
   errorUserNotProvider: {
     message: "El usuario no es un proveedor",
     status: 403,
+  },
+
+  errorUserAlreadyPostulated: {
+    message: "El usuario ya se ha postulado al trabajo",
+    status: 400,
   },
 
   successUpdate: {
