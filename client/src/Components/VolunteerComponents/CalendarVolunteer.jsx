@@ -333,14 +333,14 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                   marginBottom: "10px",
                 }}
               >
+                <Button onClick={handleDialogClose} variant="outlined">
+                  Cerrar
+                </Button>
                 <Button
                   variant="contained"
                   onClick={() => handlePostulation(selectedWork.id)}
                 >
                   Postularse
-                </Button>
-                <Button onClick={handleDialogClose} variant="outlined">
-                  Cerrar
                 </Button>
               </Box>
             </Box>
