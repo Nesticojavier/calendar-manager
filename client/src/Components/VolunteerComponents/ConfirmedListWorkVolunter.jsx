@@ -109,7 +109,23 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              {row.work.description}
+              Descripción: {row.work.description}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de inicio: {row.work.dateInit}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de fin: {row.work.dateEnd}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Bloques: <br/>
+              {row.work.blocks &&
+                JSON.parse(row.work.blocks).map((block, index) => (
+                  <span key={block}>
+                    Día: {block.day} Hora: {block.hour}
+                    {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
+                  </span>
+                ))}
             </Typography>
           </CardContent>
           <CardActions disableSpacing>
@@ -120,7 +136,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
               color="error"
               startIcon={<DeleteIcon />}
             >
-              {statusConfirmed ? "Abandonar tabajo" : "Cancelar solicitud"}
+              {statusConfirmed ? "Abandonar trabajo" : "Cancelar solicitud"}
             </Button>
           </CardActions>
         </Card>

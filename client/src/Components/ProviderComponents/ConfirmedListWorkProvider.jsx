@@ -184,8 +184,29 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              {row.work.description}
+              Descripción: {row.work.description}
             </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de inicio: {row.work.dateInit}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de fin: {row.work.dateEnd}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Bloques: <br/>
+              {row.work.blocks &&
+                JSON.parse(row.work.blocks).map((block, index) => (
+                  <span key={block}>
+                    Día: {block.day} Hora: {block.hour}
+                    {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
+                  </span>
+                ))}
+            </Typography>
+            {row.work.type === 1 && ( 
+              <Typography variant="body2" color="text.secondary">
+                Fecha propuesta: {/*row.work. */}
+              </Typography>
+            )}
           </CardContent>
           <CardActions disableSpacing>
             {statusConfirmed ? (

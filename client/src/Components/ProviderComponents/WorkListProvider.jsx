@@ -103,7 +103,27 @@ export default function WorkListProvider() {
           />
           <CardContent>
             <Typography variant="body2" color="text.secondary">
-              {work.description}
+              Descripción: {work.description}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de inicio: {work.dateInit}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Fecha de fin: {work.dateEnd}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              Bloques:
+              {work.blocks && 
+                work.blocks.map((block) => (
+                    <div key={block.id}>
+                      <Typography variant="body2" color="text.secondary">
+                        Día: {block.day}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        Hora: {block.hour}
+                      </Typography>
+                    </div>
+                  ))}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Etiquetas:
