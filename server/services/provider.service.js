@@ -411,13 +411,6 @@ const providerService = {
         },
         include: [{ model: Work, where: users_id }],
       });
-      const rowsUpdated = await Postulation.destroy({
-        where: {
-          id,
-          confirmed: false,
-        },
-        include: [{ model: Work, where: users_id }],
-      });
       console.log(rowsUpdated);
       if (rowsUpdated === 0) {
         throw serverErrors.error404;
