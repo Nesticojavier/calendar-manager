@@ -46,6 +46,9 @@ export default function EditWork() {
 
   // Function for send new work data to backend
   const onSubmit = (data) => {
+    if (data.workType === 2) {
+      data.blocks[0].day = data.startDate;
+    }
     providerService
       .editJob(data, workId)
       .then(() => {
