@@ -14,7 +14,7 @@ export default function Home() {
       authService
         .dashboard()
         .then((data) => {
-          console.log(data)
+          // console.log(data)
           setRol(data.rol);
           changeProfile(data);
         })
