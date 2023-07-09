@@ -85,7 +85,7 @@ const showProfile = async (req, res) => {
 
 const postulate = async (req, res) => {
   const { workId } = req.body;
-  
+
   if (!workId) {
     const error = serverErrors.errorMissingData;
     return res
@@ -129,6 +129,27 @@ const jobsInProgress = async (req, res) => {
   }
 };
 
+const cancelPostulation = async (req, res) => {
+  const { workId } = req.body;
+
+  if (!workId) {
+    const error = serverErrors.errorMissingData;
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+
+  try {
+    const postulation = await volunteerService.cancelPostulation(req.userData, workId);
+    res.json(postulation);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
+  return res.json();
+};
+
 module.exports = {
   getAllJobs,
   getOneJob,
@@ -138,4 +159,5 @@ module.exports = {
   postulate,
   jobsInProgress,
   getAllJobsPaginated,
+  cancelPostulation,
 };

@@ -221,32 +221,31 @@ const volunteerService = {
       throw serverErrors.errorUnauthorizedRole;
     }
 
-    const transaction =await  sq.transaction()
+    const transaction = await sq.transaction();
     try {
       const work = await Work.findByPk(works_id);
 
       if (work === null) {
-        throw serverErrors.errorJobDontExists
+        throw serverErrors.errorJobDontExists;
       }
 
       if (work.volunteerCount + 1 > work.volunteerCountMax) {
-        throw serverErrors.errorMaxVolunteers
+        throw serverErrors.errorMaxVolunteers;
       }
+
+      const postulation = await Postulation.create(
+        { users_id, works_id },
+        transaction
+      );
 
       await Work.update(
         { volunteerCount: work.volunteerCount + 1 },
         { where: { id: works_id }, transaction }
       );
-
-      const postulation = await Postulation.create({ users_id, works_id }, transaction);
-      await transaction.commit()
+      await transaction.commit();
       return postulation;
     } catch (error) {
-      await transaction.rollback()
-
-      if ( error.original && error.original.constraint == "postulations_users_id_fkey") {
-        throw serverErrors.errorUserDontExists;
-      }
+      await transaction.rollback();
 
       if (error.name == "SequelizeUniqueConstraintError") {
         throw serverErrors.errorUserAlreadyPostulated;
@@ -289,6 +288,46 @@ const volunteerService = {
       });
       return allJobs;
     } catch (error) {
+      throw error;
+    }
+  },
+  cancelPostulation: async (user, works_id) => {
+    const { id: users_id, rol } = user;
+
+    if (rol !== "voluntario") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
+
+    const transaction = await sq.transaction();
+    try {
+      const work = await Work.findByPk(works_id);
+
+      if (work === null) {
+        throw serverErrors.errorJobDontExists;
+      }
+
+      const rowsDeleted = await Postulation.destroy({
+        where: { users_id, works_id },
+        transaction,
+      });
+
+      if (rowsDeleted === 0) {
+        throw serverErrors.errorUserHasNotPostulated;
+      }
+
+      await Work.update(
+        { volunteerCount: work.volunteerCount - 1 },
+        { where: { id: works_id }, transaction }
+      );
+      await transaction.commit();
+      return;
+    } catch (error) {
+      await transaction.rollback();
+
+      if (error.name == "SequelizeUniqueConstraintError") {
+        throw serverErrors.errorUserAlreadyPostulated;
+      }
+
       throw error;
     }
   },

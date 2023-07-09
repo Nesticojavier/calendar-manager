@@ -78,7 +78,12 @@ const serverErrors = {
 
   errorUserAlreadyPostulated: {
     message: "El usuario ya se ha postulado al trabajo",
-    status: 400,
+    status: 409,
+  },
+
+  errorUserHasNotPostulated: {
+    message: "El usuario no esta postulado al trabajo",
+    status: 409,
   },
 
   successUpdate: {
