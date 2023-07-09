@@ -7,6 +7,7 @@ import {
   CardContent,
   Typography,
   CardActions,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -15,12 +16,26 @@ import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
 
 export default function WorkListProvider() {
+  // constant to store the number of rows to display
+  const NUMBER_ROW = 4;
+
   // Hook for navigate
   const navigate = useNavigate();
 
   // states necessary
   const [workData, setWorkData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
+
+  //state for set current page in the pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // State for set total pages to display in the pagination
+  const [totalPages, setTotalPages] = useState(0);
+
+  // handle for change page number page value
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
   // alert for confirmation of work deletion
   const alertDeleteWork = () => {
@@ -68,15 +83,19 @@ export default function WorkListProvider() {
   };
 
   useEffect(() => {
+    setIsDeleted(false)
+    const start = (currentPage - 1) * NUMBER_ROW;
+    const limit = NUMBER_ROW;
     providerService
-      .getJobs()
-      .then((workList) => {
-        setWorkData(workList);
+      .getJobsPaginated(start, limit)
+      .then((data) => {
+        setWorkData(data.rows);
+        setTotalPages(Math.ceil(data.count / NUMBER_ROW));
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [isDeleted]);
+  }, [isDeleted, currentPage]);
 
   return (
     <Box
@@ -127,6 +146,16 @@ export default function WorkListProvider() {
           </CardActions>
         </Card>
       ))}
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Pagination
+          onChange={handlePageChange}
+          page={currentPage}
+          count={totalPages}
+          variant="outlined"
+          color="primary"
+        />
+      </Box>
     </Box>
   );
 }
