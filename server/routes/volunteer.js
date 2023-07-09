@@ -8,7 +8,9 @@ const {
   editProfile,
   showProfile,
   postulate,
+  getAllJobsPaginated,
   jobsInProgress,
+  cancelPostulation,
 } = require("../controllers/volunteer.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -16,6 +18,8 @@ router.use(verifyToken(process.env.USERS_ENCRYPT));
 
 // Show all jobs
 router.get("/jobs", getAllJobs);
+
+router.get("/paginatedJobs", getAllJobsPaginated);
 
 // Show a job
 router.get("/jobs/:id", getOneJob);
@@ -31,6 +35,9 @@ router.get("/profile", showProfile);
 
 // apply for a job
 router.post("/postulation", postulate);
+
+// Cancel application
+router.delete("/postulation", cancelPostulation);
 
 // Show applications from a user
 router.get("/jobs-in-progress", jobsInProgress);

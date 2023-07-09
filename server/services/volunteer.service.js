@@ -31,6 +31,35 @@ const volunteerService = {
       throw error;
     }
   },
+  getAllJobsPaginated: async (start, limit) => {
+    try {
+      const countRows = await Work.count();
+      const allJobs = await sq.query(
+        `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+        FROM works wo 
+        LEFT JOIN "workTags" w ON wo.id = w.works_id 
+        LEFT JOIN tags t ON t.id = w.tags_id
+        GROUP BY wo.id
+        LIMIT :LIMIT
+        OFFSET :OFFSET`,
+        {
+          replacements: { LIMIT: limit, OFFSET: start },
+          type: sq.QueryTypes.SELECT,
+        }
+      );
+
+      const promise = allJobs.map((e) => {
+        e.tags = e.tags?.split(",");
+        e.blocks = JSON.parse(e.blocks);
+        return e;
+      });
+
+      const result = { count: countRows, rows: promise };
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
   getOneJob: async (id) => {
     try {
       const job = await sq.query(
@@ -192,10 +221,36 @@ const volunteerService = {
       throw serverErrors.errorUnauthorizedRole;
     }
 
+    const transaction = await sq.transaction();
     try {
-      const postulation = await Postulation.create({ users_id, works_id });
+      const work = await Work.findByPk(works_id);
+
+      if (work === null) {
+        throw serverErrors.errorJobDontExists;
+      }
+
+      if (work.volunteerCount + 1 > work.volunteerCountMax) {
+        throw serverErrors.errorMaxVolunteers;
+      }
+
+      const postulation = await Postulation.create(
+        { users_id, works_id },
+        transaction
+      );
+
+      await Work.update(
+        { volunteerCount: work.volunteerCount + 1 },
+        { where: { id: works_id }, transaction }
+      );
+      await transaction.commit();
       return postulation;
     } catch (error) {
+      await transaction.rollback();
+
+      if (error.name == "SequelizeUniqueConstraintError") {
+        throw serverErrors.errorUserAlreadyPostulated;
+      }
+
       throw error;
     }
   },
@@ -233,6 +288,46 @@ const volunteerService = {
       });
       return allJobs;
     } catch (error) {
+      throw error;
+    }
+  },
+  cancelPostulation: async (user, works_id) => {
+    const { id: users_id, rol } = user;
+
+    if (rol !== "voluntario") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
+
+    const transaction = await sq.transaction();
+    try {
+      const work = await Work.findByPk(works_id);
+
+      if (work === null) {
+        throw serverErrors.errorJobDontExists;
+      }
+
+      const rowsDeleted = await Postulation.destroy({
+        where: { users_id, works_id },
+        transaction,
+      });
+
+      if (rowsDeleted === 0) {
+        throw serverErrors.errorUserHasNotPostulated;
+      }
+
+      await Work.update(
+        { volunteerCount: work.volunteerCount - 1 },
+        { where: { id: works_id }, transaction }
+      );
+      await transaction.commit();
+      return;
+    } catch (error) {
+      await transaction.rollback();
+
+      if (error.name == "SequelizeUniqueConstraintError") {
+        throw serverErrors.errorUserAlreadyPostulated;
+      }
+
       throw error;
     }
   },
