@@ -270,6 +270,7 @@ const volunteerService = {
           {
             model: Work,
             attributes: [
+              "id",
               "title",
               "status",
               "description",

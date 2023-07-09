@@ -50,4 +50,11 @@ export const volunteerService = {
     });
     return response.data;
   },
+  cancelPostulation: async (workId) => {
+    const response =  await api.request({
+      url: "/volunteer/postulation",
+      method: "DELETE",
+      data: {workId}
+    })
+  }
 };

@@ -14,6 +14,7 @@ import {
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { volunteerService } from "../../Services/Api/volunteerService";
+import Swal from "sweetalert2";
 
 export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   // constant to store the number of rows to display
@@ -33,6 +34,8 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     setCurrentPage(page);
   };
 
+  const [isRemoved, setIsRemoved] = useState(false)
+
   // Fecth data when change current page and the status bar
   useEffect(() => {
     const start = (currentPage - 1) * NUMBER_ROW;
@@ -43,11 +46,12 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
       .then((response) => {
         setWorkData(response.rows);
         setTotalPages(Math.ceil(response.count / NUMBER_ROW));
+        setIsRemoved(false)
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [currentPage, statusConfirmed]);
+  }, [currentPage, statusConfirmed, isRemoved]);
 
   // When change status view, the page number should be reset to 1
   useEffect(() => {
@@ -60,15 +64,24 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   };
 
   // handle for remove or leave work and delete from the list
-  const handleRemoveWork = () => {
+  const handleRemoveWork = (workId) => {
     if (statusConfirmed) {
       alert(
         "Se debe abandonar el trabajo y eliminarlo de la lista de trabajos"
       );
     } else {
-      alert(
-        "Se debe cancelar la solicitud de trabajo y eliminarlo de la lista de trabajo"
-      );
+      volunteerService
+        .cancelPostulation(workId)
+        .then((response) => {
+          setIsRemoved(true)
+          Swal.fire({
+            icon: "success",
+            title: "Postulacion cancelada",
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -114,7 +127,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           </CardContent>
           <CardActions disableSpacing>
             <Button
-              onClick={() => handleRemoveWork()}
+              onClick={() => handleRemoveWork(row.work.id)}
               type="button"
               variant="outlined"
               color="error"
