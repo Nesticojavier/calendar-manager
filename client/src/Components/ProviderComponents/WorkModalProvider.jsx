@@ -1,7 +1,6 @@
 import React from "react";
-import { Modal, Box, Typography, Divider, Button } from "@mui/material";
-import DateRange from "./DateRange";
-import { addDays, format } from "date-fns";
+import { Modal, Box, Typography, Divider } from "@mui/material";
+import { format } from "date-fns";
 
 const style = {
   position: "absolute",
@@ -15,16 +14,14 @@ const style = {
   p: 4,
 };
 
-export default function WorkModalVolunteer({
+export default function WorkModalProvider({
   modalOpen,
   handleModalClose,
   selectedWork,
-  handlePostulation,
-  handleDateChange,
 }) {
 
   return (
-    <Modal open={modalOpen}>
+    <Modal open={modalOpen} onClick={handleModalClose}>
       <Box sx={style}>
         <Typography variant="h5" component="h2" sx={{ textAlign: "center" }}>
           <strong>Información del trabajo</strong>
@@ -108,44 +105,6 @@ export default function WorkModalVolunteer({
                   {tag}
                 </Box>
               ))}
-            </Box>
-
-            {selectedWork && selectedWork.type === 1 && (
-              <>
-                <Divider
-                  sx={{
-                    borderBottom: "1px solid gray",
-                    margin: "10px 0",
-                    marginBottom: "20px",
-                  }}
-                />
-                <p style={{ marginBottom: "15px" }}>
-                  <strong>
-                    Seleccione las fechas en la que desea realizar el
-                    voluntariado:
-                  </strong>
-                </p>
-                <DateRange onChange={handleDateChange} minDate={new Date()} maxDate={addDays(new Date(selectedWork.dateEnd), 1)}/>
-              </>
-            )}
-
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                marginTop: "20px",
-                marginBottom: "10px",
-              }}
-            >
-              <Button onClick={handleModalClose} variant="outlined">
-                Cerrar
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handlePostulation(selectedWork.id)}
-              >
-                Postularse
-              </Button>
             </Box>
           </Box>
         )}

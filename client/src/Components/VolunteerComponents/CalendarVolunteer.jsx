@@ -223,9 +223,12 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
           />
         </Box>
 
+        {/* To display the calendar legend */}
         <CalendarLegend />
+
       </Box>
 
+      {/* To display the calendar */}
       <Calendar
         days={days}
         monthNames={monthNames}
@@ -243,6 +246,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         handleWorkClick={handleWorkClick}
       />
 
+      {/* To display the modal with the work information */}
       <WorkModalVolunteer
         modalOpen={modalOpen}
         handleModalClose={handleModalClose}

@@ -14,6 +14,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
+import { format } from "date-fns";
 
 export default function WorkListProvider() {
   // Hook for navigate
@@ -83,13 +84,13 @@ export default function WorkListProvider() {
     <Box
       flex={7}
       pt={5}
-      px={40}
+      px={25}
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
       {workData.map((work) => (
         <Card
           key={work.id}
-          sx={{ marginBottom: "20px", border: "1px solid black" }}
+          sx={{ marginBottom: "20px", border: "1px solid black"}}
         >
           <CardHeader
             action={
@@ -112,10 +113,10 @@ export default function WorkListProvider() {
             <Divider sx={{ mb: 2 }}/>
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio: </strong> {work.dateInit}
+                <strong>Fecha de inicio: </strong> {format(new Date(work.dateInit), "dd-MM-yyyy")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <strong> Fecha de fin: </strong> {work.dateEnd}
+                <strong> Fecha de fin: </strong> {format(new Date(work.dateEnd), "dd-MM-yyyy")}
               </Typography>
             </Box>
             <Divider sx={{ mb: 2 }}/>

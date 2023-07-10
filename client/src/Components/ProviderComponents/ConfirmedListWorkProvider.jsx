@@ -14,7 +14,7 @@ import {
   Tooltip,
   Divider,
 } from "@mui/material";
-
+import { format } from "date-fns";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -161,102 +161,120 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           <p>No tiene solicitudes de trabajos</p>
         )}
       </div>
-      {workData.map((row, index) => (
-        <Card
-          key={index}
-          sx={{ marginBottom: "20px", border: "1px solid black" }}
-        >
-          <CardHeader
-            action={
-              <Tooltip title="ver información del voluntario">
-                <Chip
-                  onClick={() => handleShowVolunteer(row.user)}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {workData.map((row, index) => (
+          <Card
+            key={index}
+            sx={{
+              marginBottom: "20px",
+              border: "1px solid black",
+              minWidth: 800,
+            }}
+          >
+            <CardHeader
+              action={
+                <Tooltip title="ver información del voluntario">
+                  <Chip
+                    onClick={() => handleShowVolunteer(row.user)}
+                    color="primary"
+                    icon={<PersonIcon />}
+                    label={row.user.credential.username}
+                    variant="outlined"
+                  />
+                </Tooltip>
+              }
+              title={row.work.title}
+              subheader={`Trabajo ${
+                row.work.type === 1 ? "recurrente" : "de sesión"
+              }`}
+            />
+            <CardContent>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Descripción:</strong> {row.work.description}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de inicio:</strong> {format(new Date(row.work.dateInit), "dd-MM-yyyy")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de fin:</strong> {format(new Date(row.work.dateEnd), "dd-MM-yyyy")}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <Box mb={0}>
+                    <strong>Bloques:</strong>{" "}
+                  </Box>{" "}
+                  <br />
+                  {row.work.blocks &&
+                    JSON.parse(row.work.blocks).map((block, index) => (
+                      <span key={block}>
+                        <strong>Día:</strong> {block.day}
+                        <Box component="span" mx={2} />
+                        <strong>Hora:</strong> {block.hour}
+                        {index < JSON.parse(row.work.blocks).length - 1 &&
+                          ", "}{" "}
+                        <br />
+                      </span>
+                    ))}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              {row.work.type === 1 && (
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha propuesta:</strong> {/*row.work. */}
+                </Typography>
+              )}
+            </CardContent>
+            <CardActions disableSpacing>
+              {statusConfirmed ? (
+                <Button
+                  onClick={() => handleWorkTracking(row)}
+                  type="button"
+                  variant="contained"
                   color="primary"
-                  icon={<PersonIcon />}
-                  label={row.user.credential.username}
-                  variant="outlined"
-                />
-              </Tooltip>
-            }
-            title={row.work.title}
-            subheader={`Trabajo ${
-              row.work.type === 1 ? "recurrente" : "de sesión"
-            }`}
-          />
-          <CardContent>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Descripción:</strong> {row.work.description}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio:</strong> {row.work.dateInit}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de fin:</strong> {row.work.dateEnd}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <Box mb={0}><strong>Bloques:</strong> </Box> <br/>
-                {row.work.blocks &&
-                  JSON.parse(row.work.blocks).map((block, index) => (
-                    <span key={block}>
-                      <strong>Día:</strong> {block.day}
-                      <Box component="span" mx={2} />
-                      <strong>Hora:</strong> {block.hour}
-                      {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
-                    </span>
-                  ))}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }}/>
-            {row.work.type === 1 && ( 
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha propuesta:</strong> {/*row.work. */}
-              </Typography>
-            )}
-          </CardContent>
-          <CardActions disableSpacing>
-            {statusConfirmed ? (
-              <Button
-                onClick={() => handleWorkTracking(row)}
-                type="button"
-                variant="contained"
-                color="primary"
-                startIcon={<ChecklistIcon />}
-              >
-                Hacer Seguimiento
-              </Button>
-            ) : (
-              <>
-                <Button
-                  onClick={() => handleAcceptWork(row.id)}
-                  type="button"
-                  variant="outlined"
-                  color="success"
-                  startIcon={<CheckCircleIcon />}
+                  startIcon={<ChecklistIcon />}
                 >
-                  Aceptar
+                  Hacer Seguimiento
                 </Button>
-                <Button
-                  onClick={() => handleDeclineWork(row.id)}
-                  type="button"
-                  variant="outlined"
-                  color="error"
-                  startIcon={<ClearIcon />}
-                >
-                  Declinar
-                </Button>
-              </>
-            )}
-          </CardActions>
-        </Card>
-      ))}
+              ) : (
+                <>
+                  <Button
+                    onClick={() => handleAcceptWork(row.id)}
+                    type="button"
+                    variant="outlined"
+                    color="success"
+                    startIcon={<CheckCircleIcon />}
+                    sx = {{mr: 2}}
+                  >
+                    Aceptar
+                  </Button>
+                  <Button
+                    onClick={() => handleDeclineWork(row.id)}
+                    type="button"
+                    variant="outlined"
+                    color="error"
+                    startIcon={<ClearIcon />}
+                  >
+                    Declinar
+                  </Button>
+                </>
+              )}
+            </CardActions>
+          </Card>
+        ))}
+      </div>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
           onChange={handlePageChange}
