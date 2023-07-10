@@ -14,7 +14,7 @@ import {
   Tooltip,
   Divider,
 } from "@mui/material";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import ChecklistIcon from "@mui/icons-material/Checklist";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import PersonIcon from "@mui/icons-material/Person";
@@ -204,10 +204,15 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Fecha de inicio:</strong> {format(new Date(row.work.dateInit), "dd-MM-yyyy")}
+                  <strong>Fecha de inicio:</strong>{" "}
+                  {format(
+                    addDays(new Date(row.work.dateInit), 1),
+                    "dd-MM-yyyy"
+                  )}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Fecha de fin:</strong> {format(new Date(row.work.dateEnd), "dd-MM-yyyy")}
+                  <strong>Fecha de fin:</strong>{" "}
+                  {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
               </Box>
               <Divider sx={{ mb: 2 }} />
@@ -256,7 +261,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
                     variant="outlined"
                     color="success"
                     startIcon={<CheckCircleIcon />}
-                    sx = {{mr: 2}}
+                    sx={{ mr: 2 }}
                   >
                     Aceptar
                   </Button>

@@ -22,7 +22,6 @@ export default function WorkModalVolunteer({
   handlePostulation,
   handleDateChange,
 }) {
-
   return (
     <Modal open={modalOpen}>
       <Box sx={style}>
@@ -60,10 +59,18 @@ export default function WorkModalVolunteer({
             </Box>
             <Box sx={{ marginBottom: "20px" }}>
               <p>
-                <strong>Fecha de inicio:</strong> {format(new Date(selectedWork.dateInit), "dd-MM-yyyy")}
+                <strong>Fecha de inicio:</strong>{" "}
+                {format(
+                  addDays(new Date(selectedWork.dateInit), 1),
+                  "dd-MM-yyyy"
+                )}
               </p>
               <p style={{ marginBottom: "10px" }}>
-                <strong>Fecha de fin:</strong> {format(new Date(selectedWork.dateEnd), "dd-MM-yyyy")}
+                <strong>Fecha de fin:</strong>{" "}
+                {format(
+                  addDays(new Date(selectedWork.dateEnd), 1),
+                  "dd-MM-yyyy"
+                )}
               </p>
               <Divider
                 sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
@@ -125,7 +132,11 @@ export default function WorkModalVolunteer({
                     voluntariado:
                   </strong>
                 </p>
-                <DateRange onChange={handleDateChange} minDate={new Date()} maxDate={addDays(new Date(selectedWork.dateEnd), 1)}/>
+                <DateRange
+                  onChange={handleDateChange}
+                  minDate={new Date()}
+                  maxDate={addDays(new Date(selectedWork.dateEnd), 1)}
+                />
               </>
             )}
 

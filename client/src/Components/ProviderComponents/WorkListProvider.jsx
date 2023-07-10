@@ -15,7 +15,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 export default function WorkListProvider() {
   // constant to store the number of rows to display
@@ -85,7 +85,7 @@ export default function WorkListProvider() {
   };
 
   useEffect(() => {
-    setIsDeleted(false)
+    setIsDeleted(false);
     const start = (currentPage - 1) * NUMBER_ROW;
     const limit = NUMBER_ROW;
     providerService
@@ -109,7 +109,7 @@ export default function WorkListProvider() {
       {workData.map((work) => (
         <Card
           key={work.id}
-          sx={{ marginBottom: "20px", border: "1px solid black"}}
+          sx={{ marginBottom: "20px", border: "1px solid black" }}
         >
           <CardHeader
             action={
@@ -123,39 +123,43 @@ export default function WorkListProvider() {
             }`}
           />
           <CardContent>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
                 <strong>Descripción: </strong> {work.description}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio: </strong> {format(new Date(work.dateInit), "dd-MM-yyyy")}
+                <strong>Fecha de inicio: </strong>{" "}
+                {format(addDays(new Date(work.dateInit), 1), "dd-MM-yyyy")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <strong> Fecha de fin: </strong> {format(new Date(work.dateEnd), "dd-MM-yyyy")}
+                <strong> Fecha de fin: </strong>{" "}
+                {format(addDays(new Date(work.dateEnd), 1), "dd-MM-yyyy")}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
-                <Box mb={1}><strong> Bloques: </strong></Box>
+                <Box mb={1}>
+                  <strong> Bloques: </strong>
+                </Box>
                 {work.blocks &&
                   work.blocks.map((block) => (
-                      <Box mb={1} key={block.id}>
-                        <Typography variant="body2" color="text.secondary">
-                          <strong> Día: </strong> {block.day}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          <strong> Hora: </strong> {block.hour}
-                        </Typography>
-                      </Box>
-                    ))}
+                    <Box mb={1} key={block.id}>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong> Día: </strong> {block.day}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong> Hora: </strong> {block.hour}
+                      </Typography>
+                    </Box>
+                  ))}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               <strong> Etiquetas: </strong>
               {work.tags &&

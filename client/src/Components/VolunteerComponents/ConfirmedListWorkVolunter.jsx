@@ -11,7 +11,7 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { volunteerService } from "../../Services/Api/volunteerService";
@@ -35,7 +35,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     setCurrentPage(page);
   };
 
-  const [isRemoved, setIsRemoved] = useState(false)
+  const [isRemoved, setIsRemoved] = useState(false);
 
   // Fecth data when change current page and the status bar
   useEffect(() => {
@@ -47,7 +47,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
       .then((response) => {
         setWorkData(response.rows);
         setTotalPages(Math.ceil(response.count / NUMBER_ROW));
-        setIsRemoved(false)
+        setIsRemoved(false);
       })
       .catch((error) => {
         console.error(error);
@@ -74,7 +74,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
       volunteerService
         .cancelPostulation(workId)
         .then((response) => {
-          setIsRemoved(true)
+          setIsRemoved(true);
           Swal.fire({
             icon: "success",
             title: "Postulacion cancelada",
@@ -97,7 +97,13 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           <p>No ha hecho ninguna solicitud de trabajos aún</p>
         )}
       </div>
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         {workData.map((row, index) => (
           <Card
             key={index}
@@ -136,10 +142,15 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Fecha de inicio:</strong> {format(new Date(row.work.dateInit), "dd-MM-yyyy")}
+                  <strong>Fecha de inicio:</strong>{" "}
+                  {format(
+                    addDays(new Date(row.work.dateInit), 1),
+                    "dd-MM-yyyy"
+                  )}
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
-                  <strong>Fecha de fin:</strong> {format(new Date(row.work.dateEnd), "dd-MM-yyyy")}
+                  <strong>Fecha de fin:</strong>{" "}
+                  {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
               </Box>
               <Divider sx={{ mb: 2 }} />

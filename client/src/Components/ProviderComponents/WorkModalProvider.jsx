@@ -1,6 +1,6 @@
 import React from "react";
 import { Modal, Box, Typography, Divider } from "@mui/material";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 const style = {
   position: "absolute",
@@ -19,7 +19,6 @@ export default function WorkModalProvider({
   handleModalClose,
   selectedWork,
 }) {
-
   return (
     <Modal open={modalOpen} onClick={handleModalClose}>
       <Box sx={style}>
@@ -57,10 +56,18 @@ export default function WorkModalProvider({
             </Box>
             <Box sx={{ marginBottom: "20px" }}>
               <p>
-                <strong>Fecha de inicio:</strong> {format(new Date(selectedWork.dateInit), "dd-MM-yyyy")}
+                <strong>Fecha de inicio:</strong>{" "}
+                {format(
+                  addDays(new Date(selectedWork.dateInit), 1),
+                  "dd-MM-yyyy"
+                )}
               </p>
               <p style={{ marginBottom: "10px" }}>
-                <strong>Fecha de fin:</strong> {format(new Date(selectedWork.dateEnd), "dd-MM-yyyy")}
+                <strong>Fecha de fin:</strong>{" "}
+                {format(
+                  addDays(new Date(selectedWork.dateEnd), 1),
+                  "dd-MM-yyyy"
+                )}
               </p>
               <Divider
                 sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
