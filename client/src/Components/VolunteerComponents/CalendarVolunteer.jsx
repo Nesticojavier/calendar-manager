@@ -1,12 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-  Divider,
-} from "@mui/material";
+import { Box } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import HourSelect from "../HourSelect";
 import TagSelect from "../TagSelect";
@@ -16,7 +9,8 @@ import { sortWorksByTag } from "../Utils/sortWorksByTag";
 import { days, monthNames } from "../Utils/calendarConstants";
 import { volunteerService } from "../../Services/Api/volunteerService";
 import Swal from "sweetalert2";
-// import WorkInfoDialogVolunteer from "../WorkInfoDialogVolunteer";
+import "./CalendarVolunteer.css";
+import WorkModalVolunteer from "./WorkModalVolunteer";
 
 export default function CalendarVolunteer({ setIsLoggedIn }) {
   // to know the current month
@@ -82,7 +76,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       (block) =>
         block.day &&
         block.day.toLowerCase() === dayName &&
-        (selectedHour === null || selectedHour === "" || block.hour === selectedHour)
+        (selectedHour === null ||
+          selectedHour === "" ||
+          block.hour === selectedHour)
     );
 
     // Check if the work is within the start and end range
@@ -98,29 +94,29 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   // to show a dialog with the work information
   const [selectedWork, setSelectedWork] = useState(null);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleWorkClick = (work) => {
-    setDialogOpen(true);
+    setModalOpen(true);
     setSelectedWork(work);
   };
 
-  const handleDialogClose = () => {
-    setDialogOpen(false);
+  const handleModalClose = () => {
+    setModalOpen(false);
     setSelectedWork(null);
   };
 
   const handlePostulation = (workId) => {
     volunteerService
-      .postulate(workId)
+      .postulate(workId, selectedDates)
       .then((response) => {
         // console.log(response);
-        setDialogOpen(false)
-        showSimpleAlert("Se ha postulado", "success")
+        setModalOpen(false);
+        showSimpleAlert("Se ha postulado", "success");
       })
       .catch((error) => {
-        console.log(error.response.data.data.error);
-        showSimpleAlert(error.response.data.data.error, "warning")
+        //console.log(error.response.data.data.error);
+        showSimpleAlert(error.response.data.data.error, "warning");
       });
   };
 
@@ -128,6 +124,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     Swal.fire({
       icon,
       title: message,
+      customClass: {
+        container: "my-swal-container",
+      },
     });
   };
 
@@ -162,6 +161,12 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         console.error(error);
       });
   }, []);
+
+  // To select the dates of the postulation
+  const [selectedDates, setSelectedDates] = useState([null, null]);
+  const handleDateChange = (dates) => {
+    setSelectedDates(dates);
+  };
 
   return (
     <Box
@@ -238,116 +243,13 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
         handleWorkClick={handleWorkClick}
       />
 
-      {/* To display the dialog with the work information */}
-      <Dialog open={dialogOpen}>
-        <DialogTitle sx={{ textAlign: "center" }}>
-          <strong>Información del trabajo</strong>
-        </DialogTitle>
-
-        <DialogContent>
-          {selectedWork && (
-            <Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Título:</strong> {selectedWork.title}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Descripción:</strong> {selectedWork.description}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Tipo:</strong>{" "}
-                  {`Trabajo ${
-                    selectedWork.type === 1 ? "recurrente" : "de sesión"
-                  }`}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p>
-                  <strong>Fecha de inicio:</strong> {selectedWork.dateInit}
-                </p>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Fecha de fin:</strong> {selectedWork.dateEnd}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Bloques:</strong>
-                </p>
-                <ul>
-                  {selectedWork.blocks.map((block, index) => (
-                    <div key={index}>
-                      <p>
-                        <strong>Día:</strong> {block.day}
-                      </p>
-                      <p style={{ marginBottom: "10px" }}>
-                        <strong>Hora:</strong> {block.hour}
-                      </p>
-                    </div>
-                  ))}
-                </ul>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-
-              <p style={{ marginBottom: "10px" }}>
-                <strong>Etiquetas:</strong>
-              </p>
-
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {selectedWork.tags.map((tag, index) => (
-                  <Box
-                    key={index}
-                    sx={{
-                      border: "1px solid gray",
-                      borderRadius: "20px",
-                      padding: "5px 10px",
-                      backgroundColor: "lightgray",
-                    }}
-                  >
-                    {tag}
-                  </Box>
-                ))}
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  marginTop: "20px",
-                  marginBottom: "10px",
-                }}
-              >
-                <Button onClick={handleDialogClose} variant="outlined">
-                  Cerrar
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={() => handlePostulation(selectedWork.id)}
-                >
-                  Postularse
-                </Button>
-              </Box>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
+      <WorkModalVolunteer
+        modalOpen={modalOpen}
+        handleModalClose={handleModalClose}
+        selectedWork={selectedWork}
+        handlePostulation={handlePostulation}
+        handleDateChange={handleDateChange}
+      />
     </Box>
   );
 }
