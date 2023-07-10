@@ -203,10 +203,15 @@ export default function WorkInstanceTraking() {
             marginRight: "50px",
           }}
         >
-          <Button onClick={() => window.history.back()}>
+          <Button onClick={() => window.history.back()} sx={{ marginRight: "120px" }}>
             <ArrowBackIcon />
           </Button>
+          <Typography variant="h4" component="h2" align="center" sx={{ fontSize: "30px" }}>
+            Seguimiento del trabajo: <br/>
+            {WORK_TITLE}
+          </Typography>
         </Box>
+        <Box mb={3} />
         <div
           style={{
             display: "flex",

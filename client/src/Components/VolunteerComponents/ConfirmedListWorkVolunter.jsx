@@ -9,8 +9,9 @@ import {
   Button,
   Pagination,
   Box,
+  Divider,
 } from "@mui/material";
-
+import { format } from "date-fns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { volunteerService } from "../../Services/Api/volunteerService";
@@ -127,7 +128,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           </CardContent>
           <CardActions disableSpacing>
             <Button
-              onClick={() => handleRemoveWork(row.work.id)}
+              onClick={() => handleRemoveWork()}
               type="button"
               variant="outlined"
               color="error"
@@ -151,3 +152,4 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     </div>
   );
 }
+

@@ -8,10 +8,10 @@ export const volunteerService = {
     });
     return response.data;
   },
-  postulate: async (workId) => {
+  postulate: async (workId, selectedDates) => {
     const response = await api.request({
       url: "/volunteer/postulation",
-      data: { workId },
+      data: { workId, selectedDates },
       method: "POST",
     });
     return response.data;
