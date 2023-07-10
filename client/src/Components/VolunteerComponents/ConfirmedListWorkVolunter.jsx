@@ -97,48 +97,86 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           <p>No ha hecho ninguna solicitud de trabajos aún</p>
         )}
       </div>
-      {workData.map((row, index) => (
-        <Card
-          key={index}
-          sx={{ marginBottom: "20px", border: "1px solid black" }}
-        >
-          <CardHeader
-            action={
-              !statusConfirmed ? null : (
-                <Button
-                  onClick={() => handleFollow()}
-                  type="button"
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<VisibilityIcon />}
-                >
-                  Ver seguimiento
-                </Button>
-              )
-            }
-            title={row.work.title}
-            subheader={`Trabajo ${
-              row.work.type === 1 ? "recurrente" : "de sesión"
-            }`}
-          />
-          <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              {row.work.description}
-            </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <Button
-              onClick={() => handleRemoveWork()}
-              type="button"
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteIcon />}
-            >
-              {statusConfirmed ? "Abandonar tabajo" : "Cancelar solicitud"}
-            </Button>
-          </CardActions>
-        </Card>
-      ))}
+      <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {workData.map((row, index) => (
+          <Card
+            key={index}
+            sx={{
+              marginBottom: "20px",
+              border: "1px solid black",
+              minWidth: 800,
+            }}
+          >
+            <CardHeader
+              action={
+                !statusConfirmed ? null : (
+                  <Button
+                    onClick={() => handleFollow()}
+                    type="button"
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<VisibilityIcon />}
+                  >
+                    Ver seguimiento
+                  </Button>
+                )
+              }
+              title={row.work.title}
+              subheader={`Trabajo ${
+                row.work.type === 1 ? "recurrente" : "de sesión"
+              }`}
+            />
+            <CardContent>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Descripción:</strong> {row.work.description}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de inicio:</strong> {format(new Date(row.work.dateInit), "dd-MM-yyyy")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de fin:</strong> {format(new Date(row.work.dateEnd), "dd-MM-yyyy")}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <Box mb={0}>
+                    <strong>Bloques:</strong>{" "}
+                  </Box>{" "}
+                  <br />
+                  {row.work.blocks &&
+                    JSON.parse(row.work.blocks).map((block, index) => (
+                      <span key={block}>
+                        <strong>Día:</strong> {block.day}
+                        <Box component="span" mx={2} />
+                        <strong>Hora:</strong> {block.hour}
+                        {index < JSON.parse(row.work.blocks).length - 1 &&
+                          ", "}{" "}
+                        <br />
+                      </span>
+                    ))}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardActions disableSpacing>
+              <Button
+                onClick={() => handleRemoveWork(row.work.id)}
+                type="button"
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+              >
+                {statusConfirmed ? "Abandonar trabajo" : "Cancelar solicitud"}
+              </Button>
+            </CardActions>
+          </Card>
+        ))}
+      </div>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination
@@ -152,4 +190,3 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     </div>
   );
 }
-
