@@ -9,6 +9,7 @@ import {
   Button,
   Pagination,
   Box,
+  Divider,
 } from "@mui/material";
 
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -108,25 +109,36 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
             }`}
           />
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              Descripción: {row.work.description}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Fecha de inicio: {row.work.dateInit}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Fecha de fin: {row.work.dateEnd}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Bloques: <br/>
-              {row.work.blocks &&
-                JSON.parse(row.work.blocks).map((block, index) => (
-                  <span key={block}>
-                    Día: {block.day} Hora: {block.hour}
-                    {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
-                  </span>
-                ))}
-            </Typography>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Descripción:</strong> {row.work.description}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha de inicio:</strong> {row.work.dateInit}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha de fin:</strong> {row.work.dateEnd}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <Box mb={0}><strong>Bloques:</strong> </Box> <br/>
+                {row.work.blocks &&
+                  JSON.parse(row.work.blocks).map((block, index) => (
+                    <span key={block}>
+                      <strong>Día:</strong> {block.day}
+                      <Box component="span" mx={2} />
+                      <strong>Hora:</strong> {block.hour}
+                      {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
+                    </span>
+                  ))}
+              </Typography>
+            </Box>
           </CardContent>
           <CardActions disableSpacing>
             <Button
