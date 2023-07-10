@@ -7,6 +7,7 @@ import {
   CardContent,
   Typography,
   CardActions,
+  Divider,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -102,11 +103,41 @@ export default function WorkListProvider() {
             }`}
           />
           <CardContent>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Descripción: </strong> {work.description}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha de inicio: </strong> {work.dateInit}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong> Fecha de fin: </strong> {work.dateEnd}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <Box mb={1}><strong> Bloques: </strong></Box>
+                {work.blocks &&
+                  work.blocks.map((block) => (
+                      <Box mb={1} key={block.id}>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong> Día: </strong> {block.day}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong> Hora: </strong> {block.hour}
+                        </Typography>
+                      </Box>
+                    ))}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
             <Typography variant="body2" color="text.secondary">
-              {work.description}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              Etiquetas:
+              <strong> Etiquetas: </strong>
               {work.tags &&
                 work.tags.map((tag, index) => (
                   <span key={tag}>

@@ -12,6 +12,7 @@ import {
   Button,
   Chip,
   Tooltip,
+  Divider,
 } from "@mui/material";
 
 import ChecklistIcon from "@mui/icons-material/Checklist";
@@ -183,9 +184,42 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
             }`}
           />
           <CardContent>
-            <Typography variant="body2" color="text.secondary">
-              {row.work.description}
-            </Typography>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Descripción:</strong> {row.work.description}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha de inicio:</strong> {row.work.dateInit}
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha de fin:</strong> {row.work.dateEnd}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            <Box mb={2}>
+              <Typography variant="body2" color="text.secondary">
+                <Box mb={0}><strong>Bloques:</strong> </Box> <br/>
+                {row.work.blocks &&
+                  JSON.parse(row.work.blocks).map((block, index) => (
+                    <span key={block}>
+                      <strong>Día:</strong> {block.day}
+                      <Box component="span" mx={2} />
+                      <strong>Hora:</strong> {block.hour}
+                      {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
+                    </span>
+                  ))}
+              </Typography>
+            </Box>
+            <Divider sx={{ mb: 2 }}/>
+            {row.work.type === 1 && ( 
+              <Typography variant="body2" color="text.secondary">
+                <strong>Fecha propuesta:</strong> {/*row.work. */}
+              </Typography>
+            )}
           </CardContent>
           <CardActions disableSpacing>
             {statusConfirmed ? (
