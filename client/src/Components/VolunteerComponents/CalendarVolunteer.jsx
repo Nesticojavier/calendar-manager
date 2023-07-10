@@ -82,7 +82,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       (block) =>
         block.day &&
         block.day.toLowerCase() === dayName &&
-        (selectedHour === null || block.hour === selectedHour)
+        (selectedHour === null || selectedHour === "" || block.hour === selectedHour)
     );
 
     // Check if the work is within the start and end range
@@ -114,7 +114,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     volunteerService
       .postulate(workId)
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setDialogOpen(false)
         showSimpleAlert("Se ha postulado", "success")
       })
@@ -133,9 +133,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
 
   // To select one hour preference of the volunteer and show the works that match with the preference
   const [hours, setHours] = useState([""]);
-  const [userPrefHour, setUserPrefHour] = useState(null);
+  const [userPrefHour, setUserPrefHour] = useState("");
   const handleHourChange = (e) => {
-    setUserPrefHour(e.target.value === "" ? null : e.target.value);
+    setUserPrefHour(e.target.value === "" ? "" : e.target.value);
   };
 
   // To select one tag of the volunteer and show the works that match with it
@@ -290,8 +290,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
                   <strong>Bloques:</strong>
                 </p>
                 <ul>
-                  {selectedWork.blocks.map((block) => (
-                    <div key={block.id}>
+                  {selectedWork.blocks.map((block, index) => (
+                    <div key={index}>
                       <p>
                         <strong>Día:</strong> {block.day}
                       </p>
@@ -311,8 +311,9 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
               </p>
 
               <Box sx={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {selectedWork.tags.map((tag) => (
+                {selectedWork.tags.map((tag, index) => (
                   <Box
+                    key={index}
                     sx={{
                       border: "1px solid gray",
                       borderRadius: "20px",

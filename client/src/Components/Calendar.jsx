@@ -44,7 +44,7 @@ export default function Calendar({
       {/* To display the calendar */}
       <Grid
         container
-        spacing={2}
+        spacing={1.4}
         sx={{
           margin: "0px",
           minWidth: "100%",
