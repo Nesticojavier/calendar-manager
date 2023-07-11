@@ -8,6 +8,7 @@ const { Postulation } = require("../Models/Postulation");
 const { Tracking } = require("../Models/Tracking");
 
 const serverErrors = require("../error/error");
+const { error } = require("console");
 
 const providerService = {
   createJob: async (work, user) => {
@@ -31,27 +32,29 @@ const providerService = {
       work.blocks[0].day = dayOfWeek[date.getDay()];
     }
 
-    console.log(work);
-
-    const existWork = await Work.findOne({
-      where: {
-        users_id,
-        title: work.title,
-      },
-    });
-
-    if (existWork) {
-      throw serverErrors.errorJobAlreadyExists;
+    if (work.dateInit > work.dateEnd) {
+      throw serverErrors.errorDates
     }
-
-    // Adding missing atributes to insert
-    work.users_id = users_id;
-    work.blocks = JSON.stringify(work.blocks);
-    work.status = "propuesto";
 
     const t = await sq.transaction();
 
     try {
+      const existWork = await Work.findOne({
+        where: {
+          users_id,
+          title: work.title,
+        },
+      });
+  
+      if (existWork) {
+        throw serverErrors.errorJobAlreadyExists;
+      }
+  
+      // Adding missing atributes to insert
+      work.users_id = users_id;
+      work.blocks = JSON.stringify(work.blocks);
+      work.status = "propuesto";
+  
       const createdWork = await Work.create(work, { transaction: t });
       const promises = work.tags.map(async (title) => {
         const [tag, tagCreated] = await Tags.findOrCreate({
@@ -115,12 +118,11 @@ const providerService = {
   },
   showJobsPaginated: async (provider_id, start, limit) => {
     try {
-
-      const countRows =  await Work.count({
+      const countRows = await Work.count({
         where: {
-          users_id: provider_id
-        }
-      })
+          users_id: provider_id,
+        },
+      });
       const jobs = await sq.query(
         `SELECT wo.*, string_agg(t.title, ',') as Tags 
         FROM works wo 
@@ -139,10 +141,10 @@ const providerService = {
         e.tags = e.tags?.split(",");
         e.blocks = JSON.parse(e.blocks);
         return e;
-      })
+      });
       await Promise.all(promise);
 
-      const result = {count: countRows, rows : promise}
+      const result = { count: countRows, rows: promise };
       return result;
     } catch (error) {
       throw error;
@@ -231,6 +233,10 @@ const providerService = {
       ];
       const date = new Date(work.blocks[0].day);
       work.blocks[0].day = dayOfWeek[date.getDay()];
+    }
+
+    if (work.dateInit > work.dateEnd) {
+      throw serverErrors.errorDates
     }
 
     const t = await sq.transaction();
@@ -378,42 +384,90 @@ const providerService = {
     }
   },
   acceptPostulation: async (users_id, id) => {
+    transaction = await sq.transaction();
     try {
-      // Update Work table
-      const rowsUpdated = await Postulation.update(
-        {
-          confirmed: true,
-        },
+      const postulation = await Postulation.findByPk(id);
+
+      if (!postulation) {
+        throw serverErrors.errorPostulationDontExist;
+      }
+
+      const work = await Work.findByPk(postulation.works_id);
+
+      if (!work) {
+        throw serverErrors.errorJobDontExists;
+      }
+
+      if (work.users_id !== users_id) {
+        throw serverErrors.errorProviderDontCreateJob;
+      }
+
+      if (work.volunteerCount + 1 > work.volunteerCountMax) {
+        throw serverErrors.errorMaxVolunteers;
+      }
+
+      if (postulation.confirmed) {
+        throw serverErrors.errorPostulationAccepted;
+      }
+
+      const [updatedRows] = await Postulation.update(
+        { confirmed: true },
         {
           where: {
             id,
           },
-          include: [{ model: Work, where: users_id }],
+          transaction,
         }
       );
-      console.log(rowsUpdated);
-      if (rowsUpdated[0] === 0) {
-        throw serverErrors.error404;
+
+      if (updatedRows === 0) {
+        throw serverErrors.errorUpdate;
       }
 
+      await Work.increment("volunteerCount", {
+        by: 1,
+        where: { id: work.id },
+        transaction,
+      });
+
+      await transaction.commit();
       return serverErrors.successUpdate;
     } catch (error) {
+      await transaction.rollback();
       throw error;
     }
   },
   declinePostulation: async (users_id, id) => {
     try {
+      const postulation = await Postulation.findByPk(id);
+
+      if (!postulation) {
+        throw serverErrors.errorPostulationDontExist;
+      }
+
+      const work = await Work.findByPk(postulation.works_id);
+
+      if (!work) {
+        throw serverErrors.errorJobDontExists;
+      }
+
+      if (work.users_id !== users_id) {
+        throw serverErrors.errorProviderDontCreateJob;
+      }
+
+      if (postulation.confirmed) {
+        throw serverErrors.errorPostulationAccepted;
+      }
+
       // Update Work table
       const rowsUpdated = await Postulation.destroy({
         where: {
           id,
-          confirmed: false,
         },
-        include: [{ model: Work, where: users_id }],
       });
-      console.log(rowsUpdated);
+
       if (rowsUpdated === 0) {
-        throw serverErrors.error404;
+        throw serverErrors.errorUpdate;
       }
 
       return serverErrors.succesDelete;
@@ -439,7 +493,7 @@ const providerService = {
   },
   getTracking: async (postulation_id) => {
     try {
-      const result = await Tracking.findAll({postulation_id})
+      const result = await Tracking.findAll({ where: {postulation_id} });
       return result;
     } catch (error) {
       throw error;
