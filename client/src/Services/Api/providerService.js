@@ -24,6 +24,22 @@ export const providerService = {
     });
     return response.data;
   },
+  getJobsPaginated: async (start, limit) => {
+    /**
+     * @PARAM
+     * - start: number of row in the database for start display
+     * - limit: number of rows to display
+     */
+    const response = await api.request({
+      url: "/provider/paginatedjobs",
+      method: "GET",
+      params: {
+        start,
+        limit,
+      },
+    });
+    return response.data;
+  },
   deleteJob: async (jobId) => {
     const response = await api.request({
       url: `/provider/job/${jobId}`,

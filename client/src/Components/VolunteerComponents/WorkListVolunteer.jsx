@@ -15,7 +15,7 @@ export default function WorkListVolunteer() {
   return (
     <Box
       flex={7}
-      px={40}
+      px={15}
       sx={{
         display: "flex",
         flexDirection: "column",

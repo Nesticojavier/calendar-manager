@@ -11,10 +11,11 @@ import {
   Box,
   Divider,
 } from "@mui/material";
-
+import { format, addDays } from "date-fns";
 import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { volunteerService } from "../../Services/Api/volunteerService";
+import Swal from "sweetalert2";
 
 export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   // constant to store the number of rows to display
@@ -34,6 +35,8 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     setCurrentPage(page);
   };
 
+  const [isRemoved, setIsRemoved] = useState(false);
+
   // Fecth data when change current page and the status bar
   useEffect(() => {
     const start = (currentPage - 1) * NUMBER_ROW;
@@ -44,11 +47,12 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
       .then((response) => {
         setWorkData(response.rows);
         setTotalPages(Math.ceil(response.count / NUMBER_ROW));
+        setIsRemoved(false);
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [currentPage, statusConfirmed]);
+  }, [currentPage, statusConfirmed, isRemoved]);
 
   // When change status view, the page number should be reset to 1
   useEffect(() => {
@@ -61,15 +65,24 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   };
 
   // handle for remove or leave work and delete from the list
-  const handleRemoveWork = () => {
+  const handleRemoveWork = (workId) => {
     if (statusConfirmed) {
       alert(
         "Se debe abandonar el trabajo y eliminarlo de la lista de trabajos"
       );
     } else {
-      alert(
-        "Se debe cancelar la solicitud de trabajo y eliminarlo de la lista de trabajo"
-      );
+      volunteerService
+        .cancelPostulation(workId)
+        .then((response) => {
+          setIsRemoved(true);
+          Swal.fire({
+            icon: "success",
+            title: "Postulacion cancelada",
+          });
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 
@@ -84,75 +97,97 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
           <p>No ha hecho ninguna solicitud de trabajos aún</p>
         )}
       </div>
-      {workData.map((row, index) => (
-        <Card
-          key={index}
-          sx={{ marginBottom: "20px", border: "1px solid black" }}
-        >
-          <CardHeader
-            action={
-              !statusConfirmed ? null : (
-                <Button
-                  onClick={() => handleFollow()}
-                  type="button"
-                  variant="outlined"
-                  color="primary"
-                  startIcon={<VisibilityIcon />}
-                >
-                  Ver seguimiento
-                </Button>
-              )
-            }
-            title={row.work.title}
-            subheader={`Trabajo ${
-              row.work.type === 1 ? "recurrente" : "de sesión"
-            }`}
-          />
-          <CardContent>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Descripción:</strong> {row.work.description}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio:</strong> {row.work.dateInit}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de fin:</strong> {row.work.dateEnd}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }}/>
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <Box mb={0}><strong>Bloques:</strong> </Box> <br/>
-                {row.work.blocks &&
-                  JSON.parse(row.work.blocks).map((block, index) => (
-                    <span key={block}>
-                      <strong>Día:</strong> {block.day}
-                      <Box component="span" mx={2} />
-                      <strong>Hora:</strong> {block.hour}
-                      {index < JSON.parse(row.work.blocks).length - 1 && ", "} <br/>
-                    </span>
-                  ))}
-              </Typography>
-            </Box>
-          </CardContent>
-          <CardActions disableSpacing>
-            <Button
-              onClick={() => handleRemoveWork()}
-              type="button"
-              variant="outlined"
-              color="error"
-              startIcon={<DeleteIcon />}
-            >
-              {statusConfirmed ? "Abandonar trabajo" : "Cancelar solicitud"}
-            </Button>
-          </CardActions>
-        </Card>
-      ))}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
+        {workData.map((row, index) => (
+          <Card
+            key={index}
+            sx={{
+              marginBottom: "20px",
+              border: "1px solid black",
+              minWidth: 800,
+            }}
+          >
+            <CardHeader
+              action={
+                !statusConfirmed ? null : (
+                  <Button
+                    onClick={() => handleFollow()}
+                    type="button"
+                    variant="outlined"
+                    color="primary"
+                    startIcon={<VisibilityIcon />}
+                  >
+                    Ver seguimiento
+                  </Button>
+                )
+              }
+              title={row.work.title}
+              subheader={`Trabajo ${
+                row.work.type === 1 ? "recurrente" : "de sesión"
+              }`}
+            />
+            <CardContent>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Descripción:</strong> {row.work.description}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de inicio:</strong>{" "}
+                  {format(
+                    addDays(new Date(row.work.dateInit), 1),
+                    "dd-MM-yyyy"
+                  )}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de fin:</strong>{" "}
+                  {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <Box mb={0}>
+                    <strong>Bloques:</strong>{" "}
+                  </Box>{" "}
+                  <br />
+                  {row.work.blocks &&
+                    JSON.parse(row.work.blocks).map((block, index) => (
+                      <span key={block}>
+                        <strong>Día:</strong> {block.day}
+                        <Box component="span" mx={2} />
+                        <strong>Hora:</strong> {block.hour}
+                        {index < JSON.parse(row.work.blocks).length - 1 &&
+                          ", "}{" "}
+                        <br />
+                      </span>
+                    ))}
+                </Typography>
+              </Box>
+            </CardContent>
+            <CardActions disableSpacing>
+              <Button
+                onClick={() => handleRemoveWork(row.work.id)}
+                type="button"
+                variant="outlined"
+                color="error"
+                startIcon={<DeleteIcon />}
+              >
+                {statusConfirmed ? "Abandonar trabajo" : "Cancelar solicitud"}
+              </Button>
+            </CardActions>
+          </Card>
+        ))}
+      </div>
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
         <Pagination

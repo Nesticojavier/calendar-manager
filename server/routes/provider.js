@@ -7,11 +7,12 @@ const {
   createJob,
   deleteJob,
   updateJob,
-  showJobs,
+  showJobsPaginated,
   showJob,
   showTags,
   getJobByMonth,
   jobsInProgress,
+  showJobs,
   acceptPostulation,
   declinePostulation,
   insertTrackingRecord,
@@ -24,6 +25,8 @@ router.use(verifyToken(process.env.USERS_ENCRYPT));
 router.post("/create", createJob);
 // Show all jobs created by a user
 router.get("/myJobs", showJobs);
+// Show all jobs created by a user
+router.get("/paginatedjobs", showJobsPaginated);
 //Delete Job
 router.delete("/job/:id", deleteJob);
 //Show details of a Job by id

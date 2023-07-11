@@ -8,20 +8,36 @@ import {
   Typography,
   CardActions,
   Divider,
+  Pagination,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
+import { format, addDays } from "date-fns";
 
 export default function WorkListProvider() {
+  // constant to store the number of rows to display
+  const NUMBER_ROW = 4;
+
   // Hook for navigate
   const navigate = useNavigate();
 
   // states necessary
   const [workData, setWorkData] = useState([]);
   const [isDeleted, setIsDeleted] = useState(false);
+
+  //state for set current page in the pagination
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // State for set total pages to display in the pagination
+  const [totalPages, setTotalPages] = useState(0);
+
+  // handle for change page number page value
+  const handlePageChange = (event, page) => {
+    setCurrentPage(page);
+  };
 
   // alert for confirmation of work deletion
   const alertDeleteWork = () => {
@@ -69,21 +85,25 @@ export default function WorkListProvider() {
   };
 
   useEffect(() => {
+    setIsDeleted(false);
+    const start = (currentPage - 1) * NUMBER_ROW;
+    const limit = NUMBER_ROW;
     providerService
-      .getJobs()
-      .then((workList) => {
-        setWorkData(workList);
+      .getJobsPaginated(start, limit)
+      .then((data) => {
+        setWorkData(data.rows);
+        setTotalPages(Math.ceil(data.count / NUMBER_ROW));
       })
       .catch((error) => {
         console.error(error);
       });
-  }, [isDeleted]);
+  }, [isDeleted, currentPage]);
 
   return (
     <Box
       flex={7}
       pt={5}
-      px={40}
+      px={25}
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
       {workData.map((work) => (
@@ -103,39 +123,43 @@ export default function WorkListProvider() {
             }`}
           />
           <CardContent>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
                 <strong>Descripción: </strong> {work.description}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio: </strong> {work.dateInit}
+                <strong>Fecha de inicio: </strong>{" "}
+                {format(addDays(new Date(work.dateInit), 1), "dd-MM-yyyy")}
               </Typography>
               <Typography variant="body2" color="text.secondary">
-                <strong> Fecha de fin: </strong> {work.dateEnd}
+                <strong> Fecha de fin: </strong>{" "}
+                {format(addDays(new Date(work.dateEnd), 1), "dd-MM-yyyy")}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
               <Typography variant="body2" color="text.secondary">
-                <Box mb={1}><strong> Bloques: </strong></Box>
+                <Box mb={1}>
+                  <strong> Bloques: </strong>
+                </Box>
                 {work.blocks &&
                   work.blocks.map((block) => (
-                      <Box mb={1} key={block.id}>
-                        <Typography variant="body2" color="text.secondary">
-                          <strong> Día: </strong> {block.day}
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
-                          <strong> Hora: </strong> {block.hour}
-                        </Typography>
-                      </Box>
-                    ))}
+                    <Box mb={1} key={block.id}>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong> Día: </strong> {block.day}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        <strong> Hora: </strong> {block.hour}
+                      </Typography>
+                    </Box>
+                  ))}
               </Typography>
             </Box>
-            <Divider sx={{ mb: 2 }}/>
+            <Divider sx={{ mb: 2 }} />
             <Typography variant="body2" color="text.secondary">
               <strong> Etiquetas: </strong>
               {work.tags &&
@@ -158,6 +182,16 @@ export default function WorkListProvider() {
           </CardActions>
         </Card>
       ))}
+
+      <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
+        <Pagination
+          onChange={handlePageChange}
+          page={currentPage}
+          count={totalPages}
+          variant="outlined"
+          color="primary"
+        />
+      </Box>
     </Box>
   );
 }

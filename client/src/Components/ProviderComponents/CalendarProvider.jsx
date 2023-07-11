@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Box, Dialog, DialogTitle, DialogContent, Divider } from "@mui/material";
+import { Box } from "@mui/material";
 import { getDaysInMonth, isSameDay, addDays } from "date-fns";
 import Calendar from "../Calendar";
 import CalendarLegend from "../CalendarLegend";
 import { days, monthNames } from "../Utils/calendarConstants";
 import { providerService } from "../../Services/Api/providerService";
+import WorkModalProvider from "./WorkModalProvider";
 
 export default function CalendarProvider({ setIsLoggedIn }) {
   // to know the current month
@@ -51,7 +52,7 @@ export default function CalendarProvider({ setIsLoggedIn }) {
     .catch((error) => {
       console.error(error);
     });
-    
+
   }, []);
 
   // to show the works tags in the calendar
@@ -84,15 +85,15 @@ export default function CalendarProvider({ setIsLoggedIn }) {
   // to show a dialog with the work information
   const [selectedWork, setSelectedWork] = useState(null);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
 
   const handleWorkClick = (work) => {
-    setDialogOpen(true);
+    setModalOpen(true);
     setSelectedWork(work);
   };
 
-  const handleDialogClose = (event) => {
-    setDialogOpen(false);
+  const handleModalClose = (event) => {
+    setModalOpen(false);
   };
 
   return (
@@ -126,97 +127,13 @@ export default function CalendarProvider({ setIsLoggedIn }) {
         handleWorkClick={handleWorkClick}
       />
 
-      {/* To display the dialog with the work information */}
-      <Dialog open={dialogOpen} onClose={handleDialogClose}>
-        <DialogTitle sx={{ textAlign: "center" }}>
-          <strong>Información del trabajo</strong>
-        </DialogTitle>
+      {/* To display the modal with the work information */}
+      <WorkModalProvider
+        modalOpen={modalOpen}
+        handleModalClose={handleModalClose}
+        selectedWork={selectedWork}
+      />
 
-        <DialogContent>
-          {selectedWork && (
-            <Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Título:</strong> {selectedWork.title}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Descripción:</strong> {selectedWork.description}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Tipo:</strong>{" "}
-                  {`Trabajo ${
-                    selectedWork.type === 1 ? "recurrente" : "de sesión"
-                  }`}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p>
-                  <strong>Fecha de inicio:</strong> {selectedWork.dateInit}
-                </p>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Fecha de fin:</strong> {selectedWork.dateEnd}
-                </p>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-              <Box sx={{ marginBottom: "20px" }}>
-                <p style={{ marginBottom: "10px" }}>
-                  <strong>Bloques:</strong>
-                </p>
-                <ul>
-                  {selectedWork.blocks.map((block) => (
-                    <div key={block.id}>
-                      <p>
-                        <strong>Día:</strong> {block.day}
-                      </p>
-                      <p style={{ marginBottom: "10px" }}>
-                        <strong>Hora:</strong> {block.hour}
-                      </p>
-                    </div>
-                  ))}
-                </ul>
-                <Divider
-                  sx={{ borderBottom: "1px solid gray", margin: "10px 0" }}
-                />
-              </Box>
-
-              <p style={{ marginBottom: "10px" }}>
-                <strong>Etiquetas:</strong>
-              </p>
-
-              <Box sx={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-                {selectedWork.tags.map((tag) => (
-                  <Box
-                    key={tag}
-                    sx={{
-                      border: "1px solid gray",
-                      borderRadius: "20px",
-                      padding: "5px 10px",
-                      backgroundColor: "lightgray",
-                    }}
-                  >
-                    {tag}
-                  </Box>
-                ))}
-              </Box>
-            </Box>
-          )}
-        </DialogContent>
-      </Dialog>
     </Box>
   );
 }
