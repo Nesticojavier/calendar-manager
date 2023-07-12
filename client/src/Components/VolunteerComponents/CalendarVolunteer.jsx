@@ -107,6 +107,11 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   };
 
   const handlePostulation = (workId) => {
+    if (selectedDates[0] === null || selectedDates[1] === null) {
+      showSimpleAlert("Debe seleccionar una fecha de inicio y fin", "warning");
+      return;
+    }
+
     volunteerService
       .postulate(workId, selectedDates)
       .then((response) => {
