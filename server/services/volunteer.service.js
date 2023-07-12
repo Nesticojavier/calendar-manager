@@ -95,8 +95,8 @@ const volunteerService = {
                     LEFT JOIN "workTags" w ON wo.id = w.works_id 
                     LEFT JOIN tags t ON t.id = w.tags_id
                     GROUP BY wo.id
-                    HAVING wo."dateInit" >= :FIRSTDAY::DATE AND 
-                           wo."dateEnd" <= :ENDDAY::DATE`,
+                    HAVING wo."dateInit" <= :ENDDAY::DATE AND 
+                           wo."dateEnd" >= :FIRSTDAY::DATE`,
         {
           replacements: {
             FIRSTDAY: firstDay,

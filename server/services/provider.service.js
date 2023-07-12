@@ -309,13 +309,13 @@ const providerService = {
     const endDay = new Date(year, month, 0);
     try {
       const jobsByDate = await sq.query(
-        `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 
+        `SELECT wo.*, string_agg(t.title, ',') as Tags 
                     FROM works wo 
                     LEFT JOIN "workTags" w ON wo.id = w.works_id 
                     LEFT JOIN tags t ON t.id = w.tags_id
                     GROUP BY wo.id
-                    HAVING wo."dateInit" >= :FIRSTDAY::DATE AND 
-                           wo."dateEnd" <= :ENDDAY::DATE AND
+                    HAVING wo."dateInit" <= :ENDDAY::DATE AND 
+                           wo."dateEnd" >= :FIRSTDAY::DATE AND
                            wo."users_id" = :USERID`,
         {
           replacements: {
