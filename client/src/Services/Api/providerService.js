@@ -24,6 +24,13 @@ export const providerService = {
     });
     return response.data;
   },
+  getTags: async () => {
+    const response = await api.request ({
+      url: "/tags",
+      method: "GET",
+    });
+    return response.data;
+  },
   getJobsPaginated: async (start, limit) => {
     /**
      * @PARAM

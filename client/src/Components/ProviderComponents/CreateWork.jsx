@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import WorkForm from "./WorkForm";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
+import { useState, useEffect } from "react";
 
 export default function CreateWork() {
   const navigate = useNavigate();
@@ -45,10 +46,24 @@ export default function CreateWork() {
     blocks: [],
   };
 
+  const [tagsDB, setTags] = useState([]);
+
+  useEffect(() => {
+    providerService
+      .getTags()
+      .then((response) => {
+        const titles = response.map((tag) => tag.title);
+        setTags(titles);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <Box flex={8} pt={5} px={40}>
       <h1>Crear Trabajo</h1>
-      <WorkForm onSubmit={onSubmit} work={work} />
+      <WorkForm onSubmit={onSubmit} work={work} tagsDB={tagsDB} />
     </Box>
   );
 }
