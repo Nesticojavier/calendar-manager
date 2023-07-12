@@ -95,8 +95,8 @@ const volunteerService = {
                     LEFT JOIN "workTags" w ON wo.id = w.works_id 
                     LEFT JOIN tags t ON t.id = w.tags_id
                     GROUP BY wo.id
-                    HAVING wo."dateInit" >= :FIRSTDAY::DATE AND 
-                           wo."dateEnd" <= :ENDDAY::DATE`,
+                    HAVING wo."dateInit" <= :ENDDAY::DATE AND 
+                           wo."dateEnd" >= :FIRSTDAY::DATE`,
         {
           replacements: {
             FIRSTDAY: firstDay,
@@ -214,14 +214,14 @@ const volunteerService = {
 
     return response;
   },
-  postulate: async (user, works_id) => {
+  postulate: async (user, works_id, dateInit, dateEnd) => {
     const { id: users_id, rol } = user;
-
+    
     if (rol !== "voluntario") {
       throw serverErrors.errorUnauthorizedRole;
     }
 
-    const transaction = await sq.transaction();
+ 
     try {
       const work = await Work.findByPk(works_id);
 
@@ -233,20 +233,14 @@ const volunteerService = {
         throw serverErrors.errorMaxVolunteers;
       }
 
-      const postulation = await Postulation.create(
-        { users_id, works_id },
-        transaction
-      );
+      if (work.dateInit > dateInit || work.dateEnd < dateEnd || dateInit > dateEnd) {
+        throw serverErrors.errorDates
+      }
 
-      await Work.update(
-        { volunteerCount: work.volunteerCount + 1 },
-        { where: { id: works_id }, transaction }
-      );
-      await transaction.commit();
+      const postulation = await Postulation.create({ users_id, works_id });
+
       return postulation;
     } catch (error) {
-      await transaction.rollback();
-
       if (error.name == "SequelizeUniqueConstraintError") {
         throw serverErrors.errorUserAlreadyPostulated;
       }
@@ -299,7 +293,6 @@ const volunteerService = {
       throw serverErrors.errorUnauthorizedRole;
     }
 
-    const transaction = await sq.transaction();
     try {
       const work = await Work.findByPk(works_id);
 
@@ -309,26 +302,13 @@ const volunteerService = {
 
       const rowsDeleted = await Postulation.destroy({
         where: { users_id, works_id },
-        transaction,
       });
 
       if (rowsDeleted === 0) {
         throw serverErrors.errorUserHasNotPostulated;
       }
-
-      await Work.update(
-        { volunteerCount: work.volunteerCount - 1 },
-        { where: { id: works_id }, transaction }
-      );
-      await transaction.commit();
       return;
     } catch (error) {
-      await transaction.rollback();
-
-      if (error.name == "SequelizeUniqueConstraintError") {
-        throw serverErrors.errorUserAlreadyPostulated;
-      }
-
       throw error;
     }
   },

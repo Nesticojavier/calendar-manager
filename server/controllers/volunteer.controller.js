@@ -85,8 +85,9 @@ const showProfile = async (req, res) => {
 
 const postulate = async (req, res) => {
   const { workId } = req.body;
+  const [dateInit, dateEnd] = req.body.selectedDates
 
-  if (!workId) {
+  if (!workId || !dateInit || !dateEnd ) {
     const error = serverErrors.errorMissingData;
     return res
       .status(error?.status || 500)
@@ -94,7 +95,7 @@ const postulate = async (req, res) => {
   }
 
   try {
-    const postulation = await volunteerService.postulate(req.userData, workId);
+    const postulation = await volunteerService.postulate(req.userData, workId, dateInit, dateEnd);
     res.json(postulation);
   } catch (error) {
     return res
