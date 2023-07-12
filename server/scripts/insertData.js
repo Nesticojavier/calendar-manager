@@ -12,76 +12,37 @@ const { UserBlocks } = require("../Models/Blocks");
 const { Postulation } = require("../Models/Postulation");
 const { Tracking } = require("../Models/Tracking");
 
-// users.map(async (user) => await authService.signup(user));
-const insertUsers = async () => {
+const insertData = async () => {
   try {
-    // users.map(async (user) => await authService.signup(user));
-    // console.log("Datos insertados exitosamente");
+    // Limpia las tablas existentes si es necesario
+    await Users.sync({ force: true });
+    await Credential.sync({ force: true });
+    await Work.sync({ force: true });
+    await Tags.sync({ force: true });
+    await WorkTags.sync({ force: true });
+    await UserTags.sync({ force: true });
+    await UserBlocks.sync({ force: true });
+    await Postulation.sync({ force: true });
+    await Tracking.sync({ force: true });
+
+    // Inserta los usuarios en la base de datos
     for (const user of users) {
-      authService.signup(user);
-      console.log("Usuario insertado:", user);
+      await authService.signup(user);
+      console.log(`Usuario ${user.username} insertado`);
     }
+    
+    // Inserta los trabajos en la base de datos
+    for (const { user, work } of works) {
+        await providerService.createJob(work, user);
+        console.log(
+        `Trabajo "${work.title}" insertado para el usuario ${user.username}`
+      );
+    }
+
+    console.log("Inserción de datos completada.");
   } catch (error) {
     console.error("Error al insertar datos:", error);
   }
 };
 
-const insertWorks = async () => {
-  try {
-    // works.map(
-    //   async (work) => await providerService.createJob(work.work, work.user)
-    // );
-    for (const work of works) {
-      await providerService.createJob(work.work, work.user);
-      console.log("Trabajos insertados exitosamente: ", work.work.title);
-    }
-
-  } catch (error) {
-    console.error("Error al insertar datos:", error);
-  }
-};
-
-(async () => {
-  await Users.sync({ force: true }).then(() => {
-    console.log("Users Model synced 2");
-  });
-  await Credential.sync({ force: true }).then(() => {
-    console.log("Credential Model synced 2");
-  });
-
-  await Work.sync({ force: true }).then(() => {
-    console.log("Work Model synced 2");
-  });
-
-  await Tags.sync({ force: true }).then(() => {
-    console.log("Tags Model synced 2");
-  });
-
-  await WorkTags.sync({ force: true }).then(() => {
-    console.log("WorkTags Model synced 2");
-  });
-
-  await UserTags.sync({ force: true }).then(() => {
-    console.log("UserTags Model synced 2");
-  });
-
-  await UserBlocks.sync({ force: true }).then(() => {
-    console.log("UserBlocks Model synced 2");
-  });
-  await Postulation.sync({ force: true }).then(() => {
-    console.log("Postulation Model synced 2");
-  });
-
-  await Tracking.sync({ force: true }).then(() => {
-    console.log("Tracking Model synced 2");
-  });
-
-  await insertUsers();
-
-  await insertWorks();
-})();
-
-// Ejecuta la función para insertar los datos
-
-// insertUsers();
-// insertWorks();
+insertData();
