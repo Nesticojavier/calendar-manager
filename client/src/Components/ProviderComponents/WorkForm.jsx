@@ -411,7 +411,7 @@ export default function WorkForm({ work, onSubmit, edit }) {
 
               {showErrorDate && (
                 <span>
-                  La fecha de culminacion debe ser después que la de inicio.
+                  La fecha de culminación debe ser después que la de inicio.
                 </span>
               )}
             </div>
