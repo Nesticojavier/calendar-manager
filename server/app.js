@@ -56,7 +56,7 @@ const { Tracking } = require("./Models/Tracking");
   await Postulation.sync({ force: false }).then(() => {
     console.log("Postulation Model synced 2");
   });
-  
+
   await Tracking.sync({ force: false }).then(() => {
     console.log("Tracking Model synced 2");
   });
@@ -83,6 +83,7 @@ var providerRouter = require("./routes/provider");
 var adminRouter = require("./routes/admin");
 var volunteerRouter = require("./routes/volunteer");
 var utilsRouter = require("./routes/utils");
+var reportsRouter = require("./routes/reports")
 
 app.use(indexRouter);
 app.use(authRouter);
@@ -90,6 +91,7 @@ app.use(utilsRouter);
 app.use("/provider", providerRouter);
 app.use("/admin", adminRouter);
 app.use("/volunteer", volunteerRouter);
+app.use("/report", reportsRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
