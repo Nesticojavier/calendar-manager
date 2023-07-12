@@ -4,7 +4,7 @@ import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import "./WorkCreationForm.css";
 
-export default function WorkForm({ work, onSubmit, edit }) {
+export default function WorkForm({ work, onSubmit, edit, tags }) {
   //Library for render form
   const inputs = [
     {
@@ -481,7 +481,7 @@ export default function WorkForm({ work, onSubmit, edit }) {
           multiple
           filterSelectedOptions
           id="tags-standard"
-          options={tagsDB}
+          options={tags}
           value={selectedTags}
           onChange={handleTagSelection}
           renderInput={(params) => (
@@ -519,17 +519,3 @@ export default function WorkForm({ work, onSubmit, edit }) {
     </Box>
   );
 }
-
-// Sintetic data
-const tagsDB = [
-  "python",
-  "programacion",
-  "educacion",
-  "java",
-  "matematicas",
-  "aprendizaje",
-  "universidad",
-  "escuela",
-  "jardineria",
-  "servicios",
-];
