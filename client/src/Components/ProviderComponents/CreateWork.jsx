@@ -46,7 +46,7 @@ export default function CreateWork() {
     blocks: [],
   };
 
-  const [tags, setTags] = useState([]);
+  const [tagsDB, setTags] = useState([]);
 
   useEffect(() => {
     providerService
@@ -63,7 +63,7 @@ export default function CreateWork() {
   return (
     <Box flex={8} pt={5} px={40}>
       <h1>Crear Trabajo</h1>
-      <WorkForm onSubmit={onSubmit} work={work} tags={tags} />
+      <WorkForm onSubmit={onSubmit} work={work} tagsDB={tagsDB} />
     </Box>
   );
 }

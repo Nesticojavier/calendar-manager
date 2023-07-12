@@ -5,6 +5,7 @@ import WorkForm from "./WorkForm";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
+import { useState, useEffect } from "react";
 
 export default function EditWork() {
   const navigate = useNavigate();
@@ -60,13 +61,28 @@ export default function EditWork() {
         console.log(error);
       });
   };
+
+  const [tagsDB, setTags] = useState([]);
+
+  useEffect(() => {
+    providerService
+      .getTags()
+      .then((response) => {
+        const titles = response.map((tag) => tag.title);
+        setTags(titles);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <Box flex={8} pt={5} px={40}>
       <Button onClick={() => window.history.back()}>
         <ArrowBackIcon />
       </Button>
       <h1>Editar Trabajo: {work.workTitle}</h1>
-      <WorkForm onSubmit={onSubmit} work={work} edit={true} />
+      <WorkForm onSubmit={onSubmit} work={work} edit={true} tagsDB={tagsDB} />
     </Box>
   );
 }
