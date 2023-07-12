@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
     "serverstart": "DEBUG=myapp* npm run devstart",
-    "migrate": "node scripts/migrate.js"
+    "migrate": "node scripts/migrate.js",
+    "insert": "node scripts/insertData.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
