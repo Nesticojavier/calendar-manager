@@ -35,7 +35,16 @@ const Postulation = sq.define(
       allowNull: false,
       defaultValue: false,
     },
+    dateInit: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    dateEnd: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
   },
+
   {
     indexes: [
       {
