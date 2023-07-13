@@ -14,4 +14,6 @@ server/node_modules
 *.sln
 *.sw?
 server/.env
+*.pdf
+*.csv
 

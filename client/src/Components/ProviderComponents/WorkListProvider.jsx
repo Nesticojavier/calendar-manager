@@ -16,6 +16,8 @@ import { useNavigate } from "react-router-dom";
 import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
 import { format, addDays } from "date-fns";
+import { reportsService } from "../../Services/Api/reportsService";
+import { saveAs } from 'file-saver';
 
 export default function WorkListProvider() {
   // constant to store the number of rows to display
@@ -99,6 +101,18 @@ export default function WorkListProvider() {
       });
   }, [isDeleted, currentPage]);
 
+  const handleReport = () => {
+    reportsService
+          .getReportProvider()
+          .then((response) => {
+            const pdfBlob = new Blob([response], { type: 'application/pdf' });
+            saveAs(pdfBlob, 'newPdf.pdf');
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+  };
+
   return (
     <Box
       flex={7}
@@ -106,6 +120,9 @@ export default function WorkListProvider() {
       px={25}
       sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
     >
+      <Box>
+        <button onClick={() => handleReport()}>gererar reporte</button>
+      </Box>
       {workData.map((work) => (
         <Card
           key={work.id}
