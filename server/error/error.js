@@ -15,7 +15,7 @@ const serverErrors = {
   },
 
   errorMaxVolunteers: {
-    message: "Numero maximo de voluntarios",
+    message: "Número máximo de voluntarios alcanzado",
     status: 409,
   },
   errorInvalidCredentials: {
@@ -24,7 +24,7 @@ const serverErrors = {
   },
 
   errorUnauthorized: {
-    message: "Ruta protegida",
+    message: "Acceso no autorizado",
     status: 401,
   },
   errorUserExists: {
@@ -32,7 +32,7 @@ const serverErrors = {
     status: 409,
   },
   errorUserDontExists: {
-    message: "El usuario ya existe",
+    message: "El usuario no existe",
     status: 409,
   },
 
@@ -52,7 +52,7 @@ const serverErrors = {
   },
 
   errorUnauthorizedRole: {
-    message: "No tienes permisos para realizar esta accion",
+    message: "No tienes permisos para realizar esta acción",
     status: 403,
   },
 
@@ -82,7 +82,7 @@ const serverErrors = {
   },
 
   errorUserHasNotPostulated: {
-    message: "El usuario no esta postulado al trabajo",
+    message: "El usuario no está postulado al trabajo",
     status: 409,
   },
 
@@ -97,7 +97,7 @@ const serverErrors = {
   },
 
   errorUpdate: {
-    message: "Información no se pudo actualizar",
+    message: "No se pudo actualizar la información",
     status: 409,
   },
 
@@ -105,6 +105,23 @@ const serverErrors = {
     message: "Registro exitoso",
     status: 200,
   },
+  errorPostulationDontExist: {
+    message: "La postulación no existe",
+    status: 409,
+  },
+  errorProviderDontCreateJob:{
+    message: "El trabajo no fue creado por este proveedor",
+    status: 403,
+  },
+  errorPostulationAccepted: {
+    message: "La postulación ya ha sido aceptada",
+    status: 403,
+  },
+  errorDates: {
+    message: "El intervalo de fechas no es válido",
+    status: 403,
+  }
 };
+
 
 module.exports = serverErrors;

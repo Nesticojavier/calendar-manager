@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import "./dateRange.css";
+import "./DateRange.css";
 
 export default function DateRange({ onChange, minDate, maxDate }) {
   const [startDate, setStartDate] = useState(null);
