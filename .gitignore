@@ -15,4 +15,5 @@ server/node_modules
 *.sw?
 server/.env
 *.pdf
+*.csv
 
