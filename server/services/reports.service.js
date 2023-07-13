@@ -11,7 +11,7 @@ const serverErrors = require("../error/error");
 const { error } = require("console");
 
 const reportService = {
-  getReportProvider: async (provider_id) => {
+  getReportProviderTracking: async (provider_id) => {
     try {
       const jobs = await sq.query(
         `SELECT wo.*, wo.title, string_agg(t.title, ',') as Tags 

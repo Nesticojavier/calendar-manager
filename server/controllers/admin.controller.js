@@ -41,7 +41,7 @@ const login = async (req, res) => {
       }).then((profile) => {
         // If the password is correct, we generate the JWT token and send it as a response to the client
         const token = jwt.sign(
-          { username, role: "admin" },
+          { username, rol: "admin" },
           process.env.ADMIN_ENCRYPT
         );
         res.json({ token });

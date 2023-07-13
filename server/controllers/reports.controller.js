@@ -4,13 +4,15 @@ const PDFDocument = require("pdfkit-table");
 const fs = require("fs");
 const path = require("path");
 
-const getReportProvider = async (req, res) => {
+const getReportProviderTracking = async (req, res) => {
   const outputPath = path.join(__dirname, "files", "output.pdf");
   const { id: users_id } = req.userData;
-
+  const {providerId} = req.params
+  const {startDate, endDate, date, format} = req.query
+  
   try {
     //get data
-    const data = await reportsService.getReportProvider(users_id);
+    const data = await reportsService.getReportProviderTracking(users_id);
 
     // construct pdf
     const doc = new PDFDocument({ margin: 30, size: "A4" });
@@ -51,5 +53,5 @@ const generatePDFTable = async (doc, data) => {
 };
 
 module.exports = {
-  getReportProvider,
+  getReportProviderTracking,
 };
