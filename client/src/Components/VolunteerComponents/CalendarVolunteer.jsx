@@ -104,6 +104,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
   const handleModalClose = () => {
     setModalOpen(false);
     setSelectedWork(null);
+    setSelectedDates([null, null]);
   };
 
   // To handle postulation
@@ -135,21 +136,6 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       },
     });
   };
-
-  // To get if the work is postulated by the volunteer
-  // const [postulatedWork, setPostulatedWork] = useState([]);
-
-  // useEffect(() => {
-  //   volunteerService
-  //     .getPostulatedJobs()
-  //     .then((response) => {
-  //       console.log(response);
-  //       setPostulatedWork(response);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
 
   // To select one hour preference of the volunteer and show the works that match with the preference
   const [hours, setHours] = useState([""]);

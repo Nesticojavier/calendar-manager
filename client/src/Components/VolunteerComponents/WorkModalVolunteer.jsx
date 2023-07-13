@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Modal, Box, Typography, Divider, Button } from "@mui/material";
 import DateRange from "./DateRange";
 import { addDays, format } from "date-fns";
@@ -22,6 +22,16 @@ export default function WorkModalVolunteer({
   handlePostulation,
   handleDateChange,
 }) {
+
+  const RECURRENT = selectedWork && selectedWork.type === 1;
+  const SESSION = selectedWork && selectedWork.type === 2;
+
+  useEffect(() => {
+    if (SESSION) {
+      handleDateChange([selectedWork.dateInit, selectedWork.dateEnd]);
+    }
+  }, [selectedWork, handleDateChange]);
+
   return (
     <Modal open={modalOpen}>
       <Box sx={style}>
@@ -117,7 +127,7 @@ export default function WorkModalVolunteer({
               ))}
             </Box>
 
-            {selectedWork && selectedWork.type === 1 && (
+            {RECURRENT && (
               <>
                 <Divider
                   sx={{

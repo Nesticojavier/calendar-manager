@@ -33,12 +33,12 @@ export default function EditWork() {
     tags: tags,
     blocks: workBlocks,
   };
-  // success alert
-  const alertSuccess = () => {
+  // to display alert with message
+  const showAlert = (message, icon) => {
     return new Promise((resolve) => {
       Swal.fire({
-        icon: "success",
-        title: "Trabajo actualizado exitosamente",
+        icon,
+        title: message,
       }).then((result) => {
         resolve(); // return promise
       });
@@ -53,12 +53,14 @@ export default function EditWork() {
     providerService
       .editJob(data, workId)
       .then(() => {
-        alertSuccess().then(() => {
+        showAlert("Trabajo actualizado exitosamente", "success")
+        .then(() => {
           navigate(`/provider/worklist`);
         });
       })
       .catch((error) => {
         console.log(error);
+        showAlert(error.response.data.data.error, "warning");
       });
   };
 
