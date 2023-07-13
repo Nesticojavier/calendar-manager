@@ -162,7 +162,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
                   <br />
                   {row.work.blocks &&
                     JSON.parse(row.work.blocks).map((block, index) => (
-                      <span key={block}>
+                      <span key={index}>
                         <strong>Día:</strong> {block.day}
                         <Box component="span" mx={2} />
                         <strong>Hora:</strong> {block.hour}

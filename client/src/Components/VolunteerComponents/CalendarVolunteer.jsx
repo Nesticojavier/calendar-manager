@@ -106,6 +106,7 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
     setSelectedWork(null);
   };
 
+  // To handle postulation
   const handlePostulation = (workId) => {
     if (selectedDates[0] === null || selectedDates[1] === null) {
       showSimpleAlert("Debe seleccionar una fecha de inicio y fin", "warning");
@@ -134,6 +135,21 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       },
     });
   };
+
+  // To get if the work is postulated by the volunteer
+  // const [postulatedWork, setPostulatedWork] = useState([]);
+
+  // useEffect(() => {
+  //   volunteerService
+  //     .getPostulatedJobs()
+  //     .then((response) => {
+  //       console.log(response);
+  //       setPostulatedWork(response);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
 
   // To select one hour preference of the volunteer and show the works that match with the preference
   const [hours, setHours] = useState([""]);
