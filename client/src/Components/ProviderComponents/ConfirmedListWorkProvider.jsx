@@ -166,6 +166,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
+          minHeight: "100vh"
         }}
       >
         {workData.map((row, index) => (

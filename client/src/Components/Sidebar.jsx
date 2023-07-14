@@ -38,8 +38,7 @@ export default function Sidebar() {
       borderRight={1}
       borderColor="divider"
     >
-      <List sx={{ marginTop: "20px" }}>
-
+      <List sx={{ marginTop: "20px", position: "sticky", top: "60px" }}>
         <ListItem disablePadding>
           <ListItemButton
             component={NavLink}
@@ -63,9 +62,7 @@ export default function Sidebar() {
         <ListItem disablePadding>
           <ListItemButton
             component={NavLink}
-            // component="a"
             to="workcreation"
-            // href="/WorkCreation"
             selected={selectedIndex === 1}
             onClick={(event) => handleListItemClick(event, 1)}
             sx={{
