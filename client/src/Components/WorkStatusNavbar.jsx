@@ -19,13 +19,13 @@ export default function WorkStatusNavbar({
   const [openGenerateReport, setOpenGenerateReport] = useState(false);
 
   //Open modal to generate report
-  const handleOpenGenerateReport = (x) => {
+  const handleOpenGenerateReport = () => {
     setOpenGenerateReport(true);
   };
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", my: 2 }}>
       <Button
-        onClick={() => handleOpenGenerateReport(2)}
+        onClick={handleOpenGenerateReport}
         variant="outlined"
         endIcon={<AssessmentOutlinedIcon />}
       >
