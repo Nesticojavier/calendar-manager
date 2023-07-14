@@ -184,9 +184,6 @@ export default function WorkForm({ work, onSubmit, edit, tagsDB }) {
   // To display the error message for blocks
   const [showError, setShowError] = useState(false);
 
-  // To display the error message for start and end dates
-  const [showErrorDate, setShowErrorDate] = useState(false);
-
   // To display the error message for tags
   const [showErrorTags, setShowErrorTags] = useState(false);
 
@@ -409,11 +406,6 @@ export default function WorkForm({ work, onSubmit, edit, tagsDB }) {
                 onBlur={() => handleFocus("endDate", true)}
               ></input>
 
-              {showErrorDate && (
-                <span>
-                  La fecha de culminación debe ser después que la de inicio.
-                </span>
-              )}
             </div>
           </div>
         ) : (

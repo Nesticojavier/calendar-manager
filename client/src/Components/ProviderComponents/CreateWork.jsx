@@ -10,11 +10,11 @@ export default function CreateWork() {
   const navigate = useNavigate();
 
   // success alert
-  const alertSuccess = () => {
+  const showAlert = (message, icon) => {
     return new Promise((resolve) => {
       Swal.fire({
-        icon: "success",
-        title: "Trabajo creado exitosamente",
+        icon,
+        title: message,
       }).then((result) => {
         resolve(); // return promise
       });
@@ -26,12 +26,14 @@ export default function CreateWork() {
     providerService
       .createJob(valuesEnd)
       .then(() => {
-        alertSuccess().then(() => {
+        showAlert("Trabajo creado exitosamente", "success")
+        .then(() => {
           navigate(`/provider/worklist`);
         });
       })
       .catch((error) => {
         console.log(error);
+        showAlert(error.response.data.data.error, "warning");
       });
   };
 

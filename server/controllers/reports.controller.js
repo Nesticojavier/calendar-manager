@@ -4,13 +4,15 @@ const fs = require("fs");
 const path = require("path");
 const pdfService = require("../services/file-generation/pdf.service");
 
-const getReportProvider = async (req, res) => {
+const getReportProviderTracking = async (req, res) => {
   const outputPath = path.join(__dirname, "files", "output.pdf");
-  const { id: users_id, username } = req.userData;
-
+  const { id: users_id } = req.userData;
+  const {providerId} = req.params
+  const {startDate, endDate, date, format} = req.query
+  
   try {
-    //get data using database's service
-    const data = await reportsService.getReportProvider(users_id);
+    //get data
+    const data = await reportsService.getReportProviderTracking(users_id);
 
     // use pdf generation services
     await pdfService.generatePDFTable(data, res, username);
@@ -22,5 +24,5 @@ const getReportProvider = async (req, res) => {
 };
 
 module.exports = {
-  getReportProvider,
+  getReportProviderTracking,
 };

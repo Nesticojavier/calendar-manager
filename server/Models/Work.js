@@ -49,9 +49,11 @@ const Work = sq.define("work", {
   },
   dateInit: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
   },
   dateEnd: {
     type: DataTypes.DATEONLY,
+    allowNull: false,
   },
 },
 {

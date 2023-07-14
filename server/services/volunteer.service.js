@@ -237,8 +237,8 @@ const volunteerService = {
         throw serverErrors.errorDates
       }
 
-      const postulation = await Postulation.create({ users_id, works_id });
-
+      const postulation = await Postulation.create({ users_id, works_id, dateInit, dateEnd });
+      
       return postulation;
     } catch (error) {
       if (error.name == "SequelizeUniqueConstraintError") {

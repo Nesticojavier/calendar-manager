@@ -24,6 +24,13 @@ export const providerService = {
     });
     return response.data;
   },
+  getJobsByMonth: async (month, year) => {
+    const response = await api.request({
+      url: `/provider/jobs/${year}/${month}`,
+      method: "GET",
+    });
+    return response.data;
+  },
   getTags: async () => {
     const response = await api.request ({
       url: "/tags",
