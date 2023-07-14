@@ -56,5 +56,12 @@ export const volunteerService = {
       method: "DELETE",
       data: {workId}
     })
-  }
+  },
+  // getPostulatedJobs: async () => {
+  //   const response = await api.request({
+  //     url: "/volunteer/postulation",
+  //     method: "GET",
+  //   })
+  //   return response.data;
+  // }
 };
