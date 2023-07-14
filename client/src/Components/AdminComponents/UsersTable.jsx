@@ -7,16 +7,21 @@ import {
   TableRow,
   IconButton,
   Box,
+  Tooltip,
 } from "@mui/material";
-
+import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import EditIcon from "@mui/icons-material/Edit";
 import EditUSer from "./EditUser";
 import { adminService } from "../../Services/Api/adminService";
+import GenerateReport from "../GenerateReport";
 
 export default function UsersTable() {
   const [userData, setUserData] = useState([]);
   const [openModal, setOpenModal] = useState(false); // Estado para controlar la apertura y cierre de la ventana modal
   const [selectedUser, setSelectedUser] = useState(null); // Estado para almacenar el usuario seleccionado
+
+  // States used to crontrol the windows modal with volunteer info
+  const [openGenerateReport, setOpenGenerateReport] = useState(false);
 
   useEffect(() => {
     adminService
@@ -34,10 +39,16 @@ export default function UsersTable() {
     setOpenModal(true);
   };
 
+  const handleOpenGenerateReport = (user) => {
+    setSelectedUser(user);
+    setOpenGenerateReport(true);
+  };
+
   return (
     <Box
       flex={7}
       p={4}
+      px={40}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -62,7 +73,10 @@ export default function UsersTable() {
                 {" "}
                 <b>Rol</b>{" "}
               </TableCell>
-              <TableCell> </TableCell>
+              <TableCell>
+                {" "}
+                <b>Accion</b>{" "}
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -71,9 +85,20 @@ export default function UsersTable() {
                 <TableCell>{user.username}</TableCell>
                 <TableCell>{user.user.rol}</TableCell>
                 <TableCell>
-                  <IconButton onClick={() => handleEdit(user)}>
-                    <EditIcon />
-                  </IconButton>
+                  <Tooltip title="Editar contraseña de usuario">
+                    <IconButton onClick={() => handleEdit(user)}>
+                      <EditIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {user.user.rol === "proveedor" && (
+                    <Tooltip title="Generar reportes del proveedor">
+                      <IconButton
+                        onClick={() => handleOpenGenerateReport(user)}
+                      >
+                        <AssessmentOutlinedIcon />
+                      </IconButton>
+                    </Tooltip>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -83,6 +108,13 @@ export default function UsersTable() {
 
       {openModal && (
         <EditUSer user={selectedUser} handleClose={() => setOpenModal(false)} />
+      )}
+      {openGenerateReport && (
+        <GenerateReport
+          handleClose={() => setOpenGenerateReport(false)}
+          user_id={selectedUser.id}
+          role={"proveedor"}
+        />
       )}
     </Box>
   );
