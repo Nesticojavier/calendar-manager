@@ -164,7 +164,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <strong>Fecha de la propuesta:</strong>{" "}
                     {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
@@ -175,7 +175,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
               </Box>
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box mb={0}>
                     <strong>Bloques:</strong>{" "}
                   </Box>{" "}

@@ -159,13 +159,13 @@ export default function WorkListProvider() {
             </Box>
             <Divider sx={{ mb: 2 }} />
             <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
+              <Typography component={"div"} variant="body2" color="text.secondary">
                 <Box mb={1}>
                   <strong> Bloques: </strong>
                 </Box>
                 {work.blocks &&
-                  work.blocks.map((block) => (
-                    <Box mb={1} key={block.id}>
+                  work.blocks.map((block, index) => (
+                    <Box mb={1} key={index}>
                       <Typography variant="body2" color="text.secondary">
                         <strong> Día: </strong> {block.day}
                       </Typography>

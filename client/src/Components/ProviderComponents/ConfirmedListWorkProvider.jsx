@@ -178,9 +178,6 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
               border: "1px solid black",
               minWidth: 800,
             }}
-            onClick={() => {
-              console.log(row);
-            }}
           >
             <CardHeader
               action={
@@ -219,7 +216,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <strong>Fecha de la propuesta:</strong>{" "}
                     {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
@@ -230,14 +227,14 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
               </Box>
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box mb={0}>
                     <strong>Bloques:</strong>{" "}
                   </Box>{" "}
                   <br />
                   {row.work.blocks &&
                     JSON.parse(row.work.blocks).map((block, index) => (
-                      <span key={block}>
+                      <span key={index}>
                         <strong>Día:</strong> {block.day}
                         <Box component="span" mx={2} />
                         <strong>Hora:</strong> {block.hour}
