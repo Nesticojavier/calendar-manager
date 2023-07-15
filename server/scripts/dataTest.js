@@ -207,8 +207,8 @@ works = [
       volunteerCountMax: "3",
       blocks: [{ day: "Lunes", hour: "9:00 AM" }, { day: "Sábado", hour: "3:00 PM" } ],
       tags: ["animales", "campo"],
-      dateInit: "2023-06-01",
-      dateEnd: "2023-08-01",
+      dateInit: "2023-05-01",
+      dateEnd: "2023-08-30",
     },
     user: {
       id: 1,
@@ -223,8 +223,8 @@ works = [
       volunteerCountMax: "3",
       blocks: [{ day: "Miércoles", hour: "9:00 AM" }],
       tags: ["animales", "campo"],
-      dateInit: "2023-06-13",
-      dateEnd: "2023-08-13",
+      dateInit: "2023-05-13",
+      dateEnd: "2023-08-25",
     },
     user: {
       id: 1,
@@ -239,8 +239,8 @@ works = [
       volunteerCountMax: "3",
       blocks: [{ day: "Viernes", hour: "9:00 AM" }, { day: "Jueves", hour: "9:00 AM" }, { day: "Martes", hour: "10:00 AM" }],
       tags: ["animales", "campo"],
-      dateInit: "2023-06-13",
-      dateEnd: "2023-08-13",
+      dateInit: "2023-05-13",
+      dateEnd: "2023-08-29",
     },
     user: {
       id: 1,

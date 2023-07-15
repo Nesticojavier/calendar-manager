@@ -4,6 +4,7 @@ require("dotenv").config();
 const { users, works } = require("./dataTest");
 const authService = require("../services/auth.service");
 const providerService = require("../services/provider.service");
+const volunteerService = require("../services/volunteer.service");
 
 const { Users, Credential } = require("../Models/Users");
 const { Work } = require("../Models/Work");
@@ -38,6 +39,11 @@ const insertData = async () => {
         `Trabajo "${work.title}" insertado para el usuario ${user.username}`
       );
     }
+
+    await volunteerService.postulate({id : 3, rol: "voluntario"}, 3,"2023-06-01","2023-08-04")
+    await volunteerService.postulate({id : 3, rol: "voluntario"}, 4,"2023-06-10","2023-08-04")
+    await volunteerService.postulate({id : 3, rol: "voluntario"}, 5,"2023-06-05","2023-08-04")
+
 
     console.log("Inserción de datos completada.");
   } catch (error) {
