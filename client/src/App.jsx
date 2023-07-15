@@ -64,6 +64,7 @@ function App() {
           <Route path="editprofile/:id" element={<EditVolunteerProfile />} />
           <Route path="workview/:id" element={<WorkViewVolunteer />} />
           <Route path="calendar" element={<CalendarVolunteer />} />
+          <Route path="work-instance-tracking/:id" element={<WorkInstanceTraking />} />
         </Route>
 
         {/* Routess manage for Admin */}

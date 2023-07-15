@@ -84,8 +84,9 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   //  handle for make follow up by provider
   const handleWorkTracking = (workInstance) => {
     workInstance.work.blocks = JSON.parse(workInstance.work.blocks);
+    workInstance.user.username = workInstance.user.credential.username;
     navigate(`/provider/work-instance-tracking/${workInstance.id}`, {
-      state: { workInstance },
+      state: { workInstance, editMode: true },
     });
   };
 
@@ -166,7 +167,7 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          minHeight: "100vh"
+          minHeight: "100vh",
         }}
       >
         {workData.map((row, index) => (
@@ -215,17 +216,25 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
+                <Typography component={"div"} variant="body2" color="text.secondary">
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <strong>Fecha de la propuesta:</strong>{" "}
+                    {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
+                    <Typography variant="body1">&nbsp;-&nbsp;</Typography>
+                    {format(addDays(new Date(row.dateEnd), 1), "dd-MM-yyyy")}
+                  </Box>
+                </Typography>
               </Box>
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box mb={0}>
                     <strong>Bloques:</strong>{" "}
                   </Box>{" "}
                   <br />
                   {row.work.blocks &&
                     JSON.parse(row.work.blocks).map((block, index) => (
-                      <span key={block}>
+                      <span key={index}>
                         <strong>Día:</strong> {block.day}
                         <Box component="span" mx={2} />
                         <strong>Hora:</strong> {block.hour}

@@ -344,7 +344,7 @@ const providerService = {
         where: {
           confirmed,
         },
-        attributes: ["id", "confirmed"],
+        attributes: ["id", "confirmed", "dateInit", "dateEnd"],
         include: [
           {
             model: Work,
