@@ -33,6 +33,6 @@ const Tracking = sq.define("tracking", {
   },
 });
 
-Tracking.belongsTo(Postulation, { foreignKey: "postulation_id" });
+// Tracking.belongsTo(Postulation, { foreignKey: "postulation_id" });
 
 module.exports = { Tracking };

@@ -205,7 +205,7 @@ works = [
       description: "Brinda apoyo en un hospital",
       type: "1",
       volunteerCountMax: "3",
-      blocks: [{ day: "Lunes", hour: "9:00 AM" }, { day: "Sabado", hour: "3:00 PM" } ],
+      blocks: [{ day: "Lunes", hour: "9:00 AM" }, { day: "Sábado", hour: "3:00 PM" } ],
       tags: ["animales", "campo"],
       dateInit: "2023-06-01",
       dateEnd: "2023-08-01",

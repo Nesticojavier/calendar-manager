@@ -2,6 +2,7 @@ const { sq } = require("../db/db");
 const { DataTypes } = require("sequelize");
 const { Work } = require("./Work");
 const { Users } = require("./Users");
+const { Tracking } = require("./Tracking");
 
 // Postulation Table
 const Postulation = sq.define(
@@ -57,5 +58,7 @@ const Postulation = sq.define(
 
 Postulation.belongsTo(Work, { foreignKey: "works_id" });
 Postulation.belongsTo(Users, { foreignKey: "users_id" });
+
+Postulation.hasOne(Tracking, {foreignKey: "postulation_id"})
 
 module.exports = { Postulation };

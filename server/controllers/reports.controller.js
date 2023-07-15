@@ -13,9 +13,10 @@ const getReportProviderTracking = async (req, res) => {
   try {
     //get data
     const data = await reportsService.getReportProviderTracking(users_id);
+    res.json(data)
 
     // use pdf generation services
-    await pdfService.generatePDFTable(data, res, username);
+    // await pdfService.generatePDFTable(data, res, username);
   } catch (error) {
     return res
       .status(error?.status || 500)
