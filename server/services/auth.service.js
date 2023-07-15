@@ -21,28 +21,61 @@ const authService = {
     }
 
     // If the user does not exist, we encrypt his password and save it in the database
-    bcrypt.hash(password, 10, (err, hash) => {
-      if (err) {
-        throw serverErrors.error500;
-      }
+    // bcrypt.hash(password, 10, (err, hash) => {
+    //   if (err) {
+    //     throw serverErrors.error500;
+    //   }
 
-      try {
-        Users.create({
-          fullName,
-          birthDate,
-          institutionalId,
-          rol,
-        }).then((user) => {
-          Credential.create({
-            username,
-            password: hash,
-            users_id: user.id,
-          });
-        });
-      } catch (error) {
-        throw error;
-      }
+    //   try {
+    //     Users.create({
+    //       fullName,
+    //       birthDate,
+    //       institutionalId,
+    //       rol,
+    //     }).then((user) => {
+    //       Credential.create({
+    //         username,
+    //         password: hash,
+    //         users_id: user.id,
+    //       });
+    //     });
+    //   } catch (error) {
+    //     throw error;
+    //   }
+    // });
+    
+    if (consult !== null) {
+      throw serverErrors.errorUserExists;
+    }
+
+    // Create a promise for bcrypt.hash() operation
+    const hashPassword = new Promise((resolve, reject) => {
+      bcrypt.hash(password, 10, (err, hash) => {
+        if (err) {
+          reject(serverErrors.error500);
+        } else {
+          resolve(hash);
+        }
+      });
     });
+
+    try {
+      // Wait for the hashPassword promise and create the user and credential
+      const hash = await hashPassword;
+      const createdUser = await Users.create({
+        fullName,
+        birthDate,
+        institutionalId,
+        rol,
+      });
+      await Credential.create({
+        username,
+        password: hash,
+        users_id: createdUser.id,
+      });
+    } catch (error) {
+      throw error;
+    }
   },
 
   login: async (username, password) => {

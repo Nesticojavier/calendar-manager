@@ -84,8 +84,9 @@ export default function ConfirmedListWorkProvider({ statusConfirmed }) {
   //  handle for make follow up by provider
   const handleWorkTracking = (workInstance) => {
     workInstance.work.blocks = JSON.parse(workInstance.work.blocks);
+    workInstance.user.username = workInstance.user.credential.username
     navigate(`/provider/work-instance-tracking/${workInstance.id}`, {
-      state: { workInstance },
+      state: { workInstance, editMode: true },
     });
   };
 
