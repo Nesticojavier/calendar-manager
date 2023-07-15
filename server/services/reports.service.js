@@ -44,15 +44,14 @@ const reportService = {
           const currentDay = getSpanishDayOfWeek(date);
           blocks.forEach(block => {
             if (currentDay == block.day) {
-              
 
               if(dayOfAttendance &&  dayOfAttendance.getTime() == date.getTime() && element.tracking.attendance) {
-                result.push([...row, true]) 
+                result.push([...row, block.hour, true]) 
                 console.log("\t\tAsistio:", block.hour)
 
               }
               else {
-                result.push([...row, false]) 
+                result.push([...row, block.hour, false]) 
 
                 console.log("\t\t No Asistio:", block.hour)
 
@@ -81,7 +80,7 @@ const reportService = {
         // // item.attendance
         // ]
       });
-      // console.log(result);
+      console.log(result);
 
       return jobs;
     } catch (error) {

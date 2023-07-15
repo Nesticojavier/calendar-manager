@@ -266,6 +266,8 @@ const insertTrackingRecord = async (req, res) => {
   const register = { date, hour, attendance };
   register["postulation_id"] = postulationID;
 
+  console.log(req.body)
+
   try {
     const insert = await providerService.insertTrackingRecord(register);
     return res.json(insert);

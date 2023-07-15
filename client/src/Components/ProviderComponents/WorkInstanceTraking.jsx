@@ -96,8 +96,8 @@ export default function WorkInstanceTraking() {
   // return job blocks in a day
   const isBlocksOnDay = (work, day) => {
     // Add 1 day to the end date and the start date because the date-fns library
-    const dateInit = addDays(new Date(workInstance.dateInit), 1);
-    const dateEnd = addDays(new Date(workInstance.dateEnd), 1);
+    const dateInit = addDays(new Date(work  .dateInit), 1);
+    const dateEnd = addDays(new Date(work .dateEnd), 1);
 
     // Convert the day number to a Date object
     const date = new Date(currentYear, currentMonth, day);
@@ -310,11 +310,11 @@ export default function WorkInstanceTraking() {
                   }}
                 >
                   {dayLessThanCurrentDay(index + 1)
-                    ? blocksInDay.map((block, index) =>
+                    ? blocksInDay.map((block, index2) =>
                         existRegister(block.hour, index + 1) ? (
                           existRegister(block.hour, index + 1).attendance ? (
                             <PaintBlock
-                              key={index}
+                              key={index2}
                               block={block}
                               color="lightgreen"
                               handleAttendanceSet={handleAttendanceNotAllow}
@@ -322,7 +322,7 @@ export default function WorkInstanceTraking() {
                             />
                           ) : (
                             <PaintBlock
-                              key={index}
+                              key={index2}
                               block={block}
                               color="pink"
                               handleAttendanceSet={handleAttendanceNotAllow}
@@ -331,7 +331,7 @@ export default function WorkInstanceTraking() {
                           )
                         ) : (
                           <PaintBlock
-                            key={index}
+                            key={index2}
                             block={block}
                             color="lightgray"
                             handleAttendanceSet={() => {
