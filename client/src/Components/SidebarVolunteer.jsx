@@ -31,12 +31,13 @@ export default function SidebarVolunteer() {
       sx={{
         display: "flex",
         flexDirection: "column",
-        minWidth: "20vh",
+        minWidth: "30vh",
+        maxWidth: "30vh",
       }}
       borderRight={1}
       borderColor="divider"
     >
-      <List sx={{ marginTop: "20px" }}>
+      <List sx={{ marginTop: "20px", position: "sticky", top: "60px" }}>
         <ListItem disablePadding>
           <ListItemButton
             component={NavLink}

@@ -16,8 +16,16 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { volunteerService } from "../../Services/Api/volunteerService";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../Context/UserContext";
 
 export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
+  const { profile } = useContext(UserContext);
+
+  // Hook used for navigation to diferent pages
+  const navigate = useNavigate();
+
   // constant to store the number of rows to display
   const NUMBER_ROW = 4;
 
@@ -60,8 +68,12 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   }, [statusConfirmed]);
 
   //   handle for show providers follow
-  const handleFollow = () => {
-    alert("Se debe implementar la funcion para hacerle seguimiento al trabajo");
+  const handleWorkTracking = (workInstance) => {
+    workInstance.work.blocks = JSON.parse(workInstance.work.blocks);
+    workInstance.user = profile;
+    navigate(`/volunteer/work-instance-tracking/${workInstance.id}`, {
+      state: { workInstance, editMode: false },
+    });
   };
 
   // handle for remove or leave work and delete from the list
@@ -117,7 +129,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
               action={
                 !statusConfirmed ? null : (
                   <Button
-                    onClick={() => handleFollow()}
+                    onClick={() => handleWorkTracking(row)}
                     type="button"
                     variant="outlined"
                     color="primary"
@@ -152,10 +164,18 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
+                <Typography component={"div"} variant="body2" color="text.secondary">
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <strong>Fecha de la propuesta:</strong>{" "}
+                    {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
+                    <Typography variant="body1">&nbsp;-&nbsp;</Typography>
+                    {format(addDays(new Date(row.dateEnd), 1), "dd-MM-yyyy")}
+                  </Box>
+                </Typography>
               </Box>
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
-                <Typography variant="body2" color="text.secondary">
+                <Typography component={"div"} variant="body2" color="text.secondary">
                   <Box mb={0}>
                     <strong>Bloques:</strong>{" "}
                   </Box>{" "}

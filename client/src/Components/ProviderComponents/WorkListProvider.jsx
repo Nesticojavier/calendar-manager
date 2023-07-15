@@ -9,7 +9,11 @@ import {
   CardActions,
   Divider,
   Pagination,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
 } from "@mui/material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useNavigate } from "react-router-dom";
@@ -17,11 +21,11 @@ import { providerService } from "../../Services/Api/providerService";
 import Swal from "sweetalert2";
 import { format, addDays } from "date-fns";
 import { reportsService } from "../../Services/Api/reportsService";
-import { saveAs } from 'file-saver';
+import { saveAs } from "file-saver";
 
 export default function WorkListProvider() {
   // constant to store the number of rows to display
-  const NUMBER_ROW = 4;
+  const NUMBER_ROW = 10;
 
   // Hook for navigate
   const navigate = useNavigate();
@@ -103,14 +107,14 @@ export default function WorkListProvider() {
 
   const handleReport = () => {
     reportsService
-          .getReportProvider()
-          .then((response) => {
-            const pdfBlob = new Blob([response], { type: 'application/pdf' });
-            saveAs(pdfBlob, 'newPdf.pdf');
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+      .getReportProvider()
+      .then((response) => {
+        const pdfBlob = new Blob([response], { type: "application/pdf" });
+        saveAs(pdfBlob, "newPdf.pdf");
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -124,80 +128,92 @@ export default function WorkListProvider() {
         <button onClick={() => handleReport()}>gererar reporte</button>
       </Box>
       {workData.map((work) => (
-        <Card
-          key={work.id}
-          sx={{ marginBottom: "20px", border: "1px solid black" }}
-        >
-          <CardHeader
-            action={
-              <IconButton onClick={() => handleEdit(work)}>
-                <EditIcon />
-              </IconButton>
-            }
-            title={work.title}
-            subheader={`Trabajo ${
-              work.type === 1 ? "recurrente" : "de sesión"
-            }`}
-          />
-          <CardContent>
-            <Divider sx={{ mb: 2 }} />
-            <Box mb={2}>
+        <Accordion key={work.id} sx={{marginBottom: "10px"}}>
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            aria-controls="panel1a-content"
+            id="panel1a-header"
+          >
+            <Typography variant="body1">{work.title}</Typography>
+          </AccordionSummary>
+          {/* <AccordionDetails> */}
+          <Card >
+            <CardHeader
+              action={
+                <IconButton onClick={() => handleEdit(work)}>
+                  <EditIcon />
+                </IconButton>
+              }
+              // title={work.title}
+              subheader={`Trabajo ${
+                work.type === 1 ? "recurrente" : "de sesión"
+              }`}
+            />
+            <CardContent>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Descripción: </strong> {work.description}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography variant="body2" color="text.secondary">
+                  <strong>Fecha de inicio: </strong>{" "}
+                  {format(addDays(new Date(work.dateInit), 1), "dd-MM-yyyy")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <strong> Fecha de fin: </strong>{" "}
+                  {format(addDays(new Date(work.dateEnd), 1), "dd-MM-yyyy")}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
+              <Box mb={2}>
+                <Typography
+                  component={"div"}
+                  variant="body2"
+                  color="text.secondary"
+                >
+                  <Box mb={1}>
+                    <strong> Bloques: </strong>
+                  </Box>
+                  {work.blocks &&
+                    work.blocks.map((block, index) => (
+                      <Box mb={1} key={index}>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong> Día: </strong> {block.day}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          <strong> Hora: </strong> {block.hour}
+                        </Typography>
+                      </Box>
+                    ))}
+                </Typography>
+              </Box>
+              <Divider sx={{ mb: 2 }} />
               <Typography variant="body2" color="text.secondary">
-                <strong>Descripción: </strong> {work.description}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }} />
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Fecha de inicio: </strong>{" "}
-                {format(addDays(new Date(work.dateInit), 1), "dd-MM-yyyy")}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong> Fecha de fin: </strong>{" "}
-                {format(addDays(new Date(work.dateEnd), 1), "dd-MM-yyyy")}
-              </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }} />
-            <Box mb={2}>
-              <Typography variant="body2" color="text.secondary">
-                <Box mb={1}>
-                  <strong> Bloques: </strong>
-                </Box>
-                {work.blocks &&
-                  work.blocks.map((block) => (
-                    <Box mb={1} key={block.id}>
-                      <Typography variant="body2" color="text.secondary">
-                        <strong> Día: </strong> {block.day}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        <strong> Hora: </strong> {block.hour}
-                      </Typography>
-                    </Box>
+                <strong> Etiquetas: </strong>
+                {work.tags &&
+                  work.tags.map((tag, index) => (
+                    <span key={tag}>
+                      {" "}
+                      {tag}
+                      {index < work.tags.length - 1 && ", "}
+                    </span>
                   ))}
               </Typography>
-            </Box>
-            <Divider sx={{ mb: 2 }} />
-            <Typography variant="body2" color="text.secondary">
-              <strong> Etiquetas: </strong>
-              {work.tags &&
-                work.tags.map((tag, index) => (
-                  <span key={tag}>
-                    {" "}
-                    {tag}
-                    {index < work.tags.length - 1 && ", "}
-                  </span>
-                ))}
-            </Typography>
-          </CardContent>
-          <CardActions disableSpacing>
-            <IconButton
-              aria-label="share"
-              onClick={() => handleDelete(work.id)}
-            >
-              <DeleteIcon />
-            </IconButton>
-          </CardActions>
-        </Card>
+            </CardContent>
+            <CardActions disableSpacing>
+              <IconButton
+                aria-label="share"
+                onClick={() => handleDelete(work.id)}
+              >
+                <DeleteIcon />
+              </IconButton>
+            </CardActions>
+          </Card>
+          {/* </AccordionDetails> */}
+        </Accordion>
       ))}
 
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>

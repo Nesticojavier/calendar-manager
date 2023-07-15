@@ -279,7 +279,7 @@ const volunteerService = {
         ],
         limit,
         offset: start,
-        attributes: ["users_id", "confirmed"],
+        attributes: ["users_id", "confirmed", "id", "dateInit", "dateEnd"],
       });
       return allJobs;
     } catch (error) {

@@ -31,12 +31,13 @@ export default function WorkInstanceTraking() {
   const { id: workId } = useParams();
   const workInstance = location.state.workInstance;
   const work = workInstance.work;
+  const editMode = location.state.editMode;
 
   // Define work instance data
   const WORK_TITLE = workInstance.work.title;
   const WORK_DESCRIPTION = workInstance.work.description;
   const VOLUNTEER_FULLNAME = workInstance.user.fullName;
-  const VOLUNTEER_USERNAME = workInstance.user.credential.username;
+  const VOLUNTEER_USERNAME = workInstance.user.username;
   const POSTULATION_ID = workInstance.id;
 
   // to get current day
@@ -95,8 +96,8 @@ export default function WorkInstanceTraking() {
   // return job blocks in a day
   const isBlocksOnDay = (work, day) => {
     // Add 1 day to the end date and the start date because the date-fns library
-    const dateInit = addDays(new Date(work.dateInit), 1);
-    const dateEnd = addDays(new Date(work.dateEnd), 1);
+    const dateInit = addDays(new Date(workInstance.dateInit), 1);
+    const dateEnd = addDays(new Date(workInstance.dateEnd), 1);
 
     // Convert the day number to a Date object
     const date = new Date(currentYear, currentMonth, day);
@@ -203,11 +204,19 @@ export default function WorkInstanceTraking() {
             marginRight: "50px",
           }}
         >
-          <Button onClick={() => window.history.back()} sx={{ marginRight: "120px" }}>
+          <Button
+            onClick={() => window.history.back()}
+            sx={{ marginRight: "120px" }}
+          >
             <ArrowBackIcon />
           </Button>
-          <Typography variant="h4" component="h2" align="center" sx={{ fontSize: "30px" }}>
-            Seguimiento del trabajo: <br/>
+          <Typography
+            variant="h4"
+            component="h2"
+            align="center"
+            sx={{ fontSize: "30px" }}
+          >
+            Seguimiento del trabajo: <br />
             {WORK_TITLE}
           </Typography>
         </Box>
@@ -217,7 +226,7 @@ export default function WorkInstanceTraking() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            // width: '100%',
+            width: "100%",
           }}
         >
           <ArrowBackIosNewIcon
@@ -301,23 +310,28 @@ export default function WorkInstanceTraking() {
                   }}
                 >
                   {dayLessThanCurrentDay(index + 1)
-                    ? blocksInDay.map((block) =>
+                    ? blocksInDay.map((block, index) =>
                         existRegister(block.hour, index + 1) ? (
                           existRegister(block.hour, index + 1).attendance ? (
                             <PaintBlock
+                              key={index}
                               block={block}
                               color="lightgreen"
                               handleAttendanceSet={handleAttendanceNotAllow}
+                              editMode={editMode}
                             />
                           ) : (
                             <PaintBlock
+                              key={index}
                               block={block}
                               color="pink"
                               handleAttendanceSet={handleAttendanceNotAllow}
+                              editMode={editMode}
                             />
                           )
                         ) : (
                           <PaintBlock
+                            key={index}
                             block={block}
                             color="lightgray"
                             handleAttendanceSet={() => {
@@ -326,6 +340,7 @@ export default function WorkInstanceTraking() {
                                 block.hour
                               );
                             }}
+                            editMode={editMode}
                           />
                         )
                       )
@@ -420,7 +435,7 @@ export default function WorkInstanceTraking() {
 }
 
 // component to paint block into calendar
-function PaintBlock({ block, color, handleAttendanceSet }) {
+function PaintBlock({ block, color, handleAttendanceSet, editMode }) {
   return (
     <span
       style={{
@@ -430,9 +445,9 @@ function PaintBlock({ block, color, handleAttendanceSet }) {
         borderRadius: "4px",
         fontSize: "12px",
         margin: "2px",
-        cursor: "pointer",
+        cursor: editMode ? "pointer" : "default",
       }}
-      onClick={() => handleAttendanceSet()}
+      onClick={editMode ? () => handleAttendanceSet() : null}
     >
       {block.hour}
     </span>
