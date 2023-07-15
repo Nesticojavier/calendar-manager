@@ -21,8 +21,7 @@ import { useContext } from "react";
 import { UserContext } from "../../Context/UserContext";
 
 export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
-
-  const {profile} = useContext(UserContext);
+  const { profile } = useContext(UserContext);
 
   // Hook used for navigation to diferent pages
   const navigate = useNavigate();
@@ -71,7 +70,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
   //   handle for show providers follow
   const handleWorkTracking = (workInstance) => {
     workInstance.work.blocks = JSON.parse(workInstance.work.blocks);
-    workInstance.user = profile
+    workInstance.user = profile;
     navigate(`/volunteer/work-instance-tracking/${workInstance.id}`, {
       state: { workInstance, editMode: false },
     });
@@ -164,6 +163,14 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
                 <Typography variant="body2" color="text.secondary">
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
+                </Typography>
+                <Typography variant="body2" color="text.secondary">
+                  <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <strong>Fecha de la propuesta:</strong>{" "}
+                    {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
+                    <Typography variant="body1">&nbsp;-&nbsp;</Typography>
+                    {format(addDays(new Date(row.dateEnd), 1), "dd-MM-yyyy")}
+                  </Box>
                 </Typography>
               </Box>
               <Divider sx={{ mb: 2 }} />
