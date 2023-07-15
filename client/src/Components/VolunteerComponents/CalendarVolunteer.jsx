@@ -119,6 +119,8 @@ export default function CalendarVolunteer({ setIsLoggedIn }) {
       .then((response) => {
         // console.log(response);
         setModalOpen(false);
+        setSelectedWork(null);
+        setSelectedDates([null, null]); // To reset the dates
         showSimpleAlert("Se ha postulado", "success");
       })
       .catch((error) => {
