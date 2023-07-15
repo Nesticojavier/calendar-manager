@@ -36,7 +36,7 @@ export default function SidebarVolunteer() {
       borderRight={1}
       borderColor="divider"
     >
-      <List sx={{ marginTop: "20px" }}>
+      <List sx={{ marginTop: "20px", position: "sticky", top: "60px" }}>
         <ListItem disablePadding>
           <ListItemButton
             component={NavLink}
