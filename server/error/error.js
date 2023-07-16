@@ -120,6 +120,14 @@ const serverErrors = {
   errorDates: {
     message: "El intervalo de fechas no es válido",
     status: 403,
+  },
+  errorDateInitFuture: {
+    message: "La fecha inicial no es valida. Es una fecha futura",
+    status: 403,
+  },
+  errorDateEndFuture: {
+    message: "La fecha final no es valida. Es una fecha futura",
+    status: 403,
   }
 };
 

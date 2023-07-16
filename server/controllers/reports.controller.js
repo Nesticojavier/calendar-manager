@@ -6,21 +6,30 @@ const pdfService = require("../services/file-generation/pdf.service");
 
 const getReportProviderTracking = async (req, res) => {
   const outputPath = path.join(__dirname, "files", "output.pdf");
-  const { id: users_id } = req.userData;
   const {providerId} = req.params
-  const {startDate, endDate, date, format} = req.query
+  const {startDate, endDate, format} = req.query
 
-  console.log("IDDDDD: ", users_id)
-  
+  console.log(req.params)
+  console.log(req.query)
+
+
+
   try {
+    if (!format || (format !== "pdf" && format !== "csv")) {
+      throw serverErrors.errorMissingData
+    }
+
     //get data
-    const data = await reportsService.getReportProviderTracking(users_id);
+    const data = await reportsService.getReportProviderTracking(req.userData, providerId, startDate, endDate);
 
 
     // res.json(data)
     // use pdf generation services
-    await pdfService.providerTrackingReport(data, res, "username");
+    if (format === "pdf") {
+      await pdfService.providerTrackingReport(data, res, "username"); 
+    }
   } catch (error) {
+    console.log(error)
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
