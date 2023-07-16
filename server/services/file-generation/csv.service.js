@@ -2,9 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const { createObjectCsvWriter } = require("csv-writer");
 
-
 const generateCSVFile = async (data, res) => {
-
   // construct header
   const csvHeader = [
     { id: "id", title: "ID" },
@@ -54,7 +52,39 @@ const generateCSVFile = async (data, res) => {
  * @returns {Promise<void>} - A promise that resolves when the report has
  *                            been generated and the response sent.
  */
-const providerTrackingReport = async (data, res, providerUsername) => {};
+const providerTrackingReport = async (data, res) => {
+  // construct header
+  const csvHeader = [
+    { id: "title", title: "Trabajo" },
+    { id: "type", title: "Tipo de trabajo" },
+    { id: "username", title: "Nombre de usuario" },
+    { id: "fullName", title: "Nombre Completo" },
+    { id: "institutionalId", title: "ID institucional" },
+    { id: "date", title: "Fecha" },
+    { id: "hour", title: "Hora" },
+    { id: "attendance", title: "Asistencia" },
+  ];
+
+  // construct path
+  const csvFilePath = path.join(__dirname, "..", "..", "public", "data.csv");
+
+  // construct file with header in the path
+  const csvWriter = createObjectCsvWriter({
+    path: csvFilePath,
+    header: csvHeader,
+  });
+
+  // write data in the file
+  await csvWriter.writeRecords(data);
+
+  // construct buffer to send data to client
+  const csvBuffer = fs.readFileSync(csvFilePath);
+
+  // config and send data to client
+  res.set("Content-Disposition", "attachment; filename=data.csv");
+  res.set("Content-Type", "text/csv");
+  res.send(csvBuffer);
+};
 
 /**
  * Generate a report in CSV format with the provider's applications and send
@@ -74,7 +104,38 @@ const providerTrackingReport = async (data, res, providerUsername) => {};
  * @returns {Promise<void>} - A promise that resolves when the report has
  *                            been generated and the response sent.
  */
-const providerPostulationsReport = async (data, res, providerUsername) => {};
+const providerPostulationsReport = async (data, res) => {
+  // construct header
+  const csvHeader = [
+    { id: "title", title: "Trabajo" },
+    { id: "type", title: "Tipo de trabajo" },
+    { id: "username", title: "Nombre de usuario" },
+    { id: "fullName", title: "Nombre Completo" },
+    { id: "institutionalId", title: "ID institucional" },
+    { id: "dateCreatedPostulation", title: "Fecha creación postulación" },
+    { id: "statePostulation", title: "Estado de la postulación" },
+  ];
+
+  // construct path
+  const csvFilePath = path.join(__dirname, "..", "..", "public", "data.csv");
+
+  // construct file with header in the path
+  const csvWriter = createObjectCsvWriter({
+    path: csvFilePath,
+    header: csvHeader,
+  });
+
+  // write data in the file
+  await csvWriter.writeRecords(data);
+
+  // construct buffer to send data to client
+  const csvBuffer = fs.readFileSync(csvFilePath);
+
+  // config and send data to client
+  res.set("Content-Disposition", "attachment; filename=data.csv");
+  res.set("Content-Type", "text/csv");
+  res.send(csvBuffer);
+};
 
 /**
  * Generates a report in CSV format with a volunteer trace and sends the response
@@ -94,7 +155,38 @@ const providerPostulationsReport = async (data, res, providerUsername) => {};
  * @returns {Promise<void>} - A promise that resolves when the report has
  *                            been generated and the response sent.
  */
-const volunteerTrackingReport = async (data, res, volunteerUsername) => {};
+const volunteerTrackingReport = async (data, res) => {
+  // construct header
+  const csvHeader = [
+    { id: "title", title: "Trabajo" },
+    { id: "type", title: "Tipo de trabajo" },
+    { id: "username", title: "Nombre de usuario" },
+    { id: "fullName", title: "Nombre Completo" },
+    { id: "date", title: "Fecha" },
+    { id: "hour", title: "Hora" },
+    { id: "attendance", title: "Asistencia" },
+  ];
+
+  // construct path
+  const csvFilePath = path.join(__dirname, "..", "..", "public", "data.csv");
+
+  // construct file with header in the path
+  const csvWriter = createObjectCsvWriter({
+    path: csvFilePath,
+    header: csvHeader,
+  });
+
+  // write data in the file
+  await csvWriter.writeRecords(data);
+
+  // construct buffer to send data to client
+  const csvBuffer = fs.readFileSync(csvFilePath);
+
+  // config and send data to client
+  res.set("Content-Disposition", "attachment; filename=data.csv");
+  res.set("Content-Type", "text/csv");
+  res.send(csvBuffer);
+};
 
 module.exports = {
   generateCSVFile,
