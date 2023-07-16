@@ -91,15 +91,22 @@ const reportService = {
       jobs.forEach((element) => {
         // Cast the dates
         const dateInit = new Date(element.dateinit);
+        console.log("TEEEEEEEEEEEEEEEST",dateInit)
         const dateEnd = new Date(element.dateend);
         // Use the date within the specified range, if it exists
+
         let dateInitIterator =
-          range[0] && dateInit < range[0] ? range[0] : dateInit;
+          range[0] && dateInit < range[0]
+            ? new Date(range[0].getTime())
+            :  new Date(dateInit.getTime());
         let dateEndIterator =
-          range[1] && range[1] < dateEnd ? range[1] : dateEnd;
+          range[1] && range[1] < dateEnd
+            ? new Date(range[1].getTime())
+            : dateEnd;
 
         // If the dateEnd is after today, then use today as the end date
         dateEndIterator = dateEndIterator > today ? today : dateEndIterator;
+        console.log("TEEEEEEEEEEEEEEEST 2",dateInitIterator)
 
         const tracking = element.tracking;
         const blocks = JSON.parse(element.blocks);
@@ -111,6 +118,10 @@ const reportService = {
           }
         }
 
+        console.log("Para el trabajo:", element.title)
+        console.log("Range :", range);
+
+
         const row = [
           element.postulation_id,
           element.title,
@@ -120,9 +131,13 @@ const reportService = {
           element.institutionalId,
         ];
         while (dateInitIterator <= dateEndIterator) {
+          console.log("Date init:", dateInitIterator);
+          console.log("Date end:", dateEndIterator);
           const currentDay = getSpanishDayOfWeek(dateInitIterator);
+          console.log("Curent Day: ", currentDay)
           blocks.forEach((block) => {
             if (currentDay == block.day) {
+              console.log("Este dia si va: ", dateInitIterator, block.day)
               const dateFormated = dateInitIterator.toISOString().split("T")[0];
               if (
                 mapOfAttendance[dateFormated] &&
@@ -148,19 +163,24 @@ const reportService = {
 };
 
 const getSpanishDayOfWeek = (date) => {
+  const date2 = new Date(date.getTime())
   // Create an array with the names of the days of the week in Spanish
-  var daysOfWeek = [
+  const daysOfWeek = [
+    "Domingo",
     "Lunes",
     "Martes",
     "Miércoles",
     "Jueves",
     "Viernes",
     "Sábado",
-    "Domingo",
   ];
 
   // Get the day of the week number (0-6)
-  var dayOfWeekNum = date.getDay();
+
+  const dayOfWeekNum = date.getUTCDay();
+  console.log("Dato to convert: ", date)
+
+  console.log("Numbre of week: ", dayOfWeekNum)
 
   // Return the name of the day of the week in Spanish
   return daysOfWeek[dayOfWeekNum];
