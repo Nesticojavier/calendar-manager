@@ -55,6 +55,7 @@ const generateCSVFile = async (data, res) => {
 const providerTrackingReport = async (data, res) => {
   // construct header
   const csvHeader = [
+    { id: "postulation_id", title: "ID postulación" },
     { id: "title", title: "Trabajo" },
     { id: "type", title: "Tipo de trabajo" },
     { id: "username", title: "Nombre de usuario" },
@@ -74,8 +75,23 @@ const providerTrackingReport = async (data, res) => {
     header: csvHeader,
   });
 
+  // transform data
+  const transformedData = data.map((item) => {
+    return {
+      postulation_id: item[0],
+      title: item[1],
+      type: item[2],
+      username: item[3],
+      fullName: item[4],
+      institutionalId: item[5],
+      date: item[6],
+      hour: item[7],
+      attendance: item[8],
+    };
+  });
+
   // write data in the file
-  await csvWriter.writeRecords(data);
+  await csvWriter.writeRecords(transformedData);
 
   // construct buffer to send data to client
   const csvBuffer = fs.readFileSync(csvFilePath);

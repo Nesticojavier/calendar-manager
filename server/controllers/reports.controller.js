@@ -3,6 +3,7 @@ const serverErrors = require("../error/error");
 const fs = require("fs");
 const path = require("path");
 const pdfService = require("../services/file-generation/pdf.service");
+const csvService = require("../services/file-generation/csv.service");
 
 const getReportProviderTracking = async (req, res) => {
   const outputPath = path.join(__dirname, "files", "output.pdf");
@@ -24,7 +25,7 @@ const getReportProviderTracking = async (req, res) => {
     }
 
     if (format === "csv") {
-      res.json({message: "Falta hacer el llamado"})
+      await csvService.providerTrackingReport(data, res)
     }
   } catch (error) {
     console.log(error)
