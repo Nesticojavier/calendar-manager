@@ -1,6 +1,8 @@
 const fs = require("fs");
 const path = require("path");
 const { createObjectCsvWriter } = require("csv-writer");
+const { format } = require('date-fns');
+
 
 const generateCSVFile = async (data, res) => {
   // construct header
@@ -141,8 +143,21 @@ const providerPostulationsReport = async (data, res) => {
     header: csvHeader,
   });
 
+  // transform data
+  const transformedData = data.map((item) => {
+    return {
+      title: item[0],
+      type: item[1],
+      username: item[2],
+      fullName: item[3],
+      institutionalId: undefined,
+      dateCreatedPostulation: format(item[5], 'yyyy-MM-dd'),
+      statePostulation: item[6],
+    };
+  });
+
   // write data in the file
-  await csvWriter.writeRecords(data);
+  await csvWriter.writeRecords(transformedData);
 
   // construct buffer to send data to client
   const csvBuffer = fs.readFileSync(csvFilePath);
