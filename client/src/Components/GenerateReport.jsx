@@ -53,23 +53,31 @@ export default function GenerateReport({ handleClose, user_id, role }) {
       format: selectedOption.format,
     };
 
+    const type = values.format === "pdf" ? "application/pdf" : "text/csv";
+
+    // to set filname with current date and time
+    const currentDateTime = new Date();
+    const formattedDateTime = currentDateTime
+      .toLocaleString()
+      .replace(/[/\\:*?"<>|]/g, "-");
+
     if (role === "proveedor") {
       if (selectedOption.info === "tracking") {
         reportsService
           .getProviderTrackingReport(values)
           .then((response) => {
-            const pdfBlob = new Blob([response], { type: "application/pdf" });
-            saveAs(pdfBlob, "newPdf.pdf");
+            const newBlob = new Blob([response], { type });
+            saveAs(newBlob, `reporte_proveedor_${formattedDateTime}`);
           })
           .catch((error) => {
             console.error(error);
           });
-      } else {
-        reportsService
+        } else {
+          reportsService
           .getProviderPostulationsReport(values)
           .then((response) => {
-            const pdfBlob = new Blob([response], { type: "application/pdf" });
-            saveAs(pdfBlob, "newPdf.pdf");
+            const newBlob = new Blob([response], { type });
+            saveAs(newBlob, `reporte_voluntario_${formattedDateTime}`);
           })
           .catch((error) => {
             console.error(error);

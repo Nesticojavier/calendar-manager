@@ -109,8 +109,8 @@ export default function WorkListProvider() {
     reportsService
       .getReportProvider()
       .then((response) => {
-        const pdfBlob = new Blob([response], { type: "application/pdf" });
-        saveAs(pdfBlob, "newPdf.pdf");
+        const newBlob = new Blob([response], { type: 'text/csv' });
+        saveAs(newBlob, "nuevo");
       })
       .catch((error) => {
         console.error(error);

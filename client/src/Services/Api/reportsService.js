@@ -5,7 +5,7 @@ export const reportsService = {
     const response = await api.request({
       url: "/report/provider",
       method: "GET",
-      responseType: "blob",
+      responseType: "arraybuffer",
     });
     return response.data;
   },
@@ -18,7 +18,7 @@ export const reportsService = {
     const response = await api.request({
       url: `/report/provider-tracking/${user_id}`,
       method: "GET",
-      responseType: "blob",
+      responseType: format === "pdf" ? "blob" : "arraybuffer",
       params: {
         startDate,
         endDate,
@@ -36,7 +36,7 @@ export const reportsService = {
     const response = await api.request({
       url: `/report/provider-postulations/${user_id}`,
       method: "GET",
-      responseType: "blob",
+      responseType: format === "pdf" ? "blob" : "arraybuffer",
       params: {
         startDate,
         endDate,
