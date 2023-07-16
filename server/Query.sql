@@ -75,9 +75,58 @@ from
   join works w on p.works_id = w.id
   join users u on u.id = p.users_id
   join credentials c on c.users_id = u.id
-  left join trackings t on p.id = t.postulation_id ;
+  left join trackings t on p.id = t.postulation_id;
 
 -- select
 --   *
 -- from
 --   credentials;
+SELECT
+  "postulation"."id",
+  "postulation"."users_id",
+  "postulation"."works_id",
+  "postulation"."confirmed",
+  "postulation"."dateInit",
+  "postulation"."dateEnd",
+  "postulation"."createdAt",
+  "postulation"."updatedAt",
+  "user"."id" AS "user.id",
+  "user"."rol" AS "user.rol",
+  "user"."fullName" AS "user.fullName",
+  "user"."birthDate" AS "user.birthDate",
+  "user"."institucionalId" AS "user.institucionalId",
+  "user"."createdAt" AS "user.createdAt",
+  "user"."updatedAt" AS "user.updatedAt",
+  "user->credential"."id" AS "user.credential.id",
+  "user->credential"."username" AS "user.credential.username",
+  "user->credential"."password" AS "user.credential.password",
+  "user->credential"."users_id" AS "user.credential.users_id",
+  "user->credential"."createdAt" AS "user.credential.createdAt",
+  "user->credential"."updatedAt" AS "user.credential.updatedAt",
+  "work"."id" AS "work.id",
+  "work"."users_id" AS "work.users_id",
+  "work"."title" AS "work.title",
+  "work"."status" AS "work.status",
+  "work"."description" AS "work.description",
+  "work"."type" AS "work.type",
+  "work"."volunteerCount" AS "work.volunteerCount",
+  "work"."volunteerCountMax" AS "work.volunteerCountMax",
+  "work"."blocks" AS "work.blocks",
+  "work"."dateInit" AS "work.dateInit",
+  "work"."dateEnd" AS "work.dateEnd",
+  "work"."createdAt" AS "work.createdAt",
+  "work"."updatedAt" AS "work.updatedAt",
+  "tracking"."id" AS "tracking.id",
+  "tracking"."date" AS "tracking.date",
+  "tracking"."hour" AS "tracking.hour",
+  "tracking"."attendance" AS "tracking.attendance",
+  "tracking"."postulation_id" AS "tracking.postulation_id",
+  "tracking"."createdAt" AS "tracking.createdAt",
+  "tracking"."updatedAt" AS "tracking.updatedAt"
+FROM
+  "postulations" AS "postulation"
+  LEFT OUTER JOIN "users" AS "user" ON "postulation"."users_id" = "user"."id"
+  LEFT OUTER JOIN "credentials" AS "user->credential" ON "user"."id" = "user->credential"."users_id"
+  INNER JOIN "works" AS "work" ON "postulation"."works_id" = "work"."id"
+  AND "work"."users_id" = 2
+  LEFT OUTER JOIN "trackings" AS "tracking" ON "postulation"."id" = "tracking"."postulation_id";
