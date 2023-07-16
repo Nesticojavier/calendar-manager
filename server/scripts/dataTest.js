@@ -1,6 +1,3 @@
-// const 1 = 1;
-// const 2 = 2;
-
 const users = [
   {
     username: "nestor123",
@@ -84,7 +81,7 @@ const users = [
   },
   {
     username: "juna01",
-    password: "5678",
+    password: "1234",
     rol: "voluntario",
     fullName: "Juan Perez",
     birthDate: "2000-01-01",
@@ -92,7 +89,7 @@ const users = [
   },
   {
     username: "juanga",
-    password: "5678",
+    password: "1234",
     rol: "voluntario",
     fullName: "Juan Gabriel Perez",
     birthDate: "2000-01-01",
@@ -100,7 +97,7 @@ const users = [
   },
   {
     username: "juan02",
-    password: "5678",
+    password: "1234",
     rol: "voluntario",
     fullName: "Juan Guilarte",
     birthDate: "2000-01-01",
@@ -108,7 +105,7 @@ const users = [
   },
   {
     username: "ana01",
-    password: "abcd",
+    password: "1234",
     rol: "voluntario",
     fullName: "Ana Sanchez",
     birthDate: "1995-07-15",
@@ -116,7 +113,7 @@ const users = [
   },
   {
     username: "anar02",
-    password: "abcd",
+    password: "1234",
     rol: "voluntario",
     fullName: "Ana Rodriguez",
     birthDate: "1995-07-15",
@@ -124,7 +121,7 @@ const users = [
   },
   {
     username: "maria01",
-    password: "0000",
+    password: "1234",
     rol: "voluntario",
     fullName: "Maria Rodriguez",
     birthDate: "1988-03-10",
@@ -132,7 +129,7 @@ const users = [
   },
   {
     username: "maria02",
-    password: "0000",
+    password: "1234",
     rol: "voluntario",
     fullName: "Maria Perez",
     birthDate: "1988-03-10",
@@ -140,7 +137,7 @@ const users = [
   },
   {
     username: "jose02",
-    password: "1111",
+    password: "1234",
     rol: "voluntario",
     fullName: "Jose Martinez",
     birthDate: "1992-09-20",
@@ -148,7 +145,7 @@ const users = [
   },
   {
     username: "jose01",
-    password: "1111",
+    password: "1234",
     rol: "voluntario",
     fullName: "Jose Perez",
     birthDate: "1992-09-20",
@@ -156,7 +153,7 @@ const users = [
   },
   {
     username: "jose03",
-    password: "1111",
+    password: "1234",
     rol: "voluntario",
     fullName: "Jose Manuel Guilarte",
     birthDate: "1992-09-20",
@@ -164,18 +161,20 @@ const users = [
   },
 ];
 
-works = [
-  // dos por sesion
+const works = [
+  //////////////////// PROVEEDOR 1 (apoyo comunitario)
+  // tres por sesion
   {
     work: {
-      title: "Apoyo en educacion",
-      description: "Ayuda a aprender a estudiantes habilidades",
+      title: "Soldadura de rejas",
+      description:
+        "Se necesita soldador para reparacion de rejas del colegio X",
       type: "2",
       volunteerCountMax: "3",
-      blocks: [{ day: "2023-07-12", hour: "9:00 AM" }],
-      tags: ["educaion", "aprendizaje"],
-      dateInit: "2023-07-12",
-      dateEnd: "2023-07-12",
+      blocks: [{ day: "2023-06-12", hour: "9:00 AM" }],
+      tags: ["mantenimiento", "reparacion", "soldadura", "comunidad"],
+      dateInit: "2023-06-12",
+      dateEnd: "2023-06-12",
     },
     user: {
       id: 1,
@@ -188,25 +187,44 @@ works = [
       description: "Brinda apoyo en un refugio de animales",
       type: "2",
       volunteerCountMax: "3",
-      blocks: [{ day: "2023-07-13", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
-      dateInit: "2023-07-13",
-      dateEnd: "2023-07-13",
+      blocks: [{ day: "2023-06-13", hour: "9:00 AM" }],
+      tags: ["animales", "campo", "comunidad"],
+      dateInit: "2023-06-13",
+      dateEnd: "2023-06-13",
     },
     user: {
       id: 1,
       rol: "proveedor",
     },
   },
-  // 3 recurrentes
+  {
+    work: {
+      title: "Jardineria",
+      description: "Podar plantas en el sector X",
+      type: "2",
+      volunteerCountMax: "3",
+      blocks: [{ day: "2023-06-13", hour: "9:00 AM" }],
+      tags: ["jardineria", "campo", "comunidad"],
+      dateInit: "2023-06-13",
+      dateEnd: "2023-06-13",
+    },
+    user: {
+      id: 1,
+      rol: "proveedor",
+    },
+  },
+  // tres recurrentes
   {
     work: {
       title: "Asistencia de hospitales",
       description: "Brinda apoyo en un hospital",
       type: "1",
       volunteerCountMax: "3",
-      blocks: [{ day: "Lunes", hour: "9:00 AM" }, { day: "Sábado", hour: "3:00 PM" } ],
-      tags: ["animales", "campo"],
+      blocks: [
+        { day: "Lunes", hour: "9:00 AM" },
+        { day: "Viernes", hour: "3:00 PM" },
+      ],
+      tags: ["comunidad", "hospital"],
       dateInit: "2023-05-01",
       dateEnd: "2023-08-30",
     },
@@ -222,7 +240,7 @@ works = [
       type: "1",
       volunteerCountMax: "3",
       blocks: [{ day: "Miércoles", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
+      tags: ["comunidad", "comedor"],
       dateInit: "2023-05-13",
       dateEnd: "2023-08-25",
     },
@@ -237,8 +255,11 @@ works = [
       description: "Brinda apoyo en ansianato",
       type: "1",
       volunteerCountMax: "3",
-      blocks: [{ day: "Viernes", hour: "9:00 AM" }, { day: "Jueves", hour: "9:00 AM" }, { day: "Martes", hour: "10:00 AM" }],
-      tags: ["animales", "campo"],
+      blocks: [
+        { day: "Viernes", hour: "9:00 AM" },
+        { day: "Jueves", hour: "9:00 AM" },
+      ],
+      tags: ["ansianato", "comunidad"],
       dateInit: "2023-05-13",
       dateEnd: "2023-08-29",
     },
@@ -247,18 +268,19 @@ works = [
       rol: "proveedor",
     },
   },
-  // dos por sesion otro proveedor
+  //////////////////////// PROVEEDOR 2 (educaion)
+  // por sesion
   {
     work: {
-      title: "Profesor de matematicas",
+      title: "Taller de matematicas",
       description:
-        "Brinda apoyo en una universidad dando clases de matematicas",
+        "Dar un taller para mostrarle a los jovenes la importancia de las matematicas",
       type: "2",
       volunteerCountMax: "3",
-      blocks: [{ day: "2023-07-03", hour: "9:00 AM" }],
-      tags: ["educaion", "aprendizaje"],
-      dateInit: "2023-07-03",
-      dateEnd: "2023-07-03",
+      blocks: [{ day: "2023-06-03", hour: "9:00 AM" }],
+      tags: ["educacion", "matematicas"],
+      dateInit: "2023-06-03",
+      dateEnd: "2023-06-03",
     },
     user: {
       id: 2,
@@ -267,12 +289,30 @@ works = [
   },
   {
     work: {
-      title: "Profesor de ingles",
-      description: "Brinda apoyo en una universidad dando clases de ingles",
+      title: "Taller de ingles",
+      description:
+        "Dar un taller para mostrarle a los jovenes la importancia de aprender ingles",
       type: "2",
       volunteerCountMax: "3",
       blocks: [{ day: "2023-07-02", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
+      tags: ["educacion", "ingles"],
+      dateInit: "2023-07-02",
+      dateEnd: "2023-07-02",
+    },
+    user: {
+      id: 2,
+      rol: "proveedor",
+    },
+  },
+  {
+    work: {
+      title: "Taller de programacion ",
+      description:
+        "Dar un taller para mostrarle a los jovenes la importancia de la programacion",
+      type: "2",
+      volunteerCountMax: "3",
+      blocks: [{ day: "2023-07-02", hour: "9:00 AM" }],
+      tags: ["educacion", "programacion", "python"],
       dateInit: "2023-07-02",
       dateEnd: "2023-07-02",
     },
@@ -289,9 +329,9 @@ works = [
       type: "1",
       volunteerCountMax: "3",
       blocks: [{ day: "Martes", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
-      dateInit: "2023-06-13",
-      dateEnd: "2023-08-13",
+      tags: ["educacion", "algoritmos", "python"],
+      dateInit: "2023-05-13",
+      dateEnd: "2023-08-20",
     },
     user: {
       id: 2,
@@ -305,8 +345,8 @@ works = [
       type: "1",
       volunteerCountMax: "3",
       blocks: [{ day: "Martes", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
-      dateInit: "2023-06-20",
+      tags: ["educacion", "politica"],
+      dateInit: "2023-05-11",
       dateEnd: "2023-08-20",
     },
     user: {
@@ -321,7 +361,7 @@ works = [
       type: "1",
       volunteerCountMax: "3",
       blocks: [{ day: "Jueves", hour: "9:00 AM" }],
-      tags: ["animales", "campo"],
+      tags: ["educacion", "economia"],
       dateInit: "2023-05-13",
       dateEnd: "2023-08-20",
     },
@@ -332,7 +372,166 @@ works = [
   },
 ];
 
+const postulations = [
+  // userid 3
+  {
+    volunteer: { id: 3, rol: "voluntario" },
+    work: 1,
+    dateInit: "2023-06-12",
+    dateEnd: "2023-06-12",
+  },
+  {
+    volunteer: { id: 3, rol: "voluntario" },
+    work: 4,
+    dateInit: "2023-06-04",
+    dateEnd: "2023-08-04",
+  },
+  //userid 4
+  {
+    volunteer: { id: 4, rol: "voluntario" },
+    work: 1,
+    dateInit: "2023-06-12",
+    dateEnd: "2023-06-12",
+  },
+  {
+    volunteer: { id: 4, rol: "voluntario" },
+    work: 4,
+    dateInit: "2023-06-04",
+    dateEnd: "2023-08-04",
+  },
+  //userid 5
+  {
+    volunteer: { id: 5, rol: "voluntario" },
+    work: 2,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-06-13",
+  },
+  {
+    volunteer: { id: 5, rol: "voluntario" },
+    work: 5,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 6
+  {
+    volunteer: { id: 6, rol: "voluntario" },
+    work: 2,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-06-13",
+  },
+  {
+    volunteer: { id: 6, rol: "voluntario" },
+    work: 5,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 7
+  {
+    volunteer: { id: 7, rol: "voluntario" },
+    work: 3,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-06-13",
+  },
+  {
+    volunteer: { id: 7, rol: "voluntario" },
+    work: 6,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 8
+  {
+    volunteer: { id: 8, rol: "voluntario" },
+    work: 3,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-06-13",
+  },
+  {
+    volunteer: { id: 8, rol: "voluntario" },
+    work: 6,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 12
+  {
+    volunteer: { id: 12, rol: "voluntario" },
+    work: 7,
+    dateInit: "2023-06-03",
+    dateEnd: "2023-06-03",
+  },
+  {
+    volunteer: { id: 12, rol: "voluntario" },
+    work: 10,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 13
+  {
+    volunteer: { id: 13, rol: "voluntario" },
+    work: 7,
+    dateInit: "2023-06-03",
+    dateEnd: "2023-06-03",
+  },
+  {
+    volunteer: { id: 13, rol: "voluntario" },
+    work: 10,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 14
+  {
+    volunteer: { id: 14, rol: "voluntario" },
+    work: 8,
+    dateInit: "2023-07-02",
+    dateEnd: "2023-07-02",
+  },
+  {
+    volunteer: { id: 14, rol: "voluntario" },
+    work: 11,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 15
+  {
+    volunteer: { id: 15, rol: "voluntario" },
+    work: 8,
+    dateInit: "2023-07-02",
+    dateEnd: "2023-07-02",
+  },
+  {
+    volunteer: { id: 15, rol: "voluntario" },
+    work: 11,
+    dateInit: "2023-06-01",
+    dateEnd: "2023-08-04",
+  },
+  //userid 16
+  {
+    volunteer: { id: 16, rol: "voluntario" },
+    work: 9,
+    dateInit: "2023-07-02",
+    dateEnd: "2023-07-02",
+  },
+  {
+    volunteer: { id: 16, rol: "voluntario" },
+    work: 12,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-08-04",
+  },
+  //userid 17
+  {
+    volunteer: { id: 17, rol: "voluntario" },
+    work: 9,
+    dateInit: "2023-07-02",
+    dateEnd: "2023-07-02",
+  },
+  {
+    volunteer: { id: 17, rol: "voluntario" },
+    work: 12,
+    dateInit: "2023-06-13",
+    dateEnd: "2023-08-04",
+  },
+];
 module.exports = {
   users,
   works,
+  postulations,
 };
