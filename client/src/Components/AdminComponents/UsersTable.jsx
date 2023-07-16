@@ -114,6 +114,7 @@ export default function UsersTable() {
           handleClose={() => setOpenGenerateReport(false)}
           user_id={selectedUser.id}
           role={"proveedor"}
+          admin={true}
         />
       )}
     </Box>

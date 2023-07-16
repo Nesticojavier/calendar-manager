@@ -15,7 +15,7 @@ import DatePicker from "react-datepicker";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import { reportsService } from "../Services/Api/reportsService";
 
-export default function GenerateReport({ handleClose, user_id, role }) {
+export default function GenerateReport({ handleClose, user_id, role, admin }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
 
@@ -51,8 +51,8 @@ export default function GenerateReport({ handleClose, user_id, role }) {
       startDate: startDate,
       endDate: endDate,
       format: selectedOption.format,
+      admin: admin,
     };
-
     const type = values.format === "pdf" ? "application/pdf" : "text/csv";
 
     // to set filname with current date and time

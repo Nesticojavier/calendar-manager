@@ -14,9 +14,10 @@ export const reportsService = {
     startDate,
     endDate,
     format,
+    admin,
   }) => {
     const response = await api.request({
-      url: `/report/provider-tracking/${user_id}`,
+      url: `/report/${admin ? "admin" : "provider"}-tracking/${user_id}`,
       method: "GET",
       responseType: format === "pdf" ? "blob" : "arraybuffer",
       params: {
@@ -32,9 +33,10 @@ export const reportsService = {
     startDate,
     endDate,
     format,
+    admin,
   }) => {
     const response = await api.request({
-      url: `/report/provider-postulations/${user_id}`,
+      url: `/report/${admin ? "admin" : "provider"}-postulations/${user_id}`,
       method: "GET",
       responseType: format === "pdf" ? "blob" : "arraybuffer",
       params: {
