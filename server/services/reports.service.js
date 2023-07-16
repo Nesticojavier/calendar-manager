@@ -61,7 +61,8 @@ const reportService = {
         SELECT
           p.id AS postulation_id,
           p."dateInit" AS dateInit,
-          p."dateEnd" AS dateEnd,          
+          p."dateEnd" AS dateEnd,     
+          p.confirmed,     
           w.title,
           case when w.type = '1' then 'Recurrente' else 'Sesion' end as type,
           w.blocks,
@@ -78,7 +79,8 @@ const reportService = {
         GROUP BY
           p.id, w.id, c.id, u.id   
         HAVING
-          w.users_id = :ID
+          w.users_id = :ID AND
+          p.confirmed = true
         ORDER BY
           p.id, p."dateInit"
       `,
@@ -111,8 +113,6 @@ const reportService = {
 
         const row = [
           element.postulation_id,
-          element.dateinit,
-          element.dateend,
           element.title,
           element.type,
           element.username,

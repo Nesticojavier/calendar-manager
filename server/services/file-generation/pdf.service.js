@@ -51,8 +51,6 @@ const providerTrackingReport = async (data, res, providerUsername) => {
     title: `Seguimiento del proveedor @${providerUsername}`,
     headers: [
       "Postulation_id",
-      "Fecha Inicio",
-      "Fecha fin",
       "Trabajo",
       "Tipo de trabajo",
       "Nombre de usuario",
