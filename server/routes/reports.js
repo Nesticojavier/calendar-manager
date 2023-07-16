@@ -20,6 +20,12 @@ router.get(
 );
 
 router.get(
+  "/admin-postulations/:providerId",
+  verifyToken(process.env.ADMIN_ENCRYPT),
+  getReportProviderPostulations
+);
+
+router.get(
   "/admin-tracking/:providerId",
   verifyToken(process.env.ADMIN_ENCRYPT),
   getReportProviderTracking

@@ -1,4 +1,5 @@
 const PDFDocument = require("pdfkit-table");
+const { format } = require('date-fns');
 
 const generatePDFTable = async (data, res, user) => {
   // construct pdf
@@ -91,8 +92,20 @@ const providerTrackingReport = async (data, res, providerUsername) => {
 const providerPostulationsReport = async (data, res, providerUsername) => {
   // construct pdf
   const doc = new PDFDocument({ margin: 30, size: "A4" });
-  console.log(data)
-
+  
+  //transform data
+  const transformData = data.map((item) => {
+    return [
+      item[0],
+      item[1],
+      item[2],
+      item[3],
+      undefined,
+      format(item[5], 'yyyy-MM-dd'),
+      item[6],
+    ];
+  });
+  
   // construct table
   const table = {
     title: `Postulaciones del proveedor @${providerUsername}`,
@@ -105,7 +118,7 @@ const providerPostulationsReport = async (data, res, providerUsername) => {
       "Fecha creación postulación",
       "Estado de la postulación",
     ],
-    rows: data,
+    rows: transformData,
   };
 
   doc.table(table);
