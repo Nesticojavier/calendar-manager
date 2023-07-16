@@ -9,26 +9,40 @@ export const reportsService = {
     });
     return response.data;
   },
-  getProviderTrackingReport: async ({user_id, startDate, endDate, format}) => {
+  getProviderTrackingReport: async ({
+    user_id,
+    startDate,
+    endDate,
+    format,
+  }) => {
     const response = await api.request({
       url: `/report/provider-tracking/${user_id}`,
       method: "GET",
+      responseType: "blob",
       params: {
         startDate,
         endDate,
         format,
       },
     });
+    return response.data;
   },
-  getProviderPostulationsReport: async ({user_id, startDate, endDate, format}) => {
+  getProviderPostulationsReport: async ({
+    user_id,
+    startDate,
+    endDate,
+    format,
+  }) => {
     const response = await api.request({
       url: `/report/provider-postulations/${user_id}`,
       method: "GET",
+      responseType: "blob",
       params: {
         startDate,
         endDate,
         format,
       },
     });
+    return response.data;
   },
 };

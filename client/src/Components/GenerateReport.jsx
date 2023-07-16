@@ -55,9 +55,25 @@ export default function GenerateReport({ handleClose, user_id, role }) {
 
     if (role === "proveedor") {
       if (selectedOption.info === "tracking") {
-        reportsService.getProviderTrackingReport(values)
+        reportsService
+          .getProviderTrackingReport(values)
+          .then((response) => {
+            const pdfBlob = new Blob([response], { type: "application/pdf" });
+            saveAs(pdfBlob, "newPdf.pdf");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       } else {
-        reportsService.getProviderPostulationsReport(values)
+        reportsService
+          .getProviderPostulationsReport(values)
+          .then((response) => {
+            const pdfBlob = new Blob([response], { type: "application/pdf" });
+            saveAs(pdfBlob, "newPdf.pdf");
+          })
+          .catch((error) => {
+            console.error(error);
+          });
       }
     } else if (role === "voluntario") {
       console.log(values);
