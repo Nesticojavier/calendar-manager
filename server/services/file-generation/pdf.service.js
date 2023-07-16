@@ -91,6 +91,7 @@ const providerTrackingReport = async (data, res, providerUsername) => {
 const providerPostulationsReport = async (data, res, providerUsername) => {
   // construct pdf
   const doc = new PDFDocument({ margin: 30, size: "A4" });
+  console.log(data)
 
   // construct table
   const table = {
@@ -104,15 +105,7 @@ const providerPostulationsReport = async (data, res, providerUsername) => {
       "Fecha creación postulación",
       "Estado de la postulación",
     ],
-    rows: data.map((item) => [
-      item.title,
-      item.type,
-      item.username,
-      item.fullName,
-      item.institutionalId,
-      item.dateCreatedPostulation,
-      item.statePostulation,
-    ]),
+    rows: data,
   };
 
   doc.table(table);
