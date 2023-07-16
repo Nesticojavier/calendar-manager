@@ -18,8 +18,6 @@ const getReportProviderTracking = async (req, res) => {
     //get data
     const data = await reportsService.getReportProviderTracking(req.userData, providerId, startDate, endDate);
 
-
-    // res.json(data)
     // use pdf generation services
     if (format === "pdf") {
       await pdfService.providerTrackingReport(data, res, username); 
