@@ -24,6 +24,10 @@ const getReportProviderTracking = async (req, res) => {
     if (format === "pdf") {
       await pdfService.providerTrackingReport(data, res, username); 
     }
+
+    if (format === "csv") {
+      res.json({message: "Falta hacer el llamado"})
+    }
   } catch (error) {
     console.log(error)
     return res
