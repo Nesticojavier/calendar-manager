@@ -50,6 +50,9 @@ const providerTrackingReport = async (data, res, providerUsername) => {
   const table = {
     title: `Seguimiento del proveedor @${providerUsername}`,
     headers: [
+      "Postulation_id",
+      "Fecha Inicio",
+      "Fecha fin",
       "Trabajo",
       "Tipo de trabajo",
       "Nombre de usuario",
@@ -59,16 +62,7 @@ const providerTrackingReport = async (data, res, providerUsername) => {
       "Hora",
       "Asistencia",
     ],
-    rows: data.map((item) => [
-      item.title,
-      item.type,
-      item.username,
-      item.fullName,
-      item.institutionalId,
-      item.date,
-      item.hour,
-      item.attendance,
-    ]),
+    rows: data,
   };
 
   doc.table(table);

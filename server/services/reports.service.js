@@ -11,81 +11,134 @@ const serverErrors = require("../error/error");
 const { error } = require("console");
 
 const reportService = {
-  getReportProviderTracking: async (provider_id) => {
+  getReportProviderTracking: async (user, provider_id, startDate, endDate) => {
+    const { rol, id } = user;
+
+    // Verify if the user is an admin or a provider
+    if (rol !== "proveedor" && rol !== "admin") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
+
+    // If it's a provider, then verify if their ID is equal to the ID in the request
+    if (rol === "proveedor" && provider_id != id) {
+      throw serverErrors.errorUnauthorized;
+    }
+
+    // Range to filter the search
+    const range = [
+      startDate ? new Date(startDate) : null,
+      endDate ? new Date(endDate) : null,
+    ];
+
+    const today = new Date();
+
+    // Validate the range
+    if (range[0] && range[0] > today) {
+      throw serverErrors.errorDateInitFuture;
+    }
+
+    if (range[1] && range[1] > today) {
+      throw serverErrors.errorDateEndFuture;
+    }
+
+    if (range[0] && range[1] && range[0] > range[1]) {
+      throw serverErrors.errorDates;
+    }
+
     try {
-      const jobs = await Postulation.findAll({
-        include: [
-          { model: Users, include: [{ model: Credential }] },
-          {
-            model: Work,
-            where: {
-              users_id: provider_id,
-            },
-          },
-          { model: Tracking, required: false },
-        ],
-      });
+      const [jobs] = await sq.query(
+        `
+        WITH
+          trackInfo AS (
+            SELECT
+              postulation_id,
+              date,
+              hour,
+              attendance
+            FROM
+              trackings
+        )
+        SELECT
+          p.id AS postulation_id,
+          p."dateInit" AS dateInit,
+          p."dateEnd" AS dateEnd,          
+          w.title,
+          case when w.type = '1' then 'Recurrente' else 'Sesion' end as type,
+          w.blocks,
+          c.username,
+          u."fullName",
+          u."institucionalId",
+          JSON_AGG(t.*) AS tracking
+        FROM
+          postulations p
+          JOIN works w ON w.id = p.works_id
+          JOIN users u ON u.id = p.users_id
+          JOIN credentials c ON c.users_id = u.id
+          LEFT JOIN trackInfo t ON t.postulation_id = p.id
+        GROUP BY
+          p.id, w.id, c.id, u.id   
+        HAVING
+          w.users_id = :ID
+        ORDER BY
+          p.id, p."dateInit"
+      `,
+        { replacements: { ID: provider_id } }
+      );
       const result = [];
+
       jobs.forEach((element) => {
-        const date = new Date(element.dateInit);
-        const dateEnd = new Date(element.dateEnd);
-        const dayOfAttendance = element.tracking
-          ? new Date(element.tracking.date)
-          : null;
-        console.log("Para el trabajo la postulacion: ", element.id);
-        console.log("Dia de asistencia:", dayOfAttendance);
-        const blocks = JSON.parse(element.work.blocks);
-        console.log("Blocks: ", blocks);
+        // Cast the dates
+        const dateInit = new Date(element.dateinit);
+        const dateEnd = new Date(element.dateend);
+        // Use the date within the specified range, if it exists
+        let dateInitIterator =
+          range[0] && dateInit < range[0] ? range[0] : dateInit;
+        let dateEndIterator =
+          range[1] && range[1] < dateEnd ? range[1] : dateEnd;
+
+        // If the dateEnd is after today, then use today as the end date
+        dateEndIterator = dateEndIterator > today ? today : dateEndIterator;
+
+        const tracking = element.tracking;
+        const blocks = JSON.parse(element.blocks);
+
+        let mapOfAttendance = {};
+        for (let i = 0; tracking[i] && i < tracking.length; i++) {
+          if (tracking[i].attendance) {
+            mapOfAttendance[tracking[i].date] = tracking[i].hour;
+          }
+        }
 
         const row = [
-          element.work.title,
-          element.work.type,
-          element.user.credential.username,
-          element.user.fullName,
-          element.user.institutionalId,
+          element.postulation_id,
+          element.dateinit,
+          element.dateend,
+          element.title,
+          element.type,
+          element.username,
+          element.fullName,
+          element.institutionalId,
         ];
-        while (date <= dateEnd) {
-          // console.log(date, ">>>>>>>>>>>>>>>>>>>> Hasta: ", dateEnd);
-          const currentDay = getSpanishDayOfWeek(date);
+        while (dateInitIterator <= dateEndIterator) {
+          const currentDay = getSpanishDayOfWeek(dateInitIterator);
           blocks.forEach((block) => {
             if (currentDay == block.day) {
+              const dateFormated = dateInitIterator.toISOString().split("T")[0];
               if (
-                dayOfAttendance &&
-                dayOfAttendance.getTime() == date.getTime() &&
-                element.tracking.attendance
+                mapOfAttendance[dateFormated] &&
+                mapOfAttendance[dateFormated] == block.hour
               ) {
-                console.log("Fecha: ", date)
-                const rowToPush = [...row, date.toISOString().split('T')[0], block.hour, true]
+                const rowToPush = [...row, dateFormated, block.hour, 1];
                 result.push(rowToPush);
-                console.log("\t\tAsistio:", rowToPush);
               } else {
-                result.push([...row, date.toISOString().split('T')[0], block.hour, false]);
-
-                // console.log("\t\t No Asistio:", block.hour);
+                result.push([...row, dateFormated, block.hour, 0]);
               }
             }
           });
-          
-          date.setDate(date.getDate() + 1);
+
+          dateInitIterator.setDate(dateInitIterator.getDate() + 1);
         }
-
-        // for (let index = 0; index < array.length; index++) {
-        //   const element = array[index];
-
-        // }
-        // result.push()
-        // return [
-        // element.work.title,
-        // element.work.type,
-        // element.user.credential.username,
-        // element.user.fullName,
-        // element.user.institutionalId,
-        // // item.date,
-        // // item.hour,
-        // // item.attendance
-        // ]
       });
-      // console.log(result);
 
       return result;
     } catch (error) {
