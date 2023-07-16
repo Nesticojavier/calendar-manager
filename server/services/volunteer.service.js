@@ -216,12 +216,11 @@ const volunteerService = {
   },
   postulate: async (user, works_id, dateInit, dateEnd) => {
     const { id: users_id, rol } = user;
-    
+
     if (rol !== "voluntario") {
       throw serverErrors.errorUnauthorizedRole;
     }
 
- 
     try {
       const work = await Work.findByPk(works_id);
 
@@ -233,12 +232,24 @@ const volunteerService = {
         throw serverErrors.errorMaxVolunteers;
       }
 
-      if (work.dateInit > dateInit || work.dateEnd < dateEnd || dateInit > dateEnd) {
-        throw serverErrors.errorDates
+      const workDateInit = new Date(work.dateInit)
+      const workDateEnd = new Date(work.dateEnd)
+
+      if (
+        workDateInit > dateInit ||
+        workDateEnd < dateEnd ||
+        dateInit > dateEnd
+      ) {
+        throw serverErrors.errorDates;
       }
 
-      const postulation = await Postulation.create({ users_id, works_id, dateInit, dateEnd });
-      
+      const postulation = await Postulation.create({
+        users_id,
+        works_id,
+        dateInit,
+        dateEnd,
+      });
+
       return postulation;
     } catch (error) {
       if (error.name == "SequelizeUniqueConstraintError") {
@@ -309,6 +320,56 @@ const volunteerService = {
       }
       return;
     } catch (error) {
+      throw error;
+    }
+  },
+  leaveJob: async (user, postulation_id) => {
+    const { rol, id } = user;
+
+    if (rol !== "voluntario") {
+      throw serverErrors.errorUnauthorizedRole;
+    }
+
+    const transaction = await sq.transaction();
+
+    try {
+      const postulation = await Postulation.findByPk(postulation_id);
+
+      if (!postulation) {
+        throw serverErrors.errorPostulationDontExist;
+      }
+
+      if (!postulation.confirmed) {
+        throw serverErrors.errorPostulationPending;
+      }
+
+      if (postulation.users_id !== id) {
+        throw serverErrors.errorUserHasNotPostulated;
+      }
+
+      const rowsDeleted = await Postulation.destroy({
+        where: {
+          id: postulation_id,
+          users_id: id,
+          works_id: postulation.works_id,
+        },
+        transaction,
+      });
+
+      if (rowsDeleted === 0) {
+        throw serverErrors.error404;
+      }
+
+      await Work.decrement("volunteerCount", {
+        by: 1,
+        where: { id: postulation.works_id },
+        transaction,
+      });
+
+      await transaction.commit();
+      return serverErrors.succesLeaveJob;
+    } catch (error) {
+      await transaction.rollback()
       throw error;
     }
   },

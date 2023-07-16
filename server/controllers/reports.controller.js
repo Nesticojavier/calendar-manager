@@ -29,7 +29,6 @@ const getReportProviderTracking = async (req, res) => {
       await csvService.providerTrackingReport(data, res)
     }
   } catch (error) {
-    console.log(error)
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
@@ -60,7 +59,6 @@ const getReportProviderPostulations = async (req, res) => {
       await csvService.providerPostulationsReport(data, res)
     }
   } catch (error) {
-    console.log(error)
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
@@ -83,7 +81,6 @@ const getReportVolunteerTracking = async (req, res) => {
 
     // use pdf generation services
     if (format === "pdf") {
-      return res.json(data)
       await pdfService.volunteerTrackingReport(data, res, username); 
     }
 
@@ -91,7 +88,6 @@ const getReportVolunteerTracking = async (req, res) => {
       await csvService.volunteerTrackingReport(data, res)
     }
   } catch (error) {
-    console.log(error)
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });

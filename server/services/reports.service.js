@@ -189,7 +189,6 @@ const reportService = {
     }
 
     try {
-      console.log(dateInit, dateEnd);
       const where = {};
       if (dateInit && dateEnd) {
         where.createdAt = {
@@ -321,7 +320,7 @@ const reportService = {
         GROUP BY
           p.id, w.id, c.id, u.id   
         HAVING
-          u.id = :ID AND
+          u.id = :ID and
           p.confirmed = true
         ORDER BY
           p.id, p."dateInit"
@@ -369,6 +368,7 @@ const reportService = {
         while (dateInitIterator <= dateEndIterator) {
           const currentDay = getSpanishDayOfWeek(dateInitIterator);
           blocks.forEach((block) => {
+            console.log(dateInitIterator,currentDay, block.day)
             if (currentDay == block.day) {
               const dateFormated = dateInitIterator.toISOString().split("T")[0];
               if (

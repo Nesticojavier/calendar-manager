@@ -11,6 +11,7 @@ const {
   getAllJobsPaginated,
   jobsInProgress,
   cancelPostulation,
+  leaveJob,
 } = require("../controllers/volunteer.controller");
 const { verifyToken } = require("../controllers/auth.controller");
 
@@ -38,6 +39,9 @@ router.post("/postulation", postulate);
 
 // Cancel application
 router.delete("/postulation", cancelPostulation);
+
+// leave job
+router.delete("/postulation-leave/:postulationId", leaveJob);
 
 // Show applications from a user
 router.get("/jobs-in-progress", jobsInProgress);

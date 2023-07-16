@@ -33,7 +33,7 @@ const providerService = {
     }
 
     if (work.dateInit > work.dateEnd) {
-      throw serverErrors.errorDates
+      throw serverErrors.errorDates;
     }
 
     const t = await sq.transaction();
@@ -45,16 +45,16 @@ const providerService = {
           title: work.title,
         },
       });
-  
+
       if (existWork) {
         throw serverErrors.errorJobAlreadyExists;
       }
-  
+
       // Adding missing atributes to insert
       work.users_id = users_id;
       work.blocks = JSON.stringify(work.blocks);
       work.status = "propuesto";
-  
+
       const createdWork = await Work.create(work, { transaction: t });
       const promises = work.tags.map(async (title) => {
         const [tag, tagCreated] = await Tags.findOrCreate({
@@ -236,7 +236,7 @@ const providerService = {
     }
 
     if (work.dateInit > work.dateEnd) {
-      throw serverErrors.errorDates
+      throw serverErrors.errorDates;
     }
 
     const t = await sq.transaction();
@@ -493,7 +493,7 @@ const providerService = {
   },
   getTracking: async (postulation_id) => {
     try {
-      const result = await Tracking.findAll({ where: {postulation_id} });
+      const result = await Tracking.findAll({ where: { postulation_id } });
       return result;
     } catch (error) {
       throw error;

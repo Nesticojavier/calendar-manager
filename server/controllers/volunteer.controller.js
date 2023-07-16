@@ -85,9 +85,9 @@ const showProfile = async (req, res) => {
 
 const postulate = async (req, res) => {
   const { workId } = req.body;
-  const [dateInit, dateEnd] = req.body.selectedDates
+  const [dateInit, dateEnd] = req.body.selectedDates;
 
-  if (!workId || !dateInit || !dateEnd ) {
+  if (!workId || !dateInit || !dateEnd) {
     const error = serverErrors.errorMissingData;
     return res
       .status(error?.status || 500)
@@ -95,7 +95,12 @@ const postulate = async (req, res) => {
   }
 
   try {
-    const postulation = await volunteerService.postulate(req.userData, workId, dateInit, dateEnd);
+    const postulation = await volunteerService.postulate(
+      req.userData,
+      workId,
+      dateInit,
+      dateEnd
+    );
     res.json(postulation);
   } catch (error) {
     return res
@@ -141,14 +146,37 @@ const cancelPostulation = async (req, res) => {
   }
 
   try {
-    const postulation = await volunteerService.cancelPostulation(req.userData, workId);
+    const postulation = await volunteerService.cancelPostulation(
+      req.userData,
+      workId
+    );
     res.json(postulation);
   } catch (error) {
     return res
       .status(error?.status || 500)
       .json({ status: "FAILED", data: { error: error?.message || error } });
   }
-  return res.json();
+};
+
+const leaveJob = async (req, res) => {
+  const { postulationId } = req.params;
+
+  try {
+    if (!postulationId) {
+      serverErrors.errorMissingData;
+    }
+
+    const leaveJob = await volunteerService.leaveJob(
+      req.userData,
+      postulationId
+    );
+  
+    res.json(leaveJob);
+  } catch (error) {
+    return res
+      .status(error?.status || 500)
+      .json({ status: "FAILED", data: { error: error?.message || error } });
+  }
 };
 
 module.exports = {
@@ -161,4 +189,5 @@ module.exports = {
   jobsInProgress,
   getAllJobsPaginated,
   cancelPostulation,
+  leaveJob,
 };

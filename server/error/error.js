@@ -60,7 +60,10 @@ const serverErrors = {
     message: "Trabajo creado exitosamente",
     status: 201,
   },
-
+  succesLeaveJob: {
+    message: "Trabajo abandonado exitosamente",
+    status: 200,
+  },
   errorJobAlreadyExists: {
     message: "El trabajo ya existe",
     status: 409,
@@ -109,12 +112,16 @@ const serverErrors = {
     message: "La postulación no existe",
     status: 409,
   },
-  errorProviderDontCreateJob:{
+  errorProviderDontCreateJob: {
     message: "El trabajo no fue creado por este proveedor",
     status: 403,
   },
   errorPostulationAccepted: {
     message: "La postulación ya ha sido aceptada",
+    status: 403,
+  },
+  errorPostulationPending: {
+    message: "La postulación no ha sido aceptada",
     status: 403,
   },
   errorDates: {
@@ -128,8 +135,7 @@ const serverErrors = {
   errorDateEndFuture: {
     message: "La fecha final no es valida. Es una fecha futura",
     status: 403,
-  }
+  },
 };
-
 
 module.exports = serverErrors;
