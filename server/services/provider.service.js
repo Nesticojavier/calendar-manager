@@ -25,7 +25,7 @@ const providerService = {
         "Miércoles",
         "Jueves",
         "Viernes",
-        "Sabado",
+        "Sábado",
         "Domingo",
       ];
       const date = new Date(work.blocks[0].day);
@@ -228,7 +228,7 @@ const providerService = {
         "Miércoles",
         "Jueves",
         "Viernes",
-        "Sabado",
+        "Sábado",
         "Domingo",
       ];
       const date = new Date(work.blocks[0].day);

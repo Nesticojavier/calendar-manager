@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   getReportProviderTracking,
   getReportProviderPostulations,
+  getReportVolunteerTracking
 } = require("../controllers/reports.controller");
 
 const { verifyToken } = require("../controllers/auth.controller");
@@ -17,6 +18,12 @@ router.get(
   "/provider-postulations/:providerId",
   verifyToken(process.env.USERS_ENCRYPT),
   getReportProviderPostulations
+);
+
+router.get(
+  "/volunteer-tracking",
+  verifyToken(process.env.USERS_ENCRYPT),
+  getReportVolunteerTracking
 );
 
 router.get(
