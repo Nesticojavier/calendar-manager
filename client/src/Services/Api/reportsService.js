@@ -9,4 +9,26 @@ export const reportsService = {
     });
     return response.data;
   },
+  getProviderTrackingReport: async ({user_id, startDate, endDate, format}) => {
+    const response = await api.request({
+      url: `/report/provider-tracking/${user_id}`,
+      method: "GET",
+      params: {
+        startDate,
+        endDate,
+        format,
+      },
+    });
+  },
+  getProviderPostulationsReport: async ({user_id, startDate, endDate, format}) => {
+    const response = await api.request({
+      url: `/report/provider-postulations/${user_id}`,
+      method: "GET",
+      params: {
+        startDate,
+        endDate,
+        format,
+      },
+    });
+  },
 };

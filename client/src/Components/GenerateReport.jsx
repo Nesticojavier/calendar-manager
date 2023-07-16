@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import DatePicker from "react-datepicker";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
+import { reportsService } from "../Services/Api/reportsService";
 
 export default function GenerateReport({ handleClose, user_id, role }) {
   const [startDate, setStartDate] = useState(null);
@@ -46,11 +47,21 @@ export default function GenerateReport({ handleClose, user_id, role }) {
 
     // send form data
     const values = {
-      ...selectedOption,
+      user_id: user_id,
       startDate: startDate,
       endDate: endDate,
+      format: selectedOption.format,
     };
-    console.log(values);
+
+    if (role === "proveedor") {
+      if (selectedOption.info === "tracking") {
+        reportsService.getProviderTrackingReport(values)
+      } else {
+        reportsService.getProviderPostulationsReport(values)
+      }
+    } else if (role === "voluntario") {
+      console.log(values);
+    }
   };
 
   const [selectedOption, setSelectedOption] = useState({
