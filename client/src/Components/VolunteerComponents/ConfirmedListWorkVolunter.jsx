@@ -76,26 +76,35 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
     });
   };
 
-  // handle for remove or leave work and delete from the list
+  // handle for remove work and delete from the list
   const handleRemoveWork = (workId) => {
-    if (statusConfirmed) {
-      alert(
-        "Se debe abandonar el trabajo y eliminarlo de la lista de trabajos"
-      );
-    } else {
-      volunteerService
-        .cancelPostulation(workId)
-        .then((response) => {
-          setIsRemoved(true);
-          Swal.fire({
-            icon: "success",
-            title: "Postulacion cancelada",
-          });
-        })
-        .catch((error) => {
-          console.error(error);
+    volunteerService
+      .cancelPostulation(workId)
+      .then((response) => {
+        setIsRemoved(true);
+        Swal.fire({
+          icon: "success",
+          title: "Postulacion cancelada",
         });
-    }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  // handle for leave work and delete from the list
+  const handleLeaveWork = (postulationId) => {
+    volunteerService
+      .leavePostulation(postulationId)
+      .then((response) => {
+        setIsRemoved(true);
+        Swal.fire({
+          icon: "success",
+          title: "Trabajo abandonado",
+        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   return (
@@ -164,7 +173,11 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
                   <strong>Fecha de fin:</strong>{" "}
                   {format(addDays(new Date(row.work.dateEnd), 1), "dd-MM-yyyy")}
                 </Typography>
-                <Typography component={"div"} variant="body2" color="text.secondary">
+                <Typography
+                  component={"div"}
+                  variant="body2"
+                  color="text.secondary"
+                >
                   <Box sx={{ display: "flex", alignItems: "center" }}>
                     <strong>Fecha de la propuesta:</strong>{" "}
                     {format(addDays(new Date(row.dateInit), 1), "dd-MM-yyyy")}
@@ -175,7 +188,11 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
               </Box>
               <Divider sx={{ mb: 2 }} />
               <Box mb={2}>
-                <Typography component={"div"} variant="body2" color="text.secondary">
+                <Typography
+                  component={"div"}
+                  variant="body2"
+                  color="text.secondary"
+                >
                   <Box mb={0}>
                     <strong>Bloques:</strong>{" "}
                   </Box>{" "}
@@ -196,7 +213,7 @@ export default function ConfirmedListWorkVolunter({ statusConfirmed }) {
             </CardContent>
             <CardActions disableSpacing>
               <Button
-                onClick={() => handleRemoveWork(row.work.id)}
+                onClick={() => {statusConfirmed ? handleLeaveWork(row.id): handleRemoveWork(row.work.id)}}
                 type="button"
                 variant="outlined"
                 color="error"
