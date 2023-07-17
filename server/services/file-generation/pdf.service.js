@@ -154,23 +154,17 @@ const volunteerTrackingReport = async (data, res, volunteerUsername) => {
   const table = {
     title: `Seguimiento del voluntario @${volunteerUsername}`,
     headers: [
+      "ID postulacion",
       "Trabajo",
       "Tipo de trabajo",
       "Nombre de usuario",
       "Nombre completo",
+      "ID institucional",
       "Fecha",
       "Hora",
       "Asistencia",
     ],
-    rows: data.map((item) => [
-      item.title,
-      item.type,
-      item.username,
-      item.fullName,
-      item.date,
-      item.hour,
-      item.attendance,
-    ]),
+    rows: data
   };
 
   doc.table(table);

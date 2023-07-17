@@ -72,8 +72,8 @@ export default function GenerateReport({ handleClose, user_id, role, admin }) {
           .catch((error) => {
             console.error(error);
           });
-        } else {
-          reportsService
+      } else {
+        reportsService
           .getProviderPostulationsReport(values)
           .then((response) => {
             const newBlob = new Blob([response], { type });
@@ -84,7 +84,15 @@ export default function GenerateReport({ handleClose, user_id, role, admin }) {
           });
       }
     } else if (role === "voluntario") {
-      console.log(values);
+      reportsService
+        .getVolunteerTrackingReport(values)
+        .then((response) => {
+          const newBlob = new Blob([response], { type });
+          saveAs(newBlob, `reporte_voluntario_${formattedDateTime}`);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     }
   };
 

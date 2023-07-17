@@ -47,4 +47,21 @@ export const reportsService = {
     });
     return response.data;
   },
+  getVolunteerTrackingReport: async ({
+    startDate,
+    endDate,
+    format,
+  }) => {
+    const response = await api.request({
+      url: `/report/volunteer-tracking`,
+      method: "GET",
+      responseType: format === "pdf" ? "blob" : "arraybuffer",
+      params: {
+        startDate,
+        endDate,
+        format,
+      },
+    });
+    return response.data;
+  },
 };
