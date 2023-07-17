@@ -22,6 +22,7 @@ router.get("/jobs", getAllJobs);
 
 router.get("/paginatedJobs", getAllJobsPaginated);
 
+
 // Show a job
 router.get("/jobs/:id", getOneJob);
 
