@@ -1,15 +1,15 @@
-# Frontend de la aplicacion desarrollada en React
+# Frontend of the Application developed in React
 
-## Ejecucion
+## Execution
 
-### Instalar dependencias
+### Install Dependencies
 ```
 npm install
 ```
 
-### Correr proyecto React
+### Run React Project
 ```
 npm run dev
 ```
 
-Despues de que inicie la aplicaion, visitar `http://localhost:5173`
+Once the application starts, visit `http://localhost:5173` to access it.

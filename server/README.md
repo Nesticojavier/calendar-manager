@@ -1,43 +1,43 @@
-# Backend de la aplicacion desarrollada en Nodejs + Expressjs
+# Backend of the Application developed in Node.js + Express.js
 
-## Ejecucion
+## Execution
 
-### Instalar dependencias
+### Install Dependencies
 ```
 npm install
 ```
 
-### Correr proyecto Node
+### Run Node Project
 
-Este proyecto de ExpressJs usa postgres como base de datos y tiene por defecto la base de datos de postgres con el usuario postgres y la contraseña la recibe a traves de una variable de entorno ($DATABASE_PWD). Si desea correr este proyecto en su ordenador sin un contenedor de postgres, debe establecer dicha variable de entorno de la siguiente manera:
+This Express.js project uses PostgreSQL as the database and, by default, connects to a PostgreSQL database with the username "postgres" and the password received through an environment variable ($DATABASE_PWD). If you want to run this project on your computer without a PostgreSQL container, you need to set the environment variable as follows:
 
-Si usa Linux / MacOS
+For Linux / MacOS
 ```
 export DATABASE_PWD=contraseña123
 ```
 
-Si usa Windows (CMD)
+For Windows (CMD)
 ```
 set DATABASE_PWD=contraseña123
 ```
 
-Si usa Windows (PowerShell)
+For Windows (PowerShell)
 ```
 $env:DATABASE_PWD = "contraseña123"
 ```
 
-Finalmente, puede correr el API de nodeJs en la base de datos por defecto de postgres de la siguiente manera:
+Finally, you can run the Node.js API connected to the default PostgreSQL database as follows:
 ```
 npm run serverstart
 ```
 
-## Variables de entornos utilizadas
+## Environment Variables Used
 
-Si desea correr este proyecto en su ordenador sin un contenedor de docker, debe establecer las variables de entorno que se indican a continuación en su sistema operativo o simplemente añadiendo un archivo `.env` a la raíz del server:
+If you want to run this project on your computer without a docker container, you need to set the following environment variables in your operating system or by adding a `.env` file to the root of the server:
 
-- `DATABASE_HOST` Indica el host de la base de datos
-- `DATABASE_PWD` Indica la contraseña de la base de datos
-- `ADMIN_USER` Indica el usuario administrador del calendario
-- `ADMIN_PWD` Indica la contraseña del perfil de administrador del calendario
-- `ADMIN_ENCRYPT` Indica la clave de cifrado para encriptar el jwt token del admin
-- `USERS_ENCRYPT` Indica la clave de cifrado para encriptar los jwt token de los usuarios
+- `DATABASE_HOST` Indicates the database host
+- `DATABASE_PWD` Indicates the database password
+- `ADMIN_USER` Indicates the admin user of the calendar
+- `ADMIN_PWD` Indicates the password for the admin profile of the calendar
+- `ADMIN_ENCRYPT`  Indicates the encryption key to encrypt the admin's jwt token
+- `USERS_ENCRYPT` Indicates the encryption key to encrypt the jwt tokens of the users

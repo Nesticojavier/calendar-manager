@@ -1,7 +1,10 @@
 # Calendar Manager for Volunteer Work
 
-## Aplicación React con Nodejs en el backend y uso de la base de datos postgres
-Estructura del proyecto:
+This project aimed to develop an application with three user roles: admin, provider, and volunteer. Providers have the ability to create jobs, and volunteers can apply for these jobs. The applications submitted by volunteers undergo a review process for acceptance or rejection by the job provider. The jobs are displayed on a calendar with search and filtering capabilities, allowing users to find jobs related to their interests and skills. Providers can track each volunteer's progress and generate reports for their records. The application facilitates seamless coordination between providers and volunteers for effective volunteer work management.
+
+## React Application with Node.js Backend and PostgreSQL Database Usage
+
+Project Structure:
 ```
 .
 ├── README.md
@@ -46,22 +49,22 @@ Estructura del proyecto:
         └── layout.pug
 ```
 
-## Uso con entorno de desarrollo de Docker
+## Usage with Docker Development Environment
 
-### Ejecutar con docker compose
+### Run with Docker Compose
 
 ```
 $ docker compose up
 ```
 
-Si no es la primera vez que corre este proyecto, ejecute `./restart-docker.sh` para eliminar las imagenes antiguas antes de hacer `docker compose up`
+If it's not the first time running this project, execute `./restart-docker.sh` to remove old images before `docker compose up`.
 
-#### Para ejecutar en segundo plano:
+#### To run in the background:
 ```
 $ docker compose up -d
 ```
 
-### Darle de baja a los contenedores
+### Shut Down the Containers
 
 ```
 $ docker compose down -v
